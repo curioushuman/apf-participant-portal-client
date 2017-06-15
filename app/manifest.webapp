@@ -1,0 +1,25 @@
+{
+  "version": "1.0.0",
+  "name": "Ride2School",
+  "launch_path": "/index.html",
+  "description": "Ride2School Hands Up app",
+  "icons": {
+    "128": "/images/touch/icon-128x128.png"
+  },
+  "developer": {
+    "name": "",
+    "url": ""
+  },
+  "installs_allowed_from": [
+    "*"
+  ],
+  "default_locale": "en",
+  "permissions": {
+  },
+  "locales": {
+    "en": {
+      "name": "Ride2School",
+      "description": "Ride2School Hands Up app"
+    }
+  }
+}
