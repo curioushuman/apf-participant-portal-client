@@ -74,4 +74,23 @@
 
   // Your custom JavaScript goes here
 
+  var access_token = 'blah';
+  // NOTE: access_token not required for connection
+  // NOTE: local proxy address is based on the port it indicates it is
+  // listening on
+  var conn = new jsforce.Connection({
+    // accessToken: access_token,
+    proxyUrl: 'http://localhost:3123/proxy/'
+  });
+  var username = 'blah';
+  var password = 'blah';
+  // NOTE: for connection to work access_token is added on end of password
+  var password_access_token = password + access_token;
+  conn.login(username, password_access_token, function(err, userInfo) {
+    if (err) { return console.error(err); }
+    // logged in user property
+    // console.log(userInfo);
+    // ...
+  });
+
 })();
