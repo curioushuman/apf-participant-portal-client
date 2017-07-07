@@ -9,6 +9,7 @@
       // Angular modules.
       'ngRoute',
       'ngMaterial',
+      'ngResource',
 
       // Custom modules.
       'app.core',
@@ -79,7 +80,7 @@
       }
     });
     $rootScope.$on('$routeChangeSuccess', function(event, next, previous, error) {
-      
+
     });
   }
 })();

@@ -10,14 +10,21 @@
 
   LandingController.$inject = [
     '$location',
-    'layoutService'
+    'layoutService',
+    'actionService'
   ];
 
   function LandingController(
     $location,
-    layoutService
+    layoutService,
+    actionService
   ) {
     var vm = this;
+
+    actionService.actions()
+      .$promise.then(function(actions) {
+        console.log(actions);
+      });
 
     vm.navigate = layoutService.navigate;
   }
