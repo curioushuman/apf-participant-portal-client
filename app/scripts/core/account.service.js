@@ -16,9 +16,7 @@
 
   function accountService($resource, API_URI) {
 
-    var Account = $resource(API_URI + '/account/:id',
-      { slug: '@id' }
-    );
+    var Account = $resource(API_URI + '/account');
 
     var service = {
       list: Account.query

@@ -17,7 +17,7 @@
   function contactService($resource, API_URI) {
 
     var Contact = $resource(API_URI + '/contact/:email',
-      { slug: '@email' }
+      { email: '@email' }
     );
 
     var service = {
