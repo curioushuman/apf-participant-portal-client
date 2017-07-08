@@ -15,7 +15,9 @@
     'contactService',
     'accountService',
     'affiliationService',
-    'participantService'
+    'participantService',
+    'questionService',
+    'responseService'
   ];
 
   function LandingController(
@@ -25,7 +27,9 @@
     contactService,
     accountService,
     affiliationService,
-    participantService
+    participantService,
+    questionService,
+    responseService
   ) {
     var vm = this;
 
@@ -34,10 +38,10 @@
     //     console.log(actions);
     //   });
 
-    actionService.retrieve({ slug: '2017-test_training'})
-      .$promise.then(function(action) {
-        console.log(action);
-      });
+    // actionService.retrieve({ slug: '2017-test_training'})
+    //   .$promise.then(function(action) {
+    //     console.log(action);
+    //   });
 
     // contactService.retrieve({ email: 'mike@curioushuman.com.au'})
     //   .$promise.then(function(contact) {
@@ -49,22 +53,42 @@
     //     console.log(account);
     //   });
 
-    // FINISH
-    affiliationService.retrieve({
-        contactid: '0036F000022A3fGQAS',
-        accountid: '0016F00001qccTfQAI'
-      })
-      .$promise.then(function(affiliation) {
-        console.log(affiliation);
-      });
+    // affiliationService.retrieve({
+    //     contactid: '0036F000022A3fGQAS',
+    //     accountid: '0016F00001qccTfQAI'
+    //   })
+    //   .$promise.then(function(affiliation) {
+    //     console.log(affiliation);
+    //   });
 
-    // FINISH
-    participantService.retrieve({
-        contactid: '0036F000022A3fGQAS',
+    // participantService.retrieve({
+    //     contactid: '0036F000022A3fGQAS',
+    //     actionid: 'a0m6F00000FxzWhQAJ'
+    //   })
+    //   .$promise.then(function(participant) {
+    //     console.log(participant);
+    //   });
+
+    questionService.list({
         actionid: 'a0m6F00000FxzWhQAJ'
       })
-      .$promise.then(function(participant) {
-        console.log(participant);
+      .$promise.then(function(questions) {
+        console.log(questions);
+      });
+
+    responseService.list({
+        participantid: 'a0n6F00000L2sSAQAZ'
+      })
+      .$promise.then(function(responses) {
+        console.log(responses);
+      });
+
+    responseService.retrieve({
+        participantid: 'a0n6F00000L2sSAQAZ',
+        questionid: 'a0p6F00000BVh2eQAD'
+      })
+      .$promise.then(function(response) {
+        console.log(response);
       });
 
     vm.navigate = layoutService.navigate;
