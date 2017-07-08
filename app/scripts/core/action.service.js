@@ -13,18 +13,15 @@
 
   function actionService($resource) {
 
-    var Action = $resource('http://localhost:8000/salesforce/action/:actionSlug',
-      { actionSlug: '@slug' }
+    var Action = $resource('http://localhost:8000/salesforce/action/:slug',
+      { slug: '@slug' }
     );
 
     var service = {
-      actions: Action.query
+      list: Action.query,
+      retrieve: Action.get
     };
 
     return service;
-
-    // function actions() {
-    //   return Action.query;
-    // }
   }
 })();
