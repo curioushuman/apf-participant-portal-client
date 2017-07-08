@@ -12,14 +12,16 @@
     '$location',
     'layoutService',
     'actionService',
-    'contactService'
+    'contactService',
+    'accountService'
   ];
 
   function LandingController(
     $location,
     layoutService,
     actionService,
-    contactService
+    contactService,
+    accountService
   ) {
     var vm = this;
 
@@ -33,9 +35,14 @@
     //     console.log(action);
     //   });
 
-    contactService.retrieve({ email: 'mike@curioushuman.com.au'})
-      .$promise.then(function(contact) {
-        console.log(contact);
+    // contactService.retrieve({ email: 'mike@curioushuman.com.au'})
+    //   .$promise.then(function(contact) {
+    //     console.log(contact);
+    //   });
+
+    accountService.list()
+      .$promise.then(function(account) {
+        console.log(account);
       });
 
     vm.navigate = layoutService.navigate;
