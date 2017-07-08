@@ -9,11 +9,14 @@
     .module('app.core')
     .factory('actionService', actionService);
 
-  actionService.$inject = ['$resource'];
+  actionService.$inject = [
+    '$resource',
+    'API_URI'
+  ];
 
-  function actionService($resource) {
+  function actionService($resource, API_URI) {
 
-    var Action = $resource('http://localhost:8000/salesforce/action/:slug',
+    var Action = $resource(API_URI + '/action/:slug',
       { slug: '@slug' }
     );
 
