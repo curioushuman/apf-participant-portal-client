@@ -13,7 +13,8 @@
 
       // Custom modules.
       'app.core',
-      'app.landing',
+      // 'app.landing',
+      'app.registration',
       'app.layout'
     ])
     .config(configFunction)
@@ -36,37 +37,22 @@
     });
     $mdThemingProvider.theme('default')
       .primaryPalette('blue', {
-        'default': 'A700',
-        'hue-1': 'A400',
-        'hue-2': 'A200',
-        'hue-3': 'A100'
+        'default': '600',
+        'hue-1': '700',
+        'hue-2': '800',
+        'hue-3': '900'
       })
-      // Fitz recommend
-      // .accentPalette('yellow', {
-      //   'default': 'A700',
-      //   'hue-1': 'A400',
-      //   'hue-2': 'A200',
-      //   'hue-3': 'A100'
-      // })
-      // .warnPalette('green', {
-      //   'default': 'A700',
-      //   'hue-1': 'A400',
-      //   'hue-2': 'A200',
-      //   'hue-3': 'A100'
-      // })
-      // simply flipping didn't work
-      // i've changed green to be accent and added orange as warn
-      .accentPalette('green', {
-        'default': 'A700',
-        'hue-1': 'A400',
-        'hue-2': 'A200',
-        'hue-3': 'A100'
+      .accentPalette('pink', {
+        'default': '600',
+        'hue-1': '700',
+        'hue-2': '800',
+        'hue-3': '900'
       })
-      .warnPalette('orange', {
-        'default': 'A700',
-        'hue-1': 'A400',
-        'hue-2': 'A200',
-        'hue-3': 'A100'
+      .warnPalette('deep-orange', {
+        'default': '600',
+        'hue-1': '700',
+        'hue-2': '800',
+        'hue-3': '900'
       })
       .backgroundPalette('grey');
   }
@@ -74,13 +60,6 @@
   runFunction.$inject = ['$rootScope', '$location', 'layoutService'];
 
   function runFunction($rootScope, $location, layoutService) {
-    $rootScope.$on('$routeChangeError', function(event, next, previous, error) {
-      if (error === 'AUTH_REQUIRED') {
-        $location.path('/');
-      }
-    });
-    $rootScope.$on('$routeChangeSuccess', function(event, next, previous, error) {
 
-    });
   }
 })();

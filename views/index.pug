@@ -44,6 +44,7 @@ body(ng-app='app', ng-cloak)
 
   div(layout='column', layout-fill)
     a(name='top')
+    gz-navbar
     md-content(flex)
       div(ng-view)
 
@@ -59,11 +60,16 @@ body(ng-app='app', ng-cloak)
 
   //- main app module
   script(src='scripts/app.module.js')
+  
+  //- registration module
+  script(src='scripts/registration/registration.module.js')
+  script(src='scripts/registration/config.route.js')
+  script(src='scripts/registration/registration.controller.js')
 
   //- landing module
-  script(src='scripts/landing/landing.module.js')
-  script(src='scripts/landing/config.route.js')
-  script(src='scripts/landing/landing.controller.js')
+  //- script(src='scripts/landing/landing.module.js')
+  //- script(src='scripts/landing/config.route.js')
+  //- script(src='scripts/landing/landing.controller.js')
 
   //- why module
   //- script(src='scripts/why/why.module.js')
@@ -83,6 +89,7 @@ body(ng-app='app', ng-cloak)
   //- layout module
   script(src='scripts/layout/layout.module.js')
   script(src='scripts/layout/layout.service.js')
+  script(src='scripts/layout/directives/navbar.directive.js')
 
   //- use this in production
   //- if the uglification is working
