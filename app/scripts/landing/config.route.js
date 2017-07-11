@@ -12,9 +12,10 @@
 
   function configFunction($routeProvider) {
     $routeProvider.when('/', {
-      templateUrl: 'scripts/landing/landing.view.html',
-      controller: 'LandingController',
-      controllerAs: 'vm'
+      // templateUrl: 'scripts/landing/landing.view.html',
+      // controller: 'LandingController',
+      // controllerAs: 'vm'
+      redirectTo: '/registration/none-specified'
     });
   }
 })();

@@ -13,7 +13,7 @@
 
       // Custom modules.
       'app.core',
-      // 'app.landing',
+      'app.landing',
       'app.registration',
       'app.layout'
     ])

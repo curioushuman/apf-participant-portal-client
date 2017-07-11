@@ -47,6 +47,7 @@ body(ng-app='app', ng-cloak)
     gz-navbar
     md-content(flex)
       div(ng-view)
+    gz-footer
 
   //- In production use
   script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js')
@@ -67,9 +68,9 @@ body(ng-app='app', ng-cloak)
   script(src='scripts/registration/registration.controller.js')
 
   //- landing module
-  //- script(src='scripts/landing/landing.module.js')
-  //- script(src='scripts/landing/config.route.js')
-  //- script(src='scripts/landing/landing.controller.js')
+  script(src='scripts/landing/landing.module.js')
+  script(src='scripts/landing/config.route.js')
+  script(src='scripts/landing/landing.controller.js')
 
   //- why module
   //- script(src='scripts/why/why.module.js')
@@ -89,6 +90,8 @@ body(ng-app='app', ng-cloak)
   //- layout module
   script(src='scripts/layout/layout.module.js')
   script(src='scripts/layout/layout.service.js')
+  //- script(src='scripts/layout/directives/hero.directive.js')
+  script(src='scripts/layout/directives/footer.directive.js')
   script(src='scripts/layout/directives/navbar.directive.js')
 
   //- use this in production

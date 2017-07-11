@@ -18,172 +18,18 @@
 
 /* hero */
 
-.r2s-onboard-hero h1 {
+.hero h1 {
   margin-bottom: 0px;
 }
-.r2s-onboard-hero h2 {
+.hero h2 {
   margin-top: 0px;
   margin-bottom: 0px;
 }
-.r2s-onboard-hero h3 {
+.hero h3 {
   margin-top: 0px;
   margin-bottom: 0px;
 }
-.r2s-onboard-hero p {
+.hero p {
   margin-top: 0px;
   margin-bottom: 15px;
-}
-
-/* how does this work? */
-
-.r2s-how h2 {
-  margin-top: 0px;
-}
-
-/* all */
-
-/* sidebar */
-
-div.r2s-md-sidenav-left p {
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-
-img.svg-flipped {
-  -moz-transform: scaleX(-1);
-  -o-transform: scaleX(-1);
-  -webkit-transform: scaleX(-1);
-  transform: scaleX(-1);
-  filter: FlipH;
-  -ms-filter: "FlipH";
-}
-
-.svg-scaled {
-  width: 100%;
-  height: auto;
-}
-
-/* cards */
-
-/* buttons on pink have white writing, this fixes */
-
-md-toolbar.md-default-theme.md-hue-1:not(.md-menu-toolbar).md-accent .md-ink-ripple,
-md-toolbar.md-hue-1:not(.md-menu-toolbar).md-accent .md-ink-ripple {
-  color: #000000;
-}
-
-.md-media-sm img {
-  width: 100%;
-}
-
-/* icon badges */
-
-.r2s-icon-badged {
-  position: relative;
-}
-.r2s-icon-badge {
-    font-family: 'Helvetica Neue';
-    display: block;
-    position: absolute;
-    width: 15px;
-    height: 15px;
-    top: 2px;
-    right: 2px;
-    text-align: center;
-    line-height: 15px;
-    font-size: 11px;
-    border-radius: 50%;
-}
-
-/* disabled challenge cards */
-
-md-card.r2s-challenge-disable md-card-title span.md-headline,
-md-card.r2s-challenge-disable md-card-title span.md-subhead {
-  /*color: #666666;*/
-}
-
-/* md-list dense */
-
-md-list-item.md-dense>div.md-button:first-child,
-.md-dense div.md-button {
-  padding: 0px;
-}
-
-md-list.md-dense md-list-item .md-list-item-inner>md-icon:first-child:not(.md-avatar-icon),
-md-list.md-dense md-list-item>md-icon:first-child:not(.md-avatar-icon) {
-  margin-left: 0px;
-  margin-right: 16px;
-}
-
-.md-dense p {
-  line-height: 20px;
-  margin: 0px 0px 0px 0px;
-}
-
-/* footer */
-
-footer h3 {
-
-}
-
-/* play */
-
-/* challenge cards */
-
-.r2s-challenge_preview md-card-title {
-  padding-bottom: 0px;
-}
-.r2s-challenge_preview md-card-content {
-  padding-bottom: 0px;
-}
-.r2s-play-dashboard md-card-title .md-headline {
-  font-size: 20px;
-}
-
-/* Dashboard */
-
-.r2s-play-dashboard-earth h2 {
-  margin: 0px;
-}
-
-/* Chart */
-
-.chart {
-  width: 100%;
-}
-
-/* forms */
-div.hint {
-  font-size: 12px;
-  line-height: 20px;
-  transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-  color: grey;
-}
-
-/* bug fixes */
-
-/* a dirty hack because the errors won't autohide */
-md-input-container .md-input-messages-animation .md-input-message-animation:not(.ng-animate) {
-  display: none;
-}
-md-input-container.md-input-invalid .md-input-messages-animation .md-input-message-animation:not(.ng-animate) {
-  display: block;
-}
-
-/* has no value */
-.md-errors-spacer {
-  display: none;
-}
-
-/* Temp styles I won't need later */
-.r2s-img-size-avatar {
-  width: 70px;
-}
-
-.r2s-icon-size-48 {
-  font-size: 48px;
-}
-
-.r2s-icon-size-72 {
-  font-size: 72px;
 }

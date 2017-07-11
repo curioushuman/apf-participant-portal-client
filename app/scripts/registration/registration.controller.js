@@ -9,6 +9,7 @@
     .controller('RegistrationController', RegistrationController);
 
   RegistrationController.$inject = [
+    '$routeParams',
     '$location',
     'layoutService',
     'actionService',
@@ -21,6 +22,7 @@
   ];
 
   function RegistrationController(
+    $routeParams,
     $location,
     layoutService,
     actionService,
@@ -33,8 +35,13 @@
   ) {
     var vm = this;
 
-
+    vm.actionLoading = true;
+    vm.formShow = false;
 
     vm.navigate = layoutService.navigate;
+
+    // let's attemt to obtain the action from the slug
+    console.log($routeParams);
+
   }
 })();

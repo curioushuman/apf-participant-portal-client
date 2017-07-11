@@ -11,7 +11,7 @@
   configFunction.$inject = ['$routeProvider'];
 
   function configFunction($routeProvider) {
-    $routeProvider.when('/', {
+    $routeProvider.when('/registration/:actionSlug', {
       templateUrl: 'scripts/registration/registration.view.html',
       controller: 'RegistrationController',
       controllerAs: 'vm'
