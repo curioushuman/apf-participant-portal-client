@@ -19,7 +19,8 @@
   ) {
 
     var service = {
-      navigate: navigate
+      navigate: navigate,
+      formatDate: formatDate
     };
 
     return service;
@@ -36,6 +37,15 @@
         $location.hash(hash);
         $anchorScroll();
       }
+    }
+
+    function formatDate(dateString) {
+      var DateFromString = new Date(dateString);
+      var formattedDate =
+        DateFromString.getDate() +
+        ' ' + months[DateFromString.getMonth()] +
+        ' ' + DateFromString.getFullYear();
+      return(formattedDate);
     }
   }
 })();

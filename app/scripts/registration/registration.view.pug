@@ -38,19 +38,11 @@ section
         md-content(layout-padding, md-colors="{background: 'default-primary-hue-2'}")
           div(hide, show-gt-sm)
             h1.md-display-2 {{ vm.action.Name }}
-            h2.md-display-1 keep the world healthy
+            h2.md-display-1(ng-show='vm.action.datesShow') {{ vm.action.startDate }} to {{ vm.action.finishDate }}
           div(hide-gt-sm)
             h1.md-display-1 {{ vm.action.Name }}
-            h2.md-headline keep the world healthy
-          p Kids and teachers across Australia are teaming up to help reduce our
-            |  collective carbon footprint, and inspire more active travellers.
-            |  By encouraging your class to walk, scoot, or cycle to and from
-            |  school we can make both our planet and your school a happier,
-            |  healthier place to be.
-          //- div(hide, show-gt-sm)
-          //-   h3.md-title Would you like to play?
-          //- div(hide-gt-sm)
-          //-   h3.md-title Would you like to play?
+            h2.md-headline(ng-show='vm.action.datesShow') {{ vm.action.startDate }} to {{ vm.action.finishDate }}
+          p {{ vm.action.Description__c }}
       span(hide, show-gt-xs, flex)
     div(
       flex-gt-xs='50',
@@ -61,10 +53,11 @@ section
     )
       img(
         ng-src='/images/APF-logo-main-2x.png',
-        alt='Asia Pacific Forum logo'
+        alt='Asia Pacific Forum logo',
+        hide
       )
     
-section(hide)
+section(ng-show='vm.actionLoaded')
   
   //- Content
   div.content
