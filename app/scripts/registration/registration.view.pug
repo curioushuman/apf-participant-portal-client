@@ -33,7 +33,7 @@ section
           h1.md-display-1 {{ vm.actionErrorMessage.title }}
           h2.md-headline {{ vm.actionErrorMessage.message }}
     
-    div(flex-gt-xs='50', flex-xs, layout='row', ng-show='vm.actionLoaded')
+    div(flex-gt-xs='100', flex-xs, layout='row', ng-show='vm.actionLoaded')
       div(flex-gt-xs='75', layout='column')
         md-content(layout-padding, md-colors="{background: 'default-primary-hue-2'}")
           div(hide, show-gt-sm)
@@ -45,6 +45,7 @@ section
           p {{ vm.action.Description__c }}
       span(hide, show-gt-xs, flex)
     div(
+      hide,
       flex-gt-xs='50',
       flex-xs,
       layout='row',
@@ -53,8 +54,7 @@ section
     )
       img(
         ng-src='/images/APF-logo-main-2x.png',
-        alt='Asia Pacific Forum logo',
-        hide
+        alt='Asia Pacific Forum logo'
       )
     
 section(ng-show='vm.actionLoaded')
@@ -64,12 +64,12 @@ section(ng-show='vm.actionLoaded')
 
     md-content(layout-padding, layout='row', layout-xs='column')
       
-      // Help text
+      //- Help text
       div(flex-xs, flex-gt-sm='33', layout='column')
         md-card
           md-card-title
             md-card-title-text.md-headline
-              | To register for this training
+              | To register for this course
           md-card-content
             md-list(ng-show='vm.action.registrationDateShow')
               md-list-item
@@ -78,33 +78,507 @@ section(ng-show='vm.actionLoaded')
                   p Registrations close 
                     strong {{ vm.action.registrationDate }}
             p {{ vm.action.Help_text__c }}
-
-      // Form
-      div(flex, layout='column')
+            
         md-card
-          md-card-header
-            md-card-header-text
-              span.md-display-1 Personal
-                a(name='personal')
-            md-card-avatar
-              md-icon.material-icons(md-colors="{background: 'default-accent-hue-1'}") done
-        md-card
-          md-card-header(md-colors="{background: 'default-accent-hue-1'}")
-            md-card-header-text
-              span.md-display-1 Personal
-                a(name='personal')
+          md-card-title
+            md-card-title-text.md-headline
+              | Selection criteria
           md-card-content
-            md-input-container.md-block(flex)
-              label First name
-              input(ng-model='vm.student.name', name='studentName', required)
-              div(ng-messages='beginForm.studentName.$error', role='alert')
-                div(ng-message='required')
-                  | We need to know who's playing the game
-          md-card-actions(layout='row', layout-align='end center')
-            md-button Previous
-            md-button Next
-        md-card(md-colors="{background: 'default-background-hue-3'}")
-          md-card-header
-            md-card-header-text
-              span.md-display-1 Personal
-                a(name='personal')
+            p {{ vm.action.Selection_criteria__c }}
+
+      //- Form
+      div(flex, layout='column')
+        form(name='pageForm', ng-submit='pageForm.$valid && vm.register()')
+          
+          //- Email section
+          a(name='email')
+          //- Disabled version
+          gz-disabled-form-section(
+            title='vm.emailSectionTitle',
+            ng-hide='vm.emailSectionActive || vm.emailSectionComplete'
+          )
+          //- Complete version
+          gz-complete-form-section(
+            title='vm.emailSectionTitle',
+            ng-show='vm.emailSectionComplete'
+          )
+          md-card(ng-show='vm.emailSectionActive')
+            md-card-header
+              md-card-avatar
+                img(
+                  ng-src='/images/APF-logo-footer-2x.png',
+                  alt='Asia Pacific Forum logo'
+                )
+              md-card-header-text
+                span.md-headline {{ vm.emailSectionTitle }}
+            md-card-content
+              p.intro(
+                layout='column'
+                layout-padding,
+                md-colors="{background: 'default-background-hue-2'}"
+              )
+                | The main form of communication for this training will be via 
+                | email. Please ensure you enter a valid email address that 
+                | you check often.
+              md-input-container.md-block(flex)
+                label Your email address
+                input(
+                  required,
+                  type='email',
+                  name='contactEmail',
+                  ng-model='vm.contact.Email',
+                  minlength='10',
+                  maxlength='155',
+                  ng-pattern="/^.+@.+\..+$/"
+                )
+                //- div.hint
+                //-   | Please enter an email address that is the most convenient
+                div(ng-messages='pageForm.contactEmail.$error', role='alert')
+                  div(ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']")
+                    | Your email must be between 10 and 155 characters long and look like an e-mail address.
+
+            md-card-actions(layout='row', layout-align='end center', layout-padding)
+              md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
+              md-button(
+                ng-click="vm.processEmail()",
+                ng-disabled="vm.emailSectionNextDisabled(pageForm)"
+              ) Next
+              
+          //- Personal section
+          a(name='personal')
+          //- Disabled version
+          gz-disabled-form-section(
+            title='vm.personalSectionTitle',
+            ng-hide='vm.personalSectionActive || vm.personalSectionComplete'
+          )
+          //- Complete version
+          gz-complete-form-section(
+            title='vm.personalSectionTitle',
+            ng-show='vm.personalSectionComplete'
+          )
+          md-card(ng-show='vm.personalSectionActive')
+            md-card-header
+              md-card-avatar
+                img(
+                  ng-src='/images/APF-logo-footer-2x.png',
+                  alt='Asia Pacific Forum logo'
+                )
+              md-card-header-text
+                span.md-headline  {{ vm.personalSectionTitle }}
+            md-card-content
+              //- section intro
+              //- p stuff
+              md-input-container.md-block(flex)
+                label First name
+                input(ng-model='vm.contact.FirstName', name='contactFirstName', required)
+                div(ng-messages='pageForm.contactFirstName.$error', role='alert')
+                  div(ng-message='required')
+                    | Please enter a first name
+              md-input-container.md-block(flex)
+                label Last name
+                input(ng-model='vm.contact.LastName', name='contactLastName', required)
+                div(ng-messages='pageForm.contactLastName.$error', role='alert')
+                  div(ng-message='required')
+                    | Please enter a last name
+              md-input-container.md-block(flex)
+                label Salutation
+                md-select(ng-model='vm.contact.Salutation', name='contactSalutation', required)
+                  md-option(ng-repeat='salutation in vm.salutations', value='{{ salutation }}')
+                    | {{ salutation }}
+                div(ng-messages='pageForm.contactSalutation.$error', role='alert')
+                  div(ng-message='required')
+                    | This field is required
+              md-input-container.md-block(flex)
+                label Gender
+                md-select(ng-model='vm.contact.Gender__c', name='contactGender', required)
+                  md-option(ng-repeat='gender in vm.gender', value='gender')
+                    | {{ gender }}
+                div(ng-messages='pageForm.contactGender.$error', role='alert')
+                  div(ng-message='required')
+                    | This field is required
+              md-input-container.md-block(flex)
+                label Dietary requirements
+                textarea(
+                  ng-model='vm.contact.Dietary_requirements__c',
+                  name='contactDietaryRequirements',
+                  md-maxlength='150',
+                  rows='5',
+                  md-select-on-focus
+                )
+                //- div.hint
+                //-   | Should we add some help text?
+                //- div(ng-messages='pageForm.contactDietaryRequirements.$error', role='alert')
+                //-   div(ng-message='required')
+                //-     | This field is required
+              md-input-container.md-block(flex)
+                label Accessibility requirements
+                textarea(
+                  ng-model='vm.contact.Accessibility_requirements__c',
+                  name='contactAccessibilityRequirements',
+                  md-maxlength='150',
+                  rows='5',
+                  md-select-on-focus
+                )
+                //- div.hint
+                //-   | Should we add some help text?
+                //- div(ng-messages='pageForm.contactAccessibilityRequirements.$error', role='alert')
+                //-   div(ng-message='required')
+                //-     | This field is required
+                      
+            md-card-actions(layout='row', layout-align='end center', layout-padding)
+              md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
+              md-button(
+                ng-click="vm.processPersonal()",
+                ng-disabled="vm.personalSectionNextDisabled(pageForm)"
+              ) Next
+          
+          //- Organisation section
+          a(name='organisation')
+          //- Disabled version
+          gz-disabled-form-section(
+            title='vm.organisationSectionTitle',
+            ng-hide='vm.organisationSectionActive || vm.organisationSectionComplete'
+          )
+          //- Complete version
+          gz-complete-form-section(
+            title='vm.organisationSectionTitle',
+            ng-show='vm.organisationSectionComplete'
+          )
+          md-card(ng-show='vm.organisationSectionActive')
+            md-card-header
+              md-card-avatar
+                img(
+                  ng-src='/images/APF-logo-footer-2x.png',
+                  alt='Asia Pacific Forum logo'
+                )
+              md-card-header-text
+                span.md-headline  {{ vm.organisationSectionTitle }}
+            md-card-content
+              //- section intro
+              //- p stuff
+              md-input-container.md-block(flex)
+                label Your National Human Rights Institution
+                md-select(ng-model='vm.affiliation.npe5__Organization__c', name='affiliationOrganisation', required)
+                  md-option(ng-repeat='nhri in vm.nhris', value='{{ nhri.Id }}')
+                    | {{ nhri.Name }}
+                div(ng-messages='pageForm.affiliationOrganisation.$error', role='alert')
+                  div(ng-message='required')
+                    | This field is required
+              p.question When did you start working at this organisation?
+              md-input-container.md-block(flex)
+                label Enter date
+                md-datepicker(ng-model='vm.contact.npe5__StartDate__c', name='affiliationStartDate', required)
+                div(ng-messages='pageForm.affiliationStartDate.$error', role='alert')
+                  div(ng-message='required')
+                    | This field is required
+              md-input-container.md-block(flex)
+                label Role
+                input(ng-model='vm.affiliation.npe5__Role__c', name='affiliationRole', required)
+                div(ng-messages='pageForm.affiliationRole.$error', role='alert')
+                  div(ng-message='required')
+                    | This field is required
+              md-input-container.md-block(flex)
+                label Department
+                input(ng-model='vm.affiliation.Department__c', name='affiliationDepartment', required)
+                div(ng-messages='pageForm.affiliationDepartment.$error', role='alert')
+                  div(ng-message='required')
+                    | This field is required
+                      
+            md-card-actions(layout='row', layout-align='end center', layout-padding)
+              md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
+              md-button(
+                ng-click="vm.processOrganisation()",
+                ng-disabled="vm.organisationSectionNextDisabled(pageForm)"
+              ) Next
+              
+          //- Contact details section
+          a(name='contact')
+          //- Disabled version
+          gz-disabled-form-section(
+            title='vm.contactSectionTitle',
+            ng-hide='vm.contactSectionActive || vm.contactSectionComplete'
+          )
+          //- Complete version
+          gz-complete-form-section(
+            title='vm.contactSectionTitle',
+            ng-show='vm.contactSectionComplete'
+          )
+          md-card(ng-show='vm.contactSectionActive')
+            md-card-header
+              md-card-avatar
+                img(
+                  ng-src='/images/APF-logo-footer-2x.png',
+                  alt='Asia Pacific Forum logo'
+                )
+              md-card-header-text
+                span.md-headline  {{ vm.contactSectionTitle }}
+            md-card-content
+              //- section intro
+              //- p stuff
+              md-input-container.md-block(flex)
+                label Your 
+                  strong work 
+                  | email address
+                input(
+                  required,
+                  type='email',
+                  name='contactWorkEmail',
+                  ng-model='vm.contact.npe01__WorkEmail__c',
+                  minlength='10',
+                  maxlength='155',
+                  ng-pattern="/^.+@.+\..+$/"
+                )
+                div.hint
+                  | If the email address you have entered above is not your 
+                  | work email, please enter it here
+                div(ng-messages='pageForm.contactEmail.$error', role='alert')
+                  div(ng-message-exp="['minlength', 'maxlength', 'pattern']")
+                    | Your email must be between 10 and 155 characters long and look like an e-mail address.
+              md-input-container.md-block(flex)
+                label Phone 
+                input(ng-model='vm.contact.Phone', name='contactPhone', required)
+                div(ng-messages='pageForm.contactPhone.$error', role='alert')
+                  div(ng-message='required')
+                    | This field is required
+              md-input-container.md-block(flex)
+                label Which phone number is this?
+                md-select(ng-model='vm.contact.npe01__PreferredPhone__c', name='contactPreferredPhone', required)
+                  md-option(ng-repeat='phoneTypes in vm.phoneTypes', value='{{ phoneType }}')
+                    | {{ phoneType }}
+                div.hint
+                  | Is it you work phone, mobile phone, home phone?
+                div(ng-messages='pageForm.contactPreferredPhone.$error', role='alert')
+                  div(ng-message='required')
+                    | This field is required
+              md-input-container.md-block(flex)
+                label Fax 
+                input(ng-model='vm.contact.Fax', name='contactFax')
+                //- div(ng-messages='pageForm.contactFax.$error', role='alert')
+                //-   div(ng-message='required')
+                //-     | This field is required
+              md-input-container.md-block(flex)
+                label Your nearest airport 
+                input(ng-model='vm.contact.Closest_airport__c', name='contactClosestAirport', required)
+                div.hint
+                  | If you attend the face to face component we'll need to know 
+                  | where to book your ticket.
+                div(ng-messages='pageForm.contactClosestAirport.$error', role='alert')
+                  div(ng-message='required')
+                    | This field is required
+                      
+            md-card-actions(layout='row', layout-align='end center', layout-padding)
+              md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
+              md-button(
+                ng-click="vm.processContact()",
+                ng-disabled="vm.contactSectionNextDisabled(pageForm)"
+              ) Next
+              
+          //- Experience and knowledge section
+          a(name='experience')
+          //- Disabled version
+          gz-disabled-form-section(
+            title='vm.experienceSectionTitle',
+            ng-hide='vm.experienceSectionActive || vm.experienceSectionComplete'
+          )
+          //- Complete version
+          gz-complete-form-section(
+            title='vm.experienceSectionTitle',
+            ng-show='vm.experienceSectionComplete'
+          )
+          md-card(ng-show='vm.experienceSectionActive')
+            md-card-header
+              md-card-avatar
+                img(
+                  ng-src='/images/APF-logo-footer-2x.png',
+                  alt='Asia Pacific Forum logo'
+                )
+              md-card-header-text
+                span.md-headline  {{ vm.experienceSectionTitle }}
+            md-card-content
+              //- section intro
+              //- p stuff
+              p.question Please provide details of any knowledge and experience 
+                | you have with issues related to this topic
+              md-input-container.md-block(flex)
+                textarea(
+                  ng-model='vm.participant.Prior_experience_with_action_topic__c',
+                  name='participantPriorExperienceTopic',
+                  md-maxlength='150',
+                  rows='3',
+                  md-select-on-focus,
+                  required
+                )
+                //- div.hint
+                //-   | Should we add some help text?
+                div(ng-messages='pageForm.participantPriorExperienceTopic.$error', role='alert')
+                  div(ng-message='required')
+                    | This field is required
+              p.intro(
+                layout='column'
+                layout-padding,
+                md-colors="{background: 'default-background-hue-2'}"
+              )
+                | To help us in tailoring the course to participants' needs 
+                | please rate abilities related to the following by 
+              p.question A self assessment question, need to loop them here 
+              md-slider-container.md-block(flex)
+                span 0
+                md-slider(
+                  ng-model='vm.responses[0].Score__c',
+                  name='responseScore0',
+                  required,
+                  flex,
+                  md-discrete,
+                  step='1',
+                  min='0',
+                  max='5',
+                  aria-label='Self assessment question title'
+                )
+                span 5
+              md-input-container.md-block(flex)
+                label Would you like to add any comments about this rating?
+                textarea(
+                  ng-model='vm.responses[0].Comments__c',
+                  name='responseComment0',
+                  md-maxlength='150',
+                  rows='2',
+                  md-select-on-focus
+                )
+                //- div.hint
+                //-   | Should we add some help text?
+                //- div(ng-messages='pageForm.participantPriorExperienceTopic.$error', role='alert')
+                //-   div(ng-message='required')
+                //-     | This field is required
+              p.intro(
+                layout='column'
+                layout-padding,
+                md-colors="{background: 'default-background-hue-2'}"
+              )
+                | Please rate your computer / IT skills and access:
+              p.question Ability to download files from the Internet
+              md-slider-container.md-block(flex)
+                span 0
+                md-slider(
+                  ng-model='vm.contact.IT_Skills_Ability_to_download_files__c',
+                  name='contactItDownloadFiles',
+                  required,
+                  flex,
+                  md-discrete,
+                  step='1',
+                  min='0',
+                  max='5',
+                  aria-label='Ability to download files from the Internet'
+                )
+                span 5
+              p.intro(
+                layout='column'
+                layout-padding,
+                md-colors="{background: 'default-background-hue-2'}"
+              )
+                | Please rate your English language competency
+              p.question Ability to read in English
+              md-slider-container.md-block(flex)
+                span 0
+                md-slider(
+                  ng-model='vm.contact.EN_Skills_Ability_to_read_in_English__c',
+                  name='contactEnRead',
+                  required,
+                  flex,
+                  md-discrete,
+                  step='1',
+                  min='0',
+                  max='5',
+                  aria-label='Ability to read in English'
+                )
+                span 5
+                      
+            md-card-actions(layout='row', layout-align='end center', layout-padding)
+              md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
+              md-button(
+                ng-click="vm.processExperience()",
+                ng-disabled="vm.experienceSectionNextDisabled(pageForm)"
+              ) Next
+              
+          //- Expectations and learning needs section
+          a(name='expectations')
+          //- Disabled version
+          gz-disabled-form-section(
+            title='vm.expectationsSectionTitle',
+            ng-hide='vm.expectationsSectionActive || vm.expectationsSectionComplete'
+          )
+          //- Complete version
+          gz-complete-form-section(
+            title='vm.expectationsSectionTitle',
+            ng-show='vm.expectationsSectionComplete'
+          )
+          md-card(ng-show='vm.expectationsSectionActive')
+            md-card-header
+              md-card-avatar
+                img(
+                  ng-src='/images/APF-logo-footer-2x.png',
+                  alt='Asia Pacific Forum logo'
+                )
+              md-card-header-text
+                span.md-headline  {{ vm.expectationsSectionTitle }}
+            md-card-content
+              //- section intro
+              //- p stuff
+              p.question What knowledge do you hope to gain through 
+                | participation in this course? In other words what would you 
+                | like to learn about? How could this knowledge benefit you 
+                | and the work you are doing?
+              md-input-container.md-block(flex)
+                textarea(
+                  ng-model='vm.participant.Knowledge_they_would_like_to_gain__c',
+                  name='participantKnowledgeGain',
+                  md-maxlength='150',
+                  rows='3',
+                  md-select-on-focus,
+                  required
+                )
+                //- div.hint
+                //-   | Should we add some help text?
+                div(ng-messages='pageForm.participantKnowledgeGain.$error', role='alert')
+                  div(ng-message='required')
+                    | This field is required
+              p.question What skills do you hope to gain through 
+                | participation in this course? In other words what would you 
+                | like to learn how to do? How could these skills benefit you 
+                | and the work you are doing?
+              md-input-container.md-block(flex)
+                textarea(
+                  ng-model='vm.participant.Skills_they_would_like_to_gain__c',
+                  name='participantSkillsGain',
+                  md-maxlength='150',
+                  rows='3',
+                  md-select-on-focus,
+                  required
+                )
+                //- div.hint
+                //-   | Should we add some help text?
+                div(ng-messages='pageForm.participantSkillsGain.$error', role='alert')
+                  div(ng-message='required')
+                    | This field is required
+              p.question Is there any additional information you would like to 
+                | add to your application?
+              md-input-container.md-block(flex)
+                textarea(
+                  ng-model='vm.participant.Additional_information__c',
+                  name='participantAdditionalInfo',
+                  md-maxlength='150',
+                  rows='3',
+                  md-select-on-focus,
+                  required
+                )
+                //- div.hint
+                //-   | Should we add some help text?
+                div(ng-messages='pageForm.participantAdditionalInfo.$error', role='alert')
+                  div(ng-message='required')
+                    | This field is required
+                      
+            md-card-actions(layout='row', layout-align='end center', layout-padding)
+              md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
+              md-button(
+                ng-click="vm.processExpectations()",
+                ng-disabled="vm.expectationsSectionNextDisabled(pageForm)"
+              ) Next

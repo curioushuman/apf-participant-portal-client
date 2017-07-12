@@ -33,3 +33,14 @@
   margin-top: 0px;
   margin-bottom: 15px;
 }
+
+/* form */
+
+p.intro {
+  font-size: 0.9em;
+}
+
+.hint, .question {
+  font-size: 0.9em;
+  color: #444444;
+}
