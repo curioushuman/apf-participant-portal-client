@@ -69,11 +69,15 @@ section(ng-show='vm.actionLoaded')
         md-card
           md-card-title
             md-card-title-text.md-headline
-              | More fun
+              | To register for this training
           md-card-content
-            p
-              | Kids love to move and have fun, but research shows they are not
-              |  getting enough of their daily dose. Active travel helps kids:
+            md-list(ng-show='vm.action.registrationDateShow')
+              md-list-item
+                md-icon.material-icons event
+                .md-list-item-text
+                  p Registrations close 
+                    strong {{ vm.action.registrationDate }}
+            p {{ vm.action.Help_text__c }}
 
       // Form
       div(flex, layout='column')

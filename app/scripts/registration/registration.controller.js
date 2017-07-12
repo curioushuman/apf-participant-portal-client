@@ -68,6 +68,14 @@
           vm.action.finishDate = layoutService.formatDate(vm.action.finishDate);
         }
 
+        // see if there is a due date
+        vm.action.registrationDateShow = false;
+        if (vm.action.Registrations_due_date__c !== null) {
+          vm.action.registrationDateShow = true;
+          vm.action.registrationDate =
+            layoutService.formatDate(vm.action.Registrations_due_date__c);
+        }
+
         // grab the training partner of the action
         console.log('Obtain training partner');
         console.log(vm.action.Training_partner__c);
