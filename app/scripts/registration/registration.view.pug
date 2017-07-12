@@ -11,23 +11,36 @@ section
       layout='row',
       layout-align='center center',
       layout-padding,
-      ng-show='vm.actionLoading'
+      ng-hide='vm.actionLoaded || vm.actionError'
     )
     
       md-progress-circular.md-background(
-        ng-show='vm.actionLoading',
         md-mode='indeterminate',
         md-diameter='100px'
       )
+      
+    div(
+      flex,
+      layout='column',
+      layout-padding,
+      ng-show='vm.actionError'
+    )
+      md-content(layout-padding, md-colors="{background: 'default-primary-hue-2'}")
+        div(hide, show-gt-sm)
+          h1.md-display-2 {{ vm.actionErrorMessage.title }}
+          h2.md-display-1 {{ vm.actionErrorMessage.message }}
+        div(hide-gt-sm)
+          h1.md-display-1 {{ vm.actionErrorMessage.title }}
+          h2.md-headline {{ vm.actionErrorMessage.message }}
     
-    div(flex-gt-xs='50', flex-xs, layout='row', ng-hide='vm.actionLoading')
+    div(flex-gt-xs='50', flex-xs, layout='row', ng-show='vm.actionLoaded')
       div(flex-gt-xs='75', layout='column')
         md-content(layout-padding, md-colors="{background: 'default-primary-hue-2'}")
           div(hide, show-gt-sm)
-            h1.md-display-2 Active travellers
+            h1.md-display-2 {{ vm.action.Name }}
             h2.md-display-1 keep the world healthy
           div(hide-gt-sm)
-            h1.md-display-1 Active travellers
+            h1.md-display-1 {{ vm.action.Name }}
             h2.md-headline keep the world healthy
           p Kids and teachers across Australia are teaming up to help reduce our
             |  collective carbon footprint, and inspire more active travellers.
@@ -44,7 +57,7 @@ section
       flex-xs,
       layout='row',
       layout-align='center center',
-      ng-hide='vm.actionLoading'
+      ng-show='vm.actionLoaded'
     )
       img(
         ng-src='/images/APF-logo-main-2x.png',

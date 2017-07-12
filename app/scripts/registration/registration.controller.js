@@ -35,10 +35,48 @@
   ) {
     var vm = this;
 
-    vm.actionLoading = true;
+    vm.navigate = layoutService.navigate;
+
+    vm.actionLoaded = false;
+    vm.actionError = false;
+    vm.actionErrorMessage = {};
     vm.formShow = false;
 
-    vm.navigate = layoutService.navigate;
+    vm.action = actionService.retrieve(
+      { slug: $routeParams.actionSlug },
+      function () {
+        console.log('retrieved');
+        console.log(vm.action);
+        vm.actionLoaded = true;
+
+        console.log('Obtain training partner');
+        console.log(vm.action.Training_partner__c);
+        vm.action.trainingPartnerAccount = accountService.retrieve(
+          { accountid: vm.action.Training_partner__c },
+          function () {
+            console.log('Found the training partner');
+          },
+          function (err) {
+            console.log('Training partner could not be found');
+          }
+        );
+      },
+      function (err) {
+        console.log(err);
+        if (err.status = 404) {
+          vm.actionErrorMessage = {
+            title: 'No action found',
+            message: 'Please check URL'
+          };
+        } else {
+          vm.actionErrorMessage = {
+            title: 'Error at server',
+            message: 'Please reload the page'
+          };
+        }
+        vm.actionError = true;
+      }
+    );
 
     // let's attemt to obtain the action from the slug
     console.log($routeParams);
