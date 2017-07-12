@@ -12,6 +12,8 @@
     '$routeParams',
     '$scope',
     '$location',
+    '$filter',
+    '$mdDateLocale',
     'layoutService',
     'actionService',
     'contactService',
@@ -26,6 +28,8 @@
     $routeParams,
     $scope,
     $location,
+    $filter,
+    $mdDateLocale,
     layoutService,
     actionService,
     contactService,
@@ -46,6 +50,11 @@
     vm.actionErrorMessage = {};
 
     vm.register = register;
+
+    // date stuff
+    $mdDateLocale.formatDate = function(date) {
+      return $filter('date')(date, "dd/MM/yyyy");
+    };
 
     // find the action based on the slug
     vm.action = actionService.retrieve(
@@ -122,6 +131,7 @@
     vm.contact = {
       Email: ''
     };
+    vm.contactExists = false;
     vm.emailSectionActive = true;
     vm.emailSectionComplete = false;
     vm.emailSectionTitle = 'Email';
@@ -133,7 +143,7 @@
       if (vm.contact.Email === '') {
         return true;
       }
-      if (pageForm.$invalid) {
+      if (pageForm.contactEmail.$invalid) {
         return true;
       }
       return false;
@@ -145,27 +155,26 @@
       console.log(vm.contact.Email);
       vm.working = true;
 
-      // vm.contact = contactService.retrieve(
-      //   { email: vm.contact.Email },
-      //   function () {
-      //
-      //   },
-      //   function (err) {
-      //
-      //   }
-      // );
+      vm.contact = contactService.retrieve(
+        { email: vm.contact.Email },
+        function () {
+          vm.contactExists = true;
+          console.log('Contact found');
+          vm.prePersonal();
+        },
+        function (err) {
+          console.log('There was an error retrieving the contact');
+          console.log(err);
 
-      // see if a contact exists with this email
-        // if so populate the form
-          // ask the participant to check the values are up to date
-      // show the personal form either way
-
-      vm.prePersonal();
+          vm.prePersonal();
+        }
+      );
     }
 
     // Personal section
-    vm.personalSectionActive = true;
+    vm.personalSectionActive = false;
     vm.personalSectionComplete = false;
+    vm.personalSectionInvalid = false;
     vm.personalSectionTitle = 'Personal';
     vm.prePersonal = prePersonal;
     vm.processPersonal = processPersonal;
@@ -175,21 +184,33 @@
       if (vm.working) {
         return true;
       }
-      if (pageForm.$invalid) {
-        return true;
-      }
       return false;
     };
 
     // pre
     function prePersonal() {
-
+      vm.working = false;
+      vm.emailSectionActive = false;
+      vm.emailSectionComplete = true;
+      vm.personalSectionActive = true;
     }
 
     // process
-    function processPersonal() {
+    function processPersonal(pageForm) {
+
+      if (
+        pageForm.contactFirstName.$invalid
+        || pageForm.contactLastName.$invalid
+        || pageForm.contactSalutation.$invalid
+        || pageForm.contactGender.$invalid
+      ) {
+        vm.personalSectionInvalid = true;
+        return;
+      }
 
       vm.working = true;
+
+      // save the contact in here
 
       vm.preOrganisation();
     }
@@ -198,12 +219,13 @@
     // TODO - actually get the data from somewhere
     vm.nhris = [
       {
-        Id: 'balls',
-        Name: 'Balls'
+        Id: 'nhri',
+        Name: 'An NHRI and stuff'
       }
     ];
-    vm.organisationSectionActive = true;
+    vm.organisationSectionActive = false;
     vm.organisationSectionComplete = false;
+    vm.organisationSectionInvalid = false;
     vm.organisationSectionTitle = 'Organisation';
     vm.preOrganisation = preOrganisation;
     vm.processOrganisation = processOrganisation;
@@ -211,27 +233,40 @@
       if (vm.working) {
         return true;
       }
-      if (pageForm.$invalid) {
-        return true;
-      }
       return false;
     };
 
     // pre
     function preOrganisation() {
+      vm.working = false;
+      vm.personalSectionActive = false;
+      vm.personalSectionComplete = true;
+      vm.organisationSectionActive = true;
+      layout.navigate(null,'organisation');
+
       // grab the list of NHRIs
       // also see if there is an affiliation for this contact (if one was found)
         // only if a contact is found (determined by existence of contact.Id)
     }
 
     // process
-    function processOrganisation() {
+    function processOrganisation(pageForm) {
 
-      // when creating the organisation you'll need to
+      if (
+        pageForm.affiliationOrganisation.$invalid
+        || pageForm.affiliationStartDate.$invalid
+        || pageForm.affiliationRole.$invalid
+        || pageForm.affiliationDepartment.$invalid
+      ) {
+        vm.organisationSectionInvalid = true;
+        return;
+      }
+
+      // when creating the affiliation you'll need to
       // use the contact Id that has already been created (or found)
 
       // you'll also need to update the role / department on the contact
-      // as well as the affiliate
+      // as well as the affiliation
 
       vm.working = true;
 
@@ -241,8 +276,9 @@
 
     // Contact section
     vm.phoneTypes = ['Work', 'Mobile', 'Home', 'Other'];
-    vm.contactSectionActive = true;
+    vm.contactSectionActive = false;
     vm.contactSectionComplete = false;
+    vm.contactSectionInvalid = false;
     vm.contactSectionTitle = 'Contact details';
     vm.preContact = preContact;
     vm.processContact = processContact;
@@ -250,19 +286,29 @@
       if (vm.working) {
         return true;
       }
-      if (pageForm.$invalid) {
-        return true;
-      }
       return false;
     };
 
     // pre
     function preContact() {
-
+      vm.working = false;
+      vm.organisationSectionActive = false;
+      vm.organisationSectionComplete = true;
+      vm.contactSectionActive = true;
+      layout.navigate(null,'contact');
     }
 
     // process
-    function processContact() {
+    function processContact(pageForm) {
+
+      if (
+        pageForm.contactPhone.$invalid
+        || pageForm.contactPreferredPhone.$invalid
+        || pageForm.contactClosestAirport.$invalid
+      ) {
+        vm.contactSectionInvalid = true;
+        return;
+      }
 
       // do the funky email stuff
         // i.e. if they enter an email, we assume the previous email is home
@@ -282,8 +328,9 @@
 
     // Experience section
     vm.responses = [];
-    vm.experienceSectionActive = true;
+    vm.experienceSectionActive = false;
     vm.experienceSectionComplete = false;
+    vm.experienceSectionInvalid = false;
     vm.experienceSectionTitle = 'Experience';
     vm.preExperience = preExperience;
     vm.processExperience = processExperience;
@@ -291,21 +338,33 @@
       if (vm.working) {
         return true;
       }
-      if (pageForm.$invalid) {
-        return true;
-      }
       return false;
     };
 
     // pre
     function preExperience() {
-
+      vm.working = false;
+      vm.contactSectionActive = false;
+      vm.contactSectionComplete = true;
+      vm.experienceSectionActive = true;
+      layout.navigate(null,'experience');
       // grab the self assessment questions for this action
-
     }
 
     // process
-    function processExperience() {
+    function processExperience(pageForm) {
+
+      if (
+        pageForm.participantPriorExperienceTopic.$invalid
+      ) {
+        vm.experienceSectionInvalid = true;
+        return;
+      }
+
+      // process the questions
+        // and save the responses
+      // save for the contact as well
+      // and for the participant I believe
 
       vm.working = true;
 
@@ -314,8 +373,9 @@
     }
 
     // Expectations section
-    vm.expectationsSectionActive = true;
+    vm.expectationsSectionActive = false;
     vm.expectationsSectionComplete = false;
+    vm.expectationsSectionInvalid = false;
     vm.expectationsSectionTitle = 'Expectations';
     vm.preExpectations = preExpectations;
     vm.processExpectations = processExpectations;
@@ -323,19 +383,30 @@
       if (vm.working) {
         return true;
       }
-      if (pageForm.$invalid) {
-        return true;
-      }
       return false;
     };
 
     // pre
     function preExpectations() {
-
+      vm.working = false;
+      vm.experienceSectionActive = false;
+      vm.experienceSectionComplete = true;
+      vm.expectationsSectionActive = true;
+      layout.navigate(null,'expectations');
     }
 
     // process
-    function processExpectations() {
+    function processExpectations(pageForm) {
+
+      if (
+        pageForm.participantKnowledgeGain.$invalid
+        || pageForm.participantSkillsGain.$invalid
+      ) {
+        vm.expectationsSectionInvalid = true;
+        return;
+      }
+
+      // save the participant
 
       vm.working = true;
 

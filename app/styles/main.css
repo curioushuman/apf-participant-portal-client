@@ -39,6 +39,9 @@
 p.intro {
   font-size: 0.9em;
 }
+p.error {
+  font-size: 0.9em;
+}
 
 .hint, .question {
   font-size: 0.9em;

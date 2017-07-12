@@ -65,7 +65,7 @@ section(ng-show='vm.actionLoaded')
     md-content(layout-padding, layout='row', layout-xs='column')
       
       //- Help text
-      div(flex-xs, flex-gt-sm='33', layout='column')
+      div(flex-xs, flex-gt-sm='50', layout='column')
         md-card
           md-card-title
             md-card-title-text.md-headline
@@ -167,7 +167,14 @@ section(ng-show='vm.actionLoaded')
                 span.md-headline  {{ vm.personalSectionTitle }}
             md-card-content
               //- section intro
-              //- p stuff
+              p.intro(
+                layout='column'
+                layout-padding,
+                md-colors="{background: 'default-background-hue-2'}",
+                ng-show='vm.contactExists'
+              )
+                | We have found you in the database. Please check to ensure 
+                | the information we have is up to date.
               md-input-container.md-block(flex)
                 label First name
                 input(ng-model='vm.contact.FirstName', name='contactFirstName', required)
@@ -191,7 +198,7 @@ section(ng-show='vm.actionLoaded')
               md-input-container.md-block(flex)
                 label Gender
                 md-select(ng-model='vm.contact.Gender__c', name='contactGender', required)
-                  md-option(ng-repeat='gender in vm.gender', value='gender')
+                  md-option(ng-repeat='gender in vm.genders', value='{{ gender }}')
                     | {{ gender }}
                 div(ng-messages='pageForm.contactGender.$error', role='alert')
                   div(ng-message='required')
@@ -202,7 +209,7 @@ section(ng-show='vm.actionLoaded')
                   ng-model='vm.contact.Dietary_requirements__c',
                   name='contactDietaryRequirements',
                   md-maxlength='150',
-                  rows='5',
+                  rows='3',
                   md-select-on-focus
                 )
                 //- div.hint
@@ -216,7 +223,7 @@ section(ng-show='vm.actionLoaded')
                   ng-model='vm.contact.Accessibility_requirements__c',
                   name='contactAccessibilityRequirements',
                   md-maxlength='150',
-                  rows='5',
+                  rows='3',
                   md-select-on-focus
                 )
                 //- div.hint
@@ -224,11 +231,18 @@ section(ng-show='vm.actionLoaded')
                 //- div(ng-messages='pageForm.contactAccessibilityRequirements.$error', role='alert')
                 //-   div(ng-message='required')
                 //-     | This field is required
+              p.error(
+                layout='column'
+                layout-padding,
+                md-colors="{background: 'default-warn'}",
+                ng-show='vm.personalSectionInvalid'
+              )
+                | Please make sure all required fields have been completed.
                       
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
               md-button(
-                ng-click="vm.processPersonal()",
+                ng-click="vm.processPersonal(pageForm)",
                 ng-disabled="vm.personalSectionNextDisabled(pageForm)"
               ) Next
           
@@ -267,10 +281,16 @@ section(ng-show='vm.actionLoaded')
               p.question When did you start working at this organisation?
               md-input-container.md-block(flex)
                 label Enter date
-                md-datepicker(ng-model='vm.contact.npe5__StartDate__c', name='affiliationStartDate', required)
+                md-datepicker(
+                  ng-model='vm.contact.npe5__StartDate__c',
+                  name='affiliationStartDate',
+                  required,
+                  md-open-on-focus,
+                  md-placeholder='Enter date'
+                )
                 div(ng-messages='pageForm.affiliationStartDate.$error', role='alert')
                   div(ng-message='required')
-                    | This field is required
+                    | Please enter a valid date
               md-input-container.md-block(flex)
                 label Role
                 input(ng-model='vm.affiliation.npe5__Role__c', name='affiliationRole', required)
@@ -283,11 +303,18 @@ section(ng-show='vm.actionLoaded')
                 div(ng-messages='pageForm.affiliationDepartment.$error', role='alert')
                   div(ng-message='required')
                     | This field is required
+              p.error(
+                layout='column'
+                layout-padding,
+                md-colors="{background: 'default-warn'}",
+                ng-show='vm.organisationSectionInvalid'
+              )
+                | Please make sure all required fields have been completed.
                       
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
               md-button(
-                ng-click="vm.processOrganisation()",
+                ng-click="vm.processOrganisation(pageForm)",
                 ng-disabled="vm.organisationSectionNextDisabled(pageForm)"
               ) Next
               
@@ -331,7 +358,7 @@ section(ng-show='vm.actionLoaded')
                 div.hint
                   | If the email address you have entered above is not your 
                   | work email, please enter it here
-                div(ng-messages='pageForm.contactEmail.$error', role='alert')
+                div(ng-messages='pageForm.contactWorkEmail.$error', role='alert')
                   div(ng-message-exp="['minlength', 'maxlength', 'pattern']")
                     | Your email must be between 10 and 155 characters long and look like an e-mail address.
               md-input-container.md-block(flex)
@@ -343,10 +370,10 @@ section(ng-show='vm.actionLoaded')
               md-input-container.md-block(flex)
                 label Which phone number is this?
                 md-select(ng-model='vm.contact.npe01__PreferredPhone__c', name='contactPreferredPhone', required)
-                  md-option(ng-repeat='phoneTypes in vm.phoneTypes', value='{{ phoneType }}')
+                  md-option(ng-repeat='phoneType in vm.phoneTypes', value='{{ phoneType }}')
                     | {{ phoneType }}
-                div.hint
-                  | Is it you work phone, mobile phone, home phone?
+                //- div.hint
+                //-   | Is it you work phone, mobile phone, home phone?
                 div(ng-messages='pageForm.contactPreferredPhone.$error', role='alert')
                   div(ng-message='required')
                     | This field is required
@@ -365,11 +392,18 @@ section(ng-show='vm.actionLoaded')
                 div(ng-messages='pageForm.contactClosestAirport.$error', role='alert')
                   div(ng-message='required')
                     | This field is required
+              p.error(
+                layout='column'
+                layout-padding,
+                md-colors="{background: 'default-warn'}",
+                ng-show='vm.contactSectionInvalid'
+              )
+                | Please make sure all required fields have been completed.
                       
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
               md-button(
-                ng-click="vm.processContact()",
+                ng-click="vm.processContact(pageForm)",
                 ng-disabled="vm.contactSectionNextDisabled(pageForm)"
               ) Next
               
@@ -441,7 +475,7 @@ section(ng-show='vm.actionLoaded')
                   ng-model='vm.responses[0].Comments__c',
                   name='responseComment0',
                   md-maxlength='150',
-                  rows='2',
+                  rows='3',
                   md-select-on-focus
                 )
                 //- div.hint
@@ -491,11 +525,18 @@ section(ng-show='vm.actionLoaded')
                   aria-label='Ability to read in English'
                 )
                 span 5
+              p.error(
+                layout='column'
+                layout-padding,
+                md-colors="{background: 'default-warn'}",
+                ng-show='vm.experienceSectionInvalid'
+              )
+                | Please make sure all required fields have been completed.
                       
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
               md-button(
-                ng-click="vm.processExperience()",
+                ng-click="vm.processExperience(pageForm)",
                 ng-disabled="vm.experienceSectionNextDisabled(pageForm)"
               ) Next
               
@@ -567,18 +608,24 @@ section(ng-show='vm.actionLoaded')
                   name='participantAdditionalInfo',
                   md-maxlength='150',
                   rows='3',
-                  md-select-on-focus,
-                  required
+                  md-select-on-focus
                 )
                 //- div.hint
                 //-   | Should we add some help text?
-                div(ng-messages='pageForm.participantAdditionalInfo.$error', role='alert')
-                  div(ng-message='required')
-                    | This field is required
+                //- div(ng-messages='pageForm.participantAdditionalInfo.$error', role='alert')
+                //-   div(ng-message='required')
+                //-     | This field is required
+              p.error(
+                layout='column'
+                layout-padding,
+                md-colors="{background: 'default-warn'}",
+                ng-show='vm.expectationsSectionInvalid'
+              )
+                | Please make sure all required fields have been completed.
                       
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
               md-button(
-                ng-click="vm.processExpectations()",
+                ng-click="vm.processExpectations(pageForm)",
                 ng-disabled="vm.expectationsSectionNextDisabled(pageForm)"
               ) Next
