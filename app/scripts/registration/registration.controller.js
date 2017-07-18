@@ -41,6 +41,9 @@
   ) {
     var vm = this;
 
+    // debugging / developing
+    vm.openAll = true;
+
     vm.navigate = layoutService.navigate;
 
     vm.working = false;
@@ -179,7 +182,7 @@
     vm.prePersonal = prePersonal;
     vm.processPersonal = processPersonal;
     vm.salutations = ['Mr.', 'Ms.', 'Mrs.', 'Dr.', 'Prof.'];
-    vm.genders = ['Male', 'Female', 'Prefer not to disclose'];
+    vm.genders = ['Male', 'Female', 'Other', 'Prefer not to disclose'];
     vm.personalSectionNextDisabled = function(pageForm) {
       if (vm.working) {
         return true;

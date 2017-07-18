@@ -95,14 +95,14 @@ section(ng-show='vm.actionLoaded')
           //- Disabled version
           gz-disabled-form-section(
             title='vm.emailSectionTitle',
-            ng-hide='vm.emailSectionActive || vm.emailSectionComplete'
+            ng-hide='vm.openAll || vm.emailSectionActive || vm.emailSectionComplete'
           )
           //- Complete version
           gz-complete-form-section(
             title='vm.emailSectionTitle',
             ng-show='vm.emailSectionComplete'
           )
-          md-card(ng-show='vm.emailSectionActive')
+          md-card(ng-show='vm.openAll || vm.emailSectionActive')
             md-card-header
               md-card-avatar
                 img(
@@ -149,14 +149,14 @@ section(ng-show='vm.actionLoaded')
           //- Disabled version
           gz-disabled-form-section(
             title='vm.personalSectionTitle',
-            ng-hide='vm.personalSectionActive || vm.personalSectionComplete'
+            ng-hide='vm.openAll || vm.personalSectionActive || vm.personalSectionComplete'
           )
           //- Complete version
           gz-complete-form-section(
             title='vm.personalSectionTitle',
             ng-show='vm.personalSectionComplete'
           )
-          md-card(ng-show='vm.personalSectionActive')
+          md-card(ng-show='vm.openAll || vm.personalSectionActive')
             md-card-header
               md-card-avatar
                 img(
@@ -251,14 +251,14 @@ section(ng-show='vm.actionLoaded')
           //- Disabled version
           gz-disabled-form-section(
             title='vm.organisationSectionTitle',
-            ng-hide='vm.organisationSectionActive || vm.organisationSectionComplete'
+            ng-hide='vm.openAll || vm.organisationSectionActive || vm.organisationSectionComplete'
           )
           //- Complete version
           gz-complete-form-section(
             title='vm.organisationSectionTitle',
             ng-show='vm.organisationSectionComplete'
           )
-          md-card(ng-show='vm.organisationSectionActive')
+          md-card(ng-show='vm.openAll || vm.organisationSectionActive')
             md-card-header
               md-card-avatar
                 img(
@@ -323,14 +323,14 @@ section(ng-show='vm.actionLoaded')
           //- Disabled version
           gz-disabled-form-section(
             title='vm.contactSectionTitle',
-            ng-hide='vm.contactSectionActive || vm.contactSectionComplete'
+            ng-hide='vm.openAll || vm.contactSectionActive || vm.contactSectionComplete'
           )
           //- Complete version
           gz-complete-form-section(
             title='vm.contactSectionTitle',
             ng-show='vm.contactSectionComplete'
           )
-          md-card(ng-show='vm.contactSectionActive')
+          md-card(ng-show='vm.openAll || vm.contactSectionActive')
             md-card-header
               md-card-avatar
                 img(
@@ -412,14 +412,14 @@ section(ng-show='vm.actionLoaded')
           //- Disabled version
           gz-disabled-form-section(
             title='vm.experienceSectionTitle',
-            ng-hide='vm.experienceSectionActive || vm.experienceSectionComplete'
+            ng-hide='vm.openAll || vm.experienceSectionActive || vm.experienceSectionComplete'
           )
           //- Complete version
           gz-complete-form-section(
             title='vm.experienceSectionTitle',
             ng-show='vm.experienceSectionComplete'
           )
-          md-card(ng-show='vm.experienceSectionActive')
+          md-card(ng-show='vm.openAll || vm.experienceSectionActive')
             md-card-header
               md-card-avatar
                 img(
@@ -453,78 +453,91 @@ section(ng-show='vm.actionLoaded')
                 md-colors="{background: 'default-background-hue-2'}"
               )
                 | To help us in tailoring the course to participants' needs 
-                | please rate abilities related to the following by 
-              p.question A self assessment question, need to loop them here 
-              md-slider-container.md-block(flex)
-                span 0
-                md-slider(
-                  ng-model='vm.responses[0].Score__c',
-                  name='responseScore0',
-                  required,
-                  flex,
-                  md-discrete,
-                  step='1',
-                  min='0',
-                  max='5',
-                  aria-label='Self assessment question title'
-                )
-                span 5
-              md-input-container.md-block(flex)
-                label Would you like to add any comments about this rating?
-                textarea(
-                  ng-model='vm.responses[0].Comments__c',
-                  name='responseComment0',
-                  md-maxlength='150',
-                  rows='3',
-                  md-select-on-focus
-                )
-                //- div.hint
-                //-   | Should we add some help text?
-                //- div(ng-messages='pageForm.participantPriorExperienceTopic.$error', role='alert')
-                //-   div(ng-message='required')
-                //-     | This field is required
+                | please 
+                | rate your abilities and knowledge related to the 
+                | following on a scale of 1-5. 
+                | Where 1 indicates you have little 
+                | to no ability or knowledge and 5 indicates great ability or 
+                | knowledge on the topic. If you would like to comment on the 
+                | topic please click on the comment button.
+              gz-response-form-input(
+                question='vm.experienceSectionTitle',
+                index='1'
+              )
+              gz-response-form-input(
+                question='vm.experienceSectionTitle',
+                index='1'
+              )
+              gz-response-form-input(
+                question='vm.experienceSectionTitle',
+                index='1'
+              )
+              gz-response-form-input(
+                question='vm.experienceSectionTitle',
+                index='1'
+              )
               p.intro(
                 layout='column'
                 layout-padding,
                 md-colors="{background: 'default-background-hue-2'}"
               )
                 | Please rate your computer / IT skills and access:
-              p.question Ability to download files from the Internet
-              md-slider-container.md-block(flex)
-                span 0
-                md-slider(
-                  ng-model='vm.contact.IT_Skills_Ability_to_download_files__c',
-                  name='contactItDownloadFiles',
-                  required,
-                  flex,
-                  md-discrete,
-                  step='1',
-                  min='0',
-                  max='5',
-                  aria-label='Ability to download files from the Internet'
-                )
-                span 5
+              gz-slider-form-input(
+                question='vm.experienceSectionTitle',
+                model='vm.contact.IT_Skills_Ability_to_download_files__c',
+                name='contactItDownloadFiles'
+              )
+              gz-slider-form-input(
+                question='vm.experienceSectionTitle',
+                model='vm.contact.IT_Skills_Ability_to_download_files__c',
+                name='contactItDownloadFiles'
+              )
+              gz-slider-form-input(
+                question='vm.experienceSectionTitle',
+                model='vm.contact.IT_Skills_Ability_to_download_files__c',
+                name='contactItDownloadFiles'
+              )
+              gz-slider-form-input(
+                question='vm.experienceSectionTitle',
+                model='vm.contact.IT_Skills_Ability_to_download_files__c',
+                name='contactItDownloadFiles'
+              )
+              gz-slider-form-input(
+                question='vm.experienceSectionTitle',
+                model='vm.contact.IT_Skills_Ability_to_download_files__c',
+                name='contactItDownloadFiles'
+              )
               p.intro(
                 layout='column'
                 layout-padding,
                 md-colors="{background: 'default-background-hue-2'}"
               )
                 | Please rate your English language competency
-              p.question Ability to read in English
-              md-slider-container.md-block(flex)
-                span 0
-                md-slider(
-                  ng-model='vm.contact.EN_Skills_Ability_to_read_in_English__c',
-                  name='contactEnRead',
-                  required,
-                  flex,
-                  md-discrete,
-                  step='1',
-                  min='0',
-                  max='5',
-                  aria-label='Ability to read in English'
-                )
-                span 5
+              gz-slider-form-input(
+                question='Ability to read in English',
+                model='vm.contact.EN_Skills_Ability_to_read_in_English__c',
+                name='contactEnRead'
+              )
+              gz-slider-form-input(
+                question='Ability to read in English',
+                model='vm.contact.EN_Skills_Ability_to_read_in_English__c',
+                name='contactEnRead'
+              )
+              gz-slider-form-input(
+                question='Ability to read in English',
+                model='vm.contact.EN_Skills_Ability_to_read_in_English__c',
+                name='contactEnRead'
+              )
+              gz-slider-form-input(
+                question='Ability to read in English',
+                model='vm.contact.EN_Skills_Ability_to_read_in_English__c',
+                name='contactEnRead'
+              )
+              gz-slider-form-input(
+                question='Ability to read in English',
+                model='vm.contact.EN_Skills_Ability_to_read_in_English__c',
+                name='contactEnRead'
+              )
               p.error(
                 layout='column'
                 layout-padding,
@@ -545,14 +558,14 @@ section(ng-show='vm.actionLoaded')
           //- Disabled version
           gz-disabled-form-section(
             title='vm.expectationsSectionTitle',
-            ng-hide='vm.expectationsSectionActive || vm.expectationsSectionComplete'
+            ng-hide='vm.openAll || vm.expectationsSectionActive || vm.expectationsSectionComplete'
           )
           //- Complete version
           gz-complete-form-section(
             title='vm.expectationsSectionTitle',
             ng-show='vm.expectationsSectionComplete'
           )
-          md-card(ng-show='vm.expectationsSectionActive')
+          md-card(ng-show='vm.openAll || vm.expectationsSectionActive')
             md-card-header
               md-card-avatar
                 img(

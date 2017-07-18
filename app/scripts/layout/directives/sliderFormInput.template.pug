@@ -1,0 +1,14 @@
+p.question {{ vm.question }}
+md-slider-container.md-block(flex)
+  span 1
+  md-slider(
+    ng-model='vm.model',
+    name='{{ vm.name }}',
+    flex,
+    md-discrete,
+    step='1',
+    min='1',
+    max='5',
+    aria-label='{{ vm.question }}'
+  )
+  span 5

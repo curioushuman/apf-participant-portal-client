@@ -47,3 +47,8 @@ p.error {
   font-size: 0.9em;
   color: #444444;
 }
+
+/* footer */
+footer {
+  display: none;
+}
