@@ -95,14 +95,15 @@ section(ng-show='vm.actionLoaded')
           //- Disabled version
           gz-disabled-form-section(
             title='vm.emailSectionTitle',
-            ng-hide='vm.openAll || vm.emailSectionActive || vm.emailSectionComplete'
+            ng-hide="vm.openAll || vm.sectionActive === 'email' || vm.emailSectionStatus === 'complete'"
           )
           //- Complete version
           gz-complete-form-section(
             title='vm.emailSectionTitle',
-            ng-show='vm.emailSectionComplete'
+            edit='vm.editEmail',
+            ng-show="vm.emailSectionStatus === 'complete' && vm.sectionActive !== 'email'"
           )
-          md-card(ng-show='vm.openAll || vm.emailSectionActive')
+          md-card(ng-show="vm.openAll || vm.sectionActive === 'email'")
             md-card-header
               md-card-avatar
                 img(
@@ -136,27 +137,37 @@ section(ng-show='vm.actionLoaded')
                 div(ng-messages='pageForm.contactEmail.$error', role='alert')
                   div(ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']")
                     | Your email must be between 10 and 155 characters long and look like an e-mail address.
+                    
+            p.error(
+              layout='column'
+              layout-padding,
+              md-colors="{background: 'default-warn'}",
+              ng-show='vm.emailSectionError'
+            )
+              | There was an error reaching Salesforce. Please refresh the page and try again.
 
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
               md-button(
                 ng-click="vm.processEmail()",
                 ng-disabled="vm.emailSectionNextDisabled(pageForm)"
-              ) Next
+              ) 
+                | Next
+                md-icon.md-material-icons navigate_next
               
           //- Personal section
           a(name='personal')
           //- Disabled version
           gz-disabled-form-section(
             title='vm.personalSectionTitle',
-            ng-hide='vm.openAll || vm.personalSectionActive || vm.personalSectionComplete'
+            ng-hide="vm.openAll || vm.sectionActive === 'personal' || vm.personalSectionStatus === 'complete'"
           )
           //- Complete version
           gz-complete-form-section(
             title='vm.personalSectionTitle',
-            ng-show='vm.personalSectionComplete'
+            ng-show="vm.personalSectionStatus === 'complete' && vm.sectionActive !== 'personal'"
           )
-          md-card(ng-show='vm.openAll || vm.personalSectionActive')
+          md-card(ng-show="vm.openAll || vm.sectionActive === 'personal'")
             md-card-header
               md-card-avatar
                 img(
@@ -244,21 +255,29 @@ section(ng-show='vm.actionLoaded')
               md-button(
                 ng-click="vm.processPersonal(pageForm)",
                 ng-disabled="vm.personalSectionNextDisabled(pageForm)"
-              ) Next
+              ) 
+                md-icon.md-material-icons navigate_before
+                | Previous
+              md-button(
+                ng-click="vm.processPersonal(pageForm)",
+                ng-disabled="vm.personalSectionNextDisabled(pageForm)"
+              ) 
+                | Next
+                md-icon.md-material-icons navigate_next
           
           //- Organisation section
           a(name='organisation')
           //- Disabled version
           gz-disabled-form-section(
             title='vm.organisationSectionTitle',
-            ng-hide='vm.openAll || vm.organisationSectionActive || vm.organisationSectionComplete'
+            ng-hide="vm.openAll || vm.sectionActive === 'organisation' || vm.organisationSectionStatus === 'complete'"
           )
           //- Complete version
           gz-complete-form-section(
             title='vm.organisationSectionTitle',
-            ng-show='vm.organisationSectionComplete'
+            ng-show="vm.organisationSectionStatus === 'complete' && vm.sectionActive !== 'organisation'"
           )
-          md-card(ng-show='vm.openAll || vm.organisationSectionActive')
+          md-card(ng-show="vm.openAll || vm.sectionActive === 'organisation'")
             md-card-header
               md-card-avatar
                 img(
@@ -323,14 +342,14 @@ section(ng-show='vm.actionLoaded')
           //- Disabled version
           gz-disabled-form-section(
             title='vm.contactSectionTitle',
-            ng-hide='vm.openAll || vm.contactSectionActive || vm.contactSectionComplete'
+            ng-hide="vm.openAll || vm.sectionActive === 'contact' || vm.contactSectionStatus === 'complete'"
           )
           //- Complete version
           gz-complete-form-section(
             title='vm.contactSectionTitle',
-            ng-show='vm.contactSectionComplete'
+            ng-show="vm.contactSectionStatus === 'complete' && vm.sectionActive !== 'contact'"
           )
-          md-card(ng-show='vm.openAll || vm.contactSectionActive')
+          md-card(ng-show="vm.openAll || vm.sectionActive === 'contact'")
             md-card-header
               md-card-avatar
                 img(
@@ -412,14 +431,14 @@ section(ng-show='vm.actionLoaded')
           //- Disabled version
           gz-disabled-form-section(
             title='vm.experienceSectionTitle',
-            ng-hide='vm.openAll || vm.experienceSectionActive || vm.experienceSectionComplete'
+            ng-hide="vm.openAll || vm.sectionActive === 'experience' || vm.experienceSectionStatus === 'complete'"
           )
           //- Complete version
           gz-complete-form-section(
             title='vm.experienceSectionTitle',
-            ng-show='vm.experienceSectionComplete'
+            ng-show="vm.experienceSectionStatus === 'complete' && vm.sectionActive !== 'experience'"
           )
-          md-card(ng-show='vm.openAll || vm.experienceSectionActive')
+          md-card(ng-show="vm.openAll || vm.sectionActive === 'experience'")
             md-card-header
               md-card-avatar
                 img(
@@ -438,7 +457,7 @@ section(ng-show='vm.actionLoaded')
                   ng-model='vm.participant.Prior_experience_with_action_topic__c',
                   name='participantPriorExperienceTopic',
                   md-maxlength='500',
-                  rows='3',
+                  rows='5',
                   md-select-on-focus,
                   required
                 )
@@ -558,14 +577,14 @@ section(ng-show='vm.actionLoaded')
           //- Disabled version
           gz-disabled-form-section(
             title='vm.expectationsSectionTitle',
-            ng-hide='vm.openAll || vm.expectationsSectionActive || vm.expectationsSectionComplete'
+            ng-hide="vm.openAll || vm.sectionActive === 'expectations' || vm.expectationsSectionStatus === 'complete'"
           )
           //- Complete version
           gz-complete-form-section(
             title='vm.expectationsSectionTitle',
-            ng-show='vm.expectationsSectionComplete'
+            ng-show="vm.expectationsSectionStatus === 'complete' && vm.sectionActive !== 'expectations'"
           )
-          md-card(ng-show='vm.openAll || vm.expectationsSectionActive')
+          md-card(ng-show="vm.openAll || vm.sectionActive === 'expectations'")
             md-card-header
               md-card-avatar
                 img(

@@ -42,7 +42,7 @@
     var vm = this;
 
     // debugging / developing
-    vm.openAll = true;
+    vm.openAll = false;
 
     vm.navigate = layoutService.navigate;
 
@@ -130,15 +130,18 @@
       }
     );
 
+    vm.sectionActive = 'email';
+
     // Email section
     vm.contact = {
       Email: ''
     };
     vm.contactExists = false;
-    vm.emailSectionActive = true;
-    vm.emailSectionComplete = false;
+    vm.emailSectionError = false;
+    vm.emailSectionStatus = 'disabled';
     vm.emailSectionTitle = 'Email';
     vm.processEmail = processEmail;
+    vm.editEmail = editEmail;
     vm.emailSectionNextDisabled = function(pageForm) {
       if (vm.working) {
         return true;
@@ -163,24 +166,36 @@
         function () {
           vm.contactExists = true;
           console.log('Contact found');
+          vm.emailSectionStatus = 'complete';
           vm.prePersonal();
         },
         function (err) {
           console.log('There was an error retrieving the contact');
           console.log(err);
 
-          vm.prePersonal();
+          if (err.status === 404) {
+            // carry on through, we just didn't find a record
+            vm.emailSectionStatus = 'complete';
+            vm.prePersonal();
+          } else {
+            vm.emailSectionError = true;
+          }
+
         }
       );
     }
 
+    function editEmail() {
+      vm.sectionActive = 'email';
+    }
+
     // Personal section
-    vm.personalSectionActive = false;
-    vm.personalSectionComplete = false;
+    vm.personalSectionStatus = 'disabled';
     vm.personalSectionInvalid = false;
     vm.personalSectionTitle = 'Personal';
     vm.prePersonal = prePersonal;
     vm.processPersonal = processPersonal;
+    vm.editPersonal = editPersonal;
     vm.salutations = ['Mr.', 'Ms.', 'Mrs.', 'Dr.', 'Prof.'];
     vm.genders = ['Male', 'Female', 'Other', 'Prefer not to disclose'];
     vm.personalSectionNextDisabled = function(pageForm) {
@@ -193,13 +208,11 @@
     // pre
     function prePersonal() {
       vm.working = false;
-      vm.emailSectionActive = false;
-      vm.emailSectionComplete = true;
-      vm.personalSectionActive = true;
+      vm.sectionActive = 'personal';
     }
 
     // process
-    function processPersonal(pageForm) {
+    function processPersonal(pageForm, goToPrevious) {
 
       if (
         pageForm.contactFirstName.$invalid
@@ -215,7 +228,15 @@
 
       // save the contact in here
 
+      if (goToPrevious === true) {
+
+      }
+
       vm.preOrganisation();
+    }
+
+    function editPersonal() {
+      vm.sectionActive = 'personal';
     }
 
     // Organisation section
@@ -226,12 +247,12 @@
         Name: 'An NHRI and stuff'
       }
     ];
-    vm.organisationSectionActive = false;
-    vm.organisationSectionComplete = false;
+    vm.organisationSectionStatus = 'disabled';
     vm.organisationSectionInvalid = false;
     vm.organisationSectionTitle = 'Organisation';
     vm.preOrganisation = preOrganisation;
     vm.processOrganisation = processOrganisation;
+    vm.editOrganisation = editOrganisation;
     vm.organisationSectionNextDisabled = function(pageForm) {
       if (vm.working) {
         return true;
@@ -277,14 +298,18 @@
       vm.preContact();
     }
 
+    function editOrganisation() {
+      vm.sectionActive = 'organisation';
+    }
+
     // Contact section
     vm.phoneTypes = ['Work', 'Mobile', 'Home', 'Other'];
-    vm.contactSectionActive = false;
-    vm.contactSectionComplete = false;
+    vm.contactSectionStatus = 'disabled';
     vm.contactSectionInvalid = false;
     vm.contactSectionTitle = 'Contact details';
     vm.preContact = preContact;
     vm.processContact = processContact;
+    vm.editContact = editContact;
     vm.contactSectionNextDisabled = function(pageForm) {
       if (vm.working) {
         return true;
@@ -329,14 +354,18 @@
       vm.preExperience();
     }
 
+    function editContact() {
+      vm.sectionActive = 'contact';
+    }
+
     // Experience section
     vm.responses = [];
-    vm.experienceSectionActive = false;
-    vm.experienceSectionComplete = false;
+    vm.experienceSectionStatus = 'disabled';
     vm.experienceSectionInvalid = false;
     vm.experienceSectionTitle = 'Experience';
     vm.preExperience = preExperience;
     vm.processExperience = processExperience;
+    vm.editExperience = editExperience;
     vm.experienceSectionNextDisabled = function(pageForm) {
       if (vm.working) {
         return true;
@@ -375,13 +404,17 @@
       vm.preExpectations();
     }
 
+    function editExperience() {
+      vm.sectionActive = 'experience';
+    }
+
     // Expectations section
-    vm.expectationsSectionActive = false;
-    vm.expectationsSectionComplete = false;
+    vm.expectationsSectionStatus = 'disabled';
     vm.expectationsSectionInvalid = false;
     vm.expectationsSectionTitle = 'Expectations';
     vm.preExpectations = preExpectations;
     vm.processExpectations = processExpectations;
+    vm.editExpectations = editExpectations;
     vm.expectationsSectionNextDisabled = function(pageForm) {
       if (vm.working) {
         return true;
@@ -414,6 +447,10 @@
       vm.working = true;
 
       //
+    }
+
+    function editExpectations() {
+      vm.sectionActive = 'expectations';
     }
 
     function register() {
