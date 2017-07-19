@@ -16,11 +16,24 @@
 
   function accountService($resource, API_URI) {
 
-    var Account = $resource(API_URI + '/account/:accountid',
-      { accountid: '@accountid' }
+    var Account = $resource(API_URI + '/account',
+      {},
+      {
+        'get': {
+          method:'GET',
+          url: API_URI + '/account/:accountid',
+          params: { accountid: '@accountid' }
+        },
+        'update': {
+          method:'PUT',
+          url: API_URI + '/account/:accountid',
+          params: { accountid: '@accountid' }
+        }
+      }
     );
 
     var service = {
+      Account: Account,
       list: Account.query,
       retrieve: Account.get
     };

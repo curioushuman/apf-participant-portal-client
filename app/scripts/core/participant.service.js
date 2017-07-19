@@ -16,11 +16,24 @@
 
   function participantService($resource, API_URI) {
 
-    var Participant = $resource(API_URI + '/participant/:contactid/:actionid',
-      { contactid: '@contactid', actionid: '@actionid' }
+    var Participant = $resource(API_URI + '/participant',
+      {},
+      {
+        'get': {
+          method:'GET',
+          url: API_URI + '/participant/:contactid/:actionid',
+          params: { contactid: '@contactid', actionid: '@actionid' }
+        },
+        'update': {
+          method:'PUT',
+          url: API_URI + '/participant/:participantid',
+          params: { participantid: '@participantid' }
+        }
+      }
     );
 
     var service = {
+      Participant: Participant,
       retrieve: Participant.get
     };
 

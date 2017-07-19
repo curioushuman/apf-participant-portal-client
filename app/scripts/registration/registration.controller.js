@@ -235,29 +235,26 @@
       if (vm.contact.Id === undefined) {
         vm.contact.$save(
           function(record) {
-            vm.working = false;
             if (record.success) {
               vm.personalSectionStatus = 'complete';
               vm.preOrganisation();
             } else {
               vm.personalSectionError = true;
-              console.log('There was an error saving the contact');
+              console.log('There was an error creating the contact');
               console.log(err);
             }
           }
         );
       } else {
-        console.log('updating');
         vm.contact.$update(
           { contactid: vm.contact.Id },
           function(record) {
-            vm.working = false;
             if (record.success) {
               vm.personalSectionStatus = 'complete';
               vm.preOrganisation();
             } else {
               vm.personalSectionError = true;
-              console.log('There was an error saving the contact');
+              console.log('There was an error updating the contact');
               console.log(err);
             }
           }
@@ -275,6 +272,7 @@
     ];
     vm.organisationSectionStatus = 'disabled';
     vm.organisationSectionInvalid = false;
+    vm.organisationSectionError = false;
     vm.organisationSectionTitle = 'Organisation';
     vm.preOrganisation = preOrganisation;
     vm.processOrganisation = processOrganisation;
@@ -287,8 +285,23 @@
 
     // pre
     function preOrganisation() {
-      vm.working = false;
-      vm.editSection('organisation');
+
+      if (vm.contactExists) {
+        vm.affiliation = affiliationService.retrievePrimary(
+          { contactid: vm.contact.Id },
+          function () {
+            vm.working = false;
+            vm.editSection('organisation');
+          },
+          function (err) {
+            console.log('There was an error retrieving the contact');
+            console.log(err);
+          }
+        );
+      } else {
+        vm.working = false;
+        vm.editSection('organisation');
+      }
 
       // grab the list of NHRIs
       // also see if there is an affiliation for this contact (if one was found)
@@ -326,6 +339,7 @@
     vm.phoneTypes = ['Work', 'Mobile', 'Home', 'Other'];
     vm.contactSectionStatus = 'disabled';
     vm.contactSectionInvalid = false;
+    vm.contactSectionError = false;
     vm.contactSectionTitle = 'Contact details';
     vm.preContact = preContact;
     vm.processContact = processContact;
@@ -376,6 +390,7 @@
     vm.responses = [];
     vm.experienceSectionStatus = 'disabled';
     vm.experienceSectionInvalid = false;
+    vm.experienceSectionError = false;
     vm.experienceSectionTitle = 'Experience';
     vm.preExperience = preExperience;
     vm.processExperience = processExperience;
@@ -420,6 +435,7 @@
     // Expectations section
     vm.expectationsSectionStatus = 'disabled';
     vm.expectationsSectionInvalid = false;
+    vm.expectationsSectionError = false;
     vm.expectationsSectionTitle = 'Expectations';
     vm.preExpectations = preExpectations;
     vm.processExpectations = processExpectations;

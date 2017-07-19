@@ -16,12 +16,31 @@
 
   function affiliationService($resource, API_URI) {
 
-    var Affiliation = $resource(API_URI + '/affiliation/:contactid/:accountid',
-      { contactid: '@contactid', accountid: '@accountid' }
+    var Affiliation = $resource(API_URI + '/affiliation',
+      {},
+      {
+        'get': {
+          method:'GET',
+          url: API_URI + '/affiliation/:contactid/:accountid',
+          params: { contactid: '@contactid', accountid: '@accountid' }
+        },
+        'primary': {
+          method:'GET',
+          url: API_URI + '/affiliation/primary/:contactid',
+          params: { contactid: '@contactid' }
+        },
+        'update': {
+          method:'PUT',
+          url: API_URI + '/affiliation/:affiliationid',
+          params: { affiliationid: '@affiliationid' }
+        }
+      }
     );
 
     var service = {
-      retrieve: Affiliation.get
+      Affiliation: Affiliation,
+      retrieve: Affiliation.get,
+      retrievePrimary: Affiliation.primary
     };
 
     return service;
