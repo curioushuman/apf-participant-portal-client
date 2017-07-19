@@ -33,9 +33,8 @@
         $location.path('/' + view);
       }
       if (hash) {
-        console.log('change hash');
-        $location.hash(hash);
-        $anchorScroll();
+        console.log('change hash : ' + hash);
+        $anchorScroll(hash);
       }
     }
 

@@ -20,8 +20,7 @@
       controllerAs: 'vm',
       bindToController: true,
       scope: {
-        title: '=',
-        edit: '='
+        title: '='
       }
     };
   }

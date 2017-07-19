@@ -63,8 +63,8 @@
     vm.action = actionService.retrieve(
       { slug: $routeParams.actionSlug },
       function () {
-        console.log('retrieved');
-        console.log(vm.action);
+        // console.log('retrieved');
+        // console.log(vm.action);
         vm.actionLoaded = true;
 
         // work out the correct start and end dates
@@ -100,18 +100,19 @@
         // vm.action.Selection_criteria__c
 
         // grab the training partner of the action
-        console.log('Obtain training partner');
-        console.log(vm.action.Training_partner__c);
-        vm.action.trainingPartnerAccount = accountService.retrieve(
-          { accountid: vm.action.Training_partner__c },
-          function () {
-            console.log('Found the training partner');
-            console.log(vm.action.trainingPartnerAccount);
-          },
-          function (err) {
-            console.log('Training partner could not be found');
-          }
-        );
+        // TODO Needs review aftre we've changed how training partners work in SF
+        // console.log('Obtain training partner');
+        // console.log(vm.action.Training_partner__c);
+        // vm.action.trainingPartnerAccount = accountService.retrieve(
+        //   { accountid: vm.action.Training_partner__c },
+        //   function () {
+        //     console.log('Found the training partner');
+        //     console.log(vm.action.trainingPartnerAccount);
+        //   },
+        //   function (err) {
+        //     console.log('Training partner could not be found');
+        //   }
+        // );
       },
       function (err) {
         console.log(err);
@@ -132,6 +133,11 @@
 
     vm.sectionActive = 'email';
 
+    vm.editSection = function(section) {
+      vm.sectionActive = section;
+      layoutService.navigate(null,section);
+    }
+
     // Email section
     vm.contact = {
       Email: ''
@@ -141,7 +147,6 @@
     vm.emailSectionStatus = 'disabled';
     vm.emailSectionTitle = 'Email';
     vm.processEmail = processEmail;
-    vm.editEmail = editEmail;
     vm.emailSectionNextDisabled = function(pageForm) {
       if (vm.working) {
         return true;
@@ -185,17 +190,12 @@
       );
     }
 
-    function editEmail() {
-      vm.sectionActive = 'email';
-    }
-
     // Personal section
     vm.personalSectionStatus = 'disabled';
     vm.personalSectionInvalid = false;
     vm.personalSectionTitle = 'Personal';
     vm.prePersonal = prePersonal;
     vm.processPersonal = processPersonal;
-    vm.editPersonal = editPersonal;
     vm.salutations = ['Mr.', 'Ms.', 'Mrs.', 'Dr.', 'Prof.'];
     vm.genders = ['Male', 'Female', 'Other', 'Prefer not to disclose'];
     vm.personalSectionNextDisabled = function(pageForm) {
@@ -208,11 +208,11 @@
     // pre
     function prePersonal() {
       vm.working = false;
-      vm.sectionActive = 'personal';
+      vm.editSection('personal');
     }
 
     // process
-    function processPersonal(pageForm, goToPrevious) {
+    function processPersonal(pageForm) {
 
       if (
         pageForm.contactFirstName.$invalid
@@ -228,15 +228,9 @@
 
       // save the contact in here
 
-      if (goToPrevious === true) {
-
-      }
+      vm.personalSectionStatus = 'complete';
 
       vm.preOrganisation();
-    }
-
-    function editPersonal() {
-      vm.sectionActive = 'personal';
     }
 
     // Organisation section
@@ -252,7 +246,6 @@
     vm.organisationSectionTitle = 'Organisation';
     vm.preOrganisation = preOrganisation;
     vm.processOrganisation = processOrganisation;
-    vm.editOrganisation = editOrganisation;
     vm.organisationSectionNextDisabled = function(pageForm) {
       if (vm.working) {
         return true;
@@ -263,10 +256,7 @@
     // pre
     function preOrganisation() {
       vm.working = false;
-      vm.personalSectionActive = false;
-      vm.personalSectionComplete = true;
-      vm.organisationSectionActive = true;
-      layout.navigate(null,'organisation');
+      vm.editSection('organisation');
 
       // grab the list of NHRIs
       // also see if there is an affiliation for this contact (if one was found)
@@ -294,12 +284,10 @@
 
       vm.working = true;
 
+      vm.organisationSectionStatus = 'complete';
+
       //
       vm.preContact();
-    }
-
-    function editOrganisation() {
-      vm.sectionActive = 'organisation';
     }
 
     // Contact section
@@ -309,7 +297,6 @@
     vm.contactSectionTitle = 'Contact details';
     vm.preContact = preContact;
     vm.processContact = processContact;
-    vm.editContact = editContact;
     vm.contactSectionNextDisabled = function(pageForm) {
       if (vm.working) {
         return true;
@@ -320,10 +307,7 @@
     // pre
     function preContact() {
       vm.working = false;
-      vm.organisationSectionActive = false;
-      vm.organisationSectionComplete = true;
-      vm.contactSectionActive = true;
-      layout.navigate(null,'contact');
+      vm.editSection('contact');
     }
 
     // process
@@ -350,12 +334,10 @@
 
       vm.working = true;
 
+      vm.contactSectionStatus = 'complete';
+
       //
       vm.preExperience();
-    }
-
-    function editContact() {
-      vm.sectionActive = 'contact';
     }
 
     // Experience section
@@ -365,7 +347,6 @@
     vm.experienceSectionTitle = 'Experience';
     vm.preExperience = preExperience;
     vm.processExperience = processExperience;
-    vm.editExperience = editExperience;
     vm.experienceSectionNextDisabled = function(pageForm) {
       if (vm.working) {
         return true;
@@ -376,10 +357,7 @@
     // pre
     function preExperience() {
       vm.working = false;
-      vm.contactSectionActive = false;
-      vm.contactSectionComplete = true;
-      vm.experienceSectionActive = true;
-      layout.navigate(null,'experience');
+      vm.editSection('experience');
       // grab the self assessment questions for this action
     }
 
@@ -400,12 +378,10 @@
 
       vm.working = true;
 
+      vm.experienceSectionStatus = 'complete';
+
       //
       vm.preExpectations();
-    }
-
-    function editExperience() {
-      vm.sectionActive = 'experience';
     }
 
     // Expectations section
@@ -414,7 +390,6 @@
     vm.expectationsSectionTitle = 'Expectations';
     vm.preExpectations = preExpectations;
     vm.processExpectations = processExpectations;
-    vm.editExpectations = editExpectations;
     vm.expectationsSectionNextDisabled = function(pageForm) {
       if (vm.working) {
         return true;
@@ -425,10 +400,7 @@
     // pre
     function preExpectations() {
       vm.working = false;
-      vm.experienceSectionActive = false;
-      vm.experienceSectionComplete = true;
-      vm.expectationsSectionActive = true;
-      layout.navigate(null,'expectations');
+      vm.editSection('expectations');
     }
 
     // process
@@ -446,11 +418,9 @@
 
       vm.working = true;
 
-      //
-    }
+      vm.expectationsSectionStatus = 'complete';
 
-    function editExpectations() {
-      vm.sectionActive = 'expectations';
+      //
     }
 
     function register() {

@@ -100,7 +100,7 @@ section(ng-show='vm.actionLoaded')
           //- Complete version
           gz-complete-form-section(
             title='vm.emailSectionTitle',
-            edit='vm.editEmail',
+            ng-click="vm.editSection('email')",
             ng-show="vm.emailSectionStatus === 'complete' && vm.sectionActive !== 'email'"
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'email'")
@@ -165,6 +165,7 @@ section(ng-show='vm.actionLoaded')
           //- Complete version
           gz-complete-form-section(
             title='vm.personalSectionTitle',
+            ng-click="vm.editSection('personal')",
             ng-show="vm.personalSectionStatus === 'complete' && vm.sectionActive !== 'personal'"
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'personal'")
@@ -253,8 +254,7 @@ section(ng-show='vm.actionLoaded')
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
               md-button(
-                ng-click="vm.processPersonal(pageForm)",
-                ng-disabled="vm.personalSectionNextDisabled(pageForm)"
+                ng-click="vm.editSection('email')"
               ) 
                 md-icon.md-material-icons navigate_before
                 | Previous
@@ -275,6 +275,7 @@ section(ng-show='vm.actionLoaded')
           //- Complete version
           gz-complete-form-section(
             title='vm.organisationSectionTitle',
+            ng-click="vm.editSection('organisation')",
             ng-show="vm.organisationSectionStatus === 'complete' && vm.sectionActive !== 'organisation'"
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'organisation'")
@@ -333,9 +334,16 @@ section(ng-show='vm.actionLoaded')
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
               md-button(
+                ng-click="vm.editSection('personal')"
+              ) 
+                md-icon.md-material-icons navigate_before
+                | Previous
+              md-button(
                 ng-click="vm.processOrganisation(pageForm)",
                 ng-disabled="vm.organisationSectionNextDisabled(pageForm)"
-              ) Next
+              ) 
+                | Next
+                md-icon.md-material-icons navigate_next
               
           //- Contact details section
           a(name='contact')
@@ -347,6 +355,7 @@ section(ng-show='vm.actionLoaded')
           //- Complete version
           gz-complete-form-section(
             title='vm.contactSectionTitle',
+            ng-click="vm.editSection('contact')",
             ng-show="vm.contactSectionStatus === 'complete' && vm.sectionActive !== 'contact'"
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'contact'")
@@ -422,9 +431,16 @@ section(ng-show='vm.actionLoaded')
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
               md-button(
+                ng-click="vm.editSection('organisation')"
+              ) 
+                md-icon.md-material-icons navigate_before
+                | Previous
+              md-button(
                 ng-click="vm.processContact(pageForm)",
                 ng-disabled="vm.contactSectionNextDisabled(pageForm)"
-              ) Next
+              ) 
+                | Next
+                md-icon.md-material-icons navigate_next
               
           //- Experience and knowledge section
           a(name='experience')
@@ -436,6 +452,7 @@ section(ng-show='vm.actionLoaded')
           //- Complete version
           gz-complete-form-section(
             title='vm.experienceSectionTitle',
+            ng-click="vm.editSection('experience')",
             ng-show="vm.experienceSectionStatus === 'complete' && vm.sectionActive !== 'experience'"
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'experience'")
@@ -568,9 +585,16 @@ section(ng-show='vm.actionLoaded')
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
               md-button(
+                ng-click="vm.editSection('contact')"
+              ) 
+                md-icon.md-material-icons navigate_before
+                | Previous
+              md-button(
                 ng-click="vm.processExperience(pageForm)",
                 ng-disabled="vm.experienceSectionNextDisabled(pageForm)"
-              ) Next
+              ) 
+                | Next
+                md-icon.md-material-icons navigate_next
               
           //- Expectations and learning needs section
           a(name='expectations')
@@ -582,6 +606,7 @@ section(ng-show='vm.actionLoaded')
           //- Complete version
           gz-complete-form-section(
             title='vm.expectationsSectionTitle',
+            ng-click="vm.editSection('expectations')",
             ng-show="vm.expectationsSectionStatus === 'complete' && vm.sectionActive !== 'expectations'"
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'expectations'")
@@ -658,6 +683,13 @@ section(ng-show='vm.actionLoaded')
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
               md-button(
+                ng-click="vm.editSection('experience')"
+              ) 
+                md-icon.md-material-icons navigate_before
+                | Previous
+              md-button(
                 ng-click="vm.processExpectations(pageForm)",
                 ng-disabled="vm.expectationsSectionNextDisabled(pageForm)"
-              ) Next
+              ) 
+                | Next
+                md-icon.md-material-icons navigate_next

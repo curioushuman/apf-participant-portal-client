@@ -1,4 +1,4 @@
-md-card(
+md-card.section-complete(
   md-colors="{background: 'default-accent-hue-2'}"
 )
   md-card-header
@@ -10,12 +10,4 @@ md-card(
     md-card-header-text
       span.md-headline {{ vm.title }}
     md-card-avatar
-      //- md-icon.material-icons(
-      //-    aria-label='Edit {{ vm.title }}',
-      //-    ng-click='vm.editClick'
-      //- ) mode_edit
-      md-button.md-card-avatar-button(
-        aria-label='Edit {{ vm.title }}',
-        ng-click='vm.edit()'
-      )
-        md-icon mode_edit
+      md-icon.material-icons mode_edit
