@@ -151,7 +151,7 @@
       if (vm.working) {
         return true;
       }
-      if (vm.contact.Email === '') {
+      if (vm.email === '') {
         return true;
       }
       if (pageForm.contactEmail.$invalid) {
@@ -163,11 +163,11 @@
     // process email
     function processEmail() {
 
-      console.log(vm.contact.Email);
+      console.log(vm.email);
       vm.working = true;
 
       vm.contact = contactService.retrieve(
-        { email: vm.contact.Email },
+        { email: vm.email },
         function () {
           vm.contactExists = true;
           console.log('Contact found');
@@ -181,6 +181,7 @@
           if (err.status === 404) {
             // carry on through, we just didn't find a record
             vm.emailSectionStatus = 'complete';
+            vm.contact.Email = vm.email;
             vm.prePersonal();
           } else {
             vm.emailSectionError = true;
@@ -359,6 +360,7 @@
       vm.working = false;
       vm.editSection('experience');
       // grab the self assessment questions for this action
+      // don't forget to include the help text in the output (if it exists)
     }
 
     // process
@@ -424,6 +426,8 @@
     }
 
     function register() {
+
+      // just submit, don't show a summary of all fields
 
     }
 
