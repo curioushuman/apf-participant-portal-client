@@ -139,9 +139,7 @@
     }
 
     // Email section
-    // vm.contact = {
-    //   Email: ''
-    // };
+    vm.email = 'mike@curioushuman.com.au'; // TESTING
     vm.contactExists = false;
     vm.emailSectionError = false;
     vm.emailSectionStatus = 'disabled';
@@ -273,6 +271,7 @@
     vm.organisationSectionStatus = 'disabled';
     vm.organisationSectionInvalid = false;
     vm.organisationSectionError = false;
+    vm.organisationSectionErrorTop = false;
     vm.organisationSectionTitle = 'Organisation';
     vm.preOrganisation = preOrganisation;
     vm.processOrganisation = processOrganisation;
@@ -285,27 +284,60 @@
 
     // pre
     function preOrganisation() {
+      vm.working = true;
+      vm.organisationSectionErrorTop = false;
+      preOrganisationAccounts();
+    }
 
+    function preOrganisationAccounts() {
+      vm.nhris = accountService.listByType(
+        { type: 'National Human Rights Institution' },
+        function() {
+          console.log(vm.nhris);
+          preOrganisationAffiliation();
+        },
+        function(err) {
+          console.log('There was an error retrieving the NHRIs');
+          console.log(err);
+          vm.organisationSectionErrorTop = true;
+        }
+      );
+    }
+
+    function preOrganisationAffiliation() {
       if (vm.contactExists) {
         vm.affiliation = affiliationService.retrievePrimary(
           { contactid: vm.contact.Id },
           function () {
+            console.log(vm.affiliation);
+            // is the affiliated organisation an NHRI?
+            if (affiliationService.isNhri(vm.affiliation, vm.nhris) === false) {
+              vm.affiliation = new affiliationService.Affiliation(
+                { contactid: vm.contact.Id }
+              );
+            }
             vm.working = false;
             vm.editSection('organisation');
           },
           function (err) {
-            console.log('There was an error retrieving the contact');
+            console.log('There was an error retrieving the affiliation');
             console.log(err);
+            if (err.status !== 404) {
+              vm.organisationSectionErrorTop = true;
+            }
+            vm.working = false;
+            vm.editSection('organisation');
           }
         );
       } else {
+
+        vm.affiliation = new affiliationService.Affiliation(
+          { contactid: vm.contact.Id }
+        );
+
         vm.working = false;
         vm.editSection('organisation');
       }
-
-      // grab the list of NHRIs
-      // also see if there is an affiliation for this contact (if one was found)
-        // only if a contact is found (determined by existence of contact.Id)
     }
 
     // process

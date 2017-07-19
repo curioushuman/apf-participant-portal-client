@@ -11,10 +11,11 @@
 
   affiliationService.$inject = [
     '$resource',
+    '$filter',
     'API_URI'
   ];
 
-  function affiliationService($resource, API_URI) {
+  function affiliationService($resource, $filter, API_URI) {
 
     var Affiliation = $resource(API_URI + '/affiliation',
       {},
@@ -40,9 +41,18 @@
     var service = {
       Affiliation: Affiliation,
       retrieve: Affiliation.get,
-      retrievePrimary: Affiliation.primary
+      retrievePrimary: Affiliation.primary,
+      isNhri: isNhri
     };
 
     return service;
+
+    function isNhri(affiliation, nhris) {
+      var fi = $filter('filter')(nhris, { Id: affiliation.npe5__Organization__c }).length;
+      if (fi > 0) {
+        return true;
+      }
+      return false;
+    }
   }
 })();

@@ -24,6 +24,12 @@
           url: API_URI + '/account/:accountid',
           params: { accountid: '@accountid' }
         },
+        'queryType': {
+          method:'GET',
+          url: API_URI + '/account/type/:type',
+          params: { type: '@type' },
+          isArray: true
+        },
         'update': {
           method:'PUT',
           url: API_URI + '/account/:accountid',
@@ -35,6 +41,7 @@
     var service = {
       Account: Account,
       list: Account.query,
+      listByType: Account.queryType,
       retrieve: Account.get
     };
 

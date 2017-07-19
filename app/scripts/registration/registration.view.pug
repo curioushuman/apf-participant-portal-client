@@ -144,7 +144,7 @@ section(ng-show='vm.actionLoaded')
               md-colors="{background: 'default-warn'}",
               ng-show='vm.emailSectionError'
             )
-              | There was an error reaching Salesforce. Please refresh the page and try again.
+              | There was an error reaching the database. Please refresh the page and try again.
 
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
@@ -297,8 +297,22 @@ section(ng-show='vm.actionLoaded')
               md-card-header-text
                 span.md-headline  {{ vm.organisationSectionTitle }}
             md-card-content
-              //- section intro
-              //- p stuff
+              
+              div.error(
+                layout='row'
+                layout-padding,
+                md-colors="{background: 'default-warn'}",
+                ng-show='vm.organisationSectionErrorTop'
+              )
+                div(flex='75', layout='row', layout-align='start center')
+                  | There was an error reaching the database. Please wait 5 
+                  | seconds and then try again.
+                div(flex='25', layout='row', layout-align='end center')
+                  md-button.md-background(
+                    ng-click='vm.preOrganisation()'
+                  ) Try again
+              
+              
               md-input-container.md-block(flex)
                 label Your National Human Rights Institution
                 md-select(ng-model='vm.affiliation.npe5__Organization__c', name='affiliationOrganisation', required)
@@ -339,6 +353,15 @@ section(ng-show='vm.actionLoaded')
                 ng-show='vm.organisationSectionInvalid'
               )
                 | Please make sure all required fields have been completed.
+                
+              p.error(
+                layout='column'
+                layout-padding,
+                md-colors="{background: 'default-warn'}",
+                ng-show='vm.organisationSectionError'
+              )
+                | There was an error saving your information. Please wait 5 
+                | seconds and try again.
                       
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
@@ -436,6 +459,15 @@ section(ng-show='vm.actionLoaded')
                 ng-show='vm.contactSectionInvalid'
               )
                 | Please make sure all required fields have been completed.
+                
+              p.error(
+                layout='column'
+                layout-padding,
+                md-colors="{background: 'default-warn'}",
+                ng-show='vm.contactSectionError'
+              )
+                | There was an error saving your information. Please wait 5 
+                | seconds and try again.
                       
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
@@ -590,6 +622,15 @@ section(ng-show='vm.actionLoaded')
                 ng-show='vm.experienceSectionInvalid'
               )
                 | Please make sure all required fields have been completed.
+                
+              p.error(
+                layout='column'
+                layout-padding,
+                md-colors="{background: 'default-warn'}",
+                ng-show='vm.experienceSectionError'
+              )
+                | There was an error saving your information. Please wait 5 
+                | seconds and try again.
                       
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
@@ -688,6 +729,15 @@ section(ng-show='vm.actionLoaded')
                 ng-show='vm.expectationsSectionInvalid'
               )
                 | Please make sure all required fields have been completed.
+                
+              p.error(
+                layout='column'
+                layout-padding,
+                md-colors="{background: 'default-warn'}",
+                ng-show='vm.expectationsSectionError'
+              )
+                | There was an error saving your information. Please wait 5 
+                | seconds and try again.
                       
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
