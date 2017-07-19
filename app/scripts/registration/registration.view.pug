@@ -185,8 +185,9 @@ section(ng-show='vm.actionLoaded')
                 md-colors="{background: 'default-background-hue-2'}",
                 ng-show='vm.contactExists'
               )
-                | We have found you in the database. Please check to ensure 
-                | the information we have is up to date.
+                | Hi {{ vm.contact.FirstName }}, we have found you in our 
+                | database. Please check to ensure your information is up to 
+                | date.
               md-input-container.md-block(flex)
                 label First name
                 input(ng-model='vm.contact.FirstName', name='contactFirstName', required)
@@ -250,6 +251,14 @@ section(ng-show='vm.actionLoaded')
                 ng-show='vm.personalSectionInvalid'
               )
                 | Please make sure all required fields have been completed.
+              p.error(
+                layout='column'
+                layout-padding,
+                md-colors="{background: 'default-warn'}",
+                ng-show='vm.personalSectionError'
+              )
+                | There was an error saving your information. Please wait 5 
+                | seconds and try again.
                       
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')

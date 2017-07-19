@@ -139,9 +139,9 @@
     }
 
     // Email section
-    vm.contact = {
-      Email: ''
-    };
+    // vm.contact = {
+    //   Email: ''
+    // };
     vm.contactExists = false;
     vm.emailSectionError = false;
     vm.emailSectionStatus = 'disabled';
@@ -180,8 +180,11 @@
 
           if (err.status === 404) {
             // carry on through, we just didn't find a record
+            // create a new Contact object
+            vm.contact = new contactService.Contact(
+              { email: vm.email }
+            );
             vm.emailSectionStatus = 'complete';
-            vm.contact.Email = vm.email;
             vm.prePersonal();
           } else {
             vm.emailSectionError = true;
@@ -194,7 +197,8 @@
     // Personal section
     vm.personalSectionStatus = 'disabled';
     vm.personalSectionInvalid = false;
-    vm.personalSectionTitle = 'Personal';
+    vm.personalSectionError = false;
+    vm.personalSectionTitle = 'Personal information';
     vm.prePersonal = prePersonal;
     vm.processPersonal = processPersonal;
     vm.salutations = ['Mr.', 'Ms.', 'Mrs.', 'Dr.', 'Prof.'];
@@ -228,10 +232,37 @@
       vm.working = true;
 
       // save the contact in here
-
-      vm.personalSectionStatus = 'complete';
-
-      vm.preOrganisation();
+      if (vm.contact.Id === undefined) {
+        vm.contact.$save(
+          function(record) {
+            vm.working = false;
+            if (record.success) {
+              vm.personalSectionStatus = 'complete';
+              vm.preOrganisation();
+            } else {
+              vm.personalSectionError = true;
+              console.log('There was an error saving the contact');
+              console.log(err);
+            }
+          }
+        );
+      } else {
+        console.log('updating');
+        vm.contact.$update(
+          { contactid: vm.contact.Id },
+          function(record) {
+            vm.working = false;
+            if (record.success) {
+              vm.personalSectionStatus = 'complete';
+              vm.preOrganisation();
+            } else {
+              vm.personalSectionError = true;
+              console.log('There was an error saving the contact');
+              console.log(err);
+            }
+          }
+        );
+      }
     }
 
     // Organisation section
