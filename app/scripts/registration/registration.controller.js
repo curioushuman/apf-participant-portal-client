@@ -11,6 +11,7 @@
   RegistrationController.$inject = [
     '$routeParams',
     '$scope',
+    '$q',
     '$location',
     '$filter',
     '$mdDateLocale',
@@ -27,6 +28,7 @@
   function RegistrationController(
     $routeParams,
     $scope,
+    $q,
     $location,
     $filter,
     $mdDateLocale,
@@ -284,60 +286,70 @@
 
     // pre
     function preOrganisation() {
-      vm.working = true;
+      vm.working = false;
       vm.organisationSectionErrorTop = false;
-      preOrganisationAccounts();
-    }
 
-    function preOrganisationAccounts() {
-      vm.nhris = accountService.listByType(
-        { type: 'National Human Rights Institution' },
-        function() {
-          console.log(vm.nhris);
-          preOrganisationAffiliation();
+      $q.all([
+        preOrganisationAccounts(),
+        preOrganisationAffiliation()
+      ]).then(
+        function(data) {
+          console.log('Both promises have resolved', data);
+
+          vm.working = false;
+          vm.editSection('organisation');
         },
         function(err) {
-          console.log('There was an error retrieving the NHRIs');
-          console.log(err);
+          console.log('Something went wrong', err);
           vm.organisationSectionErrorTop = true;
         }
       );
     }
 
+    function preOrganisationAccounts() {
+
+      return accountService.listByType(
+        { type: 'National Human Rights Institution' }
+      )
+      .$promise
+      .then(
+        function(data) {
+          vm.nhris = data;
+          return 'NHRIs found';
+        },
+        function(err) {
+          console.log('There was an error retrieving the NHRIs', err);
+          return err;
+        }
+      );
+    }
+
     function preOrganisationAffiliation() {
-      if (vm.contactExists) {
-        vm.affiliation = affiliationService.retrievePrimary(
-          { contactid: vm.contact.Id },
-          function () {
-            console.log(vm.affiliation);
-            // is the affiliated organisation an NHRI?
-            if (affiliationService.isNhri(vm.affiliation, vm.nhris) === false) {
-              vm.affiliation = new affiliationService.Affiliation(
-                { contactid: vm.contact.Id }
-              );
-            }
-            vm.working = false;
-            vm.editSection('organisation');
-          },
-          function (err) {
-            console.log('There was an error retrieving the affiliation');
-            console.log(err);
-            if (err.status !== 404) {
-              vm.organisationSectionErrorTop = true;
-            }
-            vm.working = false;
-            vm.editSection('organisation');
-          }
-        );
-      } else {
 
-        vm.affiliation = new affiliationService.Affiliation(
-          { contactid: vm.contact.Id }
-        );
-
-        vm.working = false;
-        vm.editSection('organisation');
-      }
+      return $q(function(resolve, reject) {
+        if (vm.contactExists) {
+          vm.affiliation = affiliationService.retrievePrimary(
+            { contactid: vm.contact.Id },
+            function () {
+              vm.affiliation.npe5__StartDate__c =
+                new Date(vm.affiliation.npe5__StartDate__c);
+              if (affiliationService.isNhri(vm.affiliation, vm.nhris) === false) {
+                vm.affiliation = new affiliationService.Affiliation();
+              }
+              resolve('Affiliation found');
+            },
+            function (err) {
+              if (err.status !== 404) {
+                console.log('There was an error retrieving the Affiliation', err);
+                reject('An error occurred retrieving the affiliation');
+              }
+            }
+          );
+        } else {
+          vm.affiliation = new affiliationService.Affiliation();
+          resolve('New Affiliation created');
+        }
+      });
     }
 
     // process
@@ -353,18 +365,76 @@
         return;
       }
 
-      // when creating the affiliation you'll need to
-      // use the contact Id that has already been created (or found)
-
-      // you'll also need to update the role / department on the contact
-      // as well as the affiliation
-
       vm.working = true;
 
-      vm.organisationSectionStatus = 'complete';
+      $q.all([
+        processOrganisationAffiliation(),
+        processOrganisationContact()
+      ]).then(
+        function(data) {
+          console.log('Both promises have resolved', data);
 
-      //
-      vm.preContact();
+          vm.organisationSectionStatus = 'complete';
+          vm.preContact();
+        },
+        function(err) {
+          console.log('Something went wrong', err);
+          vm.organisationSectionError = true;
+        }
+      );
+    }
+
+    function processOrganisationAffiliation() {
+      console.log(vm.affiliation);
+      vm.affiliation.npe5__Contact__c = vm.contact.Id;
+      return $q(function(resolve, reject) {
+        if (vm.affiliation.Id === undefined) {
+          vm.affiliation.npe5__Primary__c = true;
+          vm.affiliation.npe5__Status__c = 'Current';
+          vm.affiliation.$save(
+            function(record) {
+              if (record.success) {
+                resolve('Affiliation created');
+              } else {
+                console.log('There was an error creating the affiliation', err);
+                reject('An error occurred creating the affiliation');
+              }
+            }
+          );
+        } else {
+          vm.affiliation.$update(
+            { affiliationid: vm.affiliation.Id },
+            function(record) {
+              if (record.success) {
+                resolve('Affiliation updated');
+              } else {
+                console.log('There was an error updating the affiliation', err);
+                reject('An error occurred updating the affiliation');
+              }
+            }
+          );
+        }
+      });
+    }
+
+    function processOrganisationContact() {
+      console.log(vm.contact);
+      vm.contact.Department = vm.affiliation.Department__c;
+      vm.contact.Title = vm.affiliation.npe5__Role__c;
+      vm.contact.Title = vm.affiliation.npe5__Role__c;
+      return $q(function(resolve, reject) {
+        vm.contact.$update(
+          { contactid: vm.contact.Id },
+          function(record) {
+            if (record.success) {
+              resolve('Contact updated');
+            } else {
+              console.log('There was an error updating the contact', err);
+              reject('An error occurred updating the contact');
+            }
+          }
+        );
+      });
     }
 
     // Contact section

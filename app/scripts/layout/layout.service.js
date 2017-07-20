@@ -10,11 +10,13 @@
 
   layoutService.$inject = [
     '$location',
+    '$filter',
     '$anchorScroll'
   ];
 
   function layoutService(
     $location,
+    $filter,
     $anchorScroll
   ) {
 
@@ -39,20 +41,7 @@
     }
 
     function formatDate(dateString) {
-
-      var months = [
-        'January', 'February', 'March',
-        'April', 'May', 'June', 'July',
-        'August', 'September', 'October',
-        'November', 'December'
-      ];
-
-      var DateFromString = new Date(dateString);
-      var formattedDate =
-        DateFromString.getDate() +
-        ' ' + months[DateFromString.getMonth()] +
-        ' ' + DateFromString.getFullYear();
-      return(formattedDate);
+      return $filter('date')(dateString, 'd MMMM yyyy');
     }
   }
 })();
