@@ -42,7 +42,9 @@
       Affiliation: Affiliation,
       retrieve: Affiliation.get,
       retrievePrimary: Affiliation.primary,
-      isNhri: isNhri
+      isNhri: isNhri,
+      equalsOrganisation: equalsOrganisation,
+      equalsOther: equalsOther
     };
 
     return service;
@@ -53,6 +55,44 @@
         return true;
       }
       return false;
+    }
+
+    function equalsOrganisation(affiliation1, affiliation2) {
+      if (
+        affiliation1.npe5__Organization__c === affiliation2.npe5__Organization__c
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    function equalsOther(affiliation1, affiliation2) {
+      var startdate1 = affiliation1.npe5__StartDate__c;
+      var startdate2 = affiliation2.npe5__StartDate__c;
+      if (typeof(startdate1) !== 'object') {
+        startdate1 = new Date(affiliation1.npe5__StartDate__c);
+      }
+      startdate1 = $filter('date')(startdate1, "dd/MM/yyyy");
+      if (typeof(startdate2) !== 'object') {
+        startdate2 = new Date(affiliation2.npe5__StartDate__c);
+      }
+      startdate2 = $filter('date')(startdate2, "dd/MM/yyyy");
+      console.log(startdate1);
+      console.log(startdate2);
+      console.log(affiliation1.Department__c);
+      console.log(affiliation2.Department__c);
+      console.log(affiliation1.npe5__Role__c);
+      console.log(affiliation2.npe5__Role__c);
+      if (
+        affiliation1.Department__c === affiliation2.Department__c
+        && affiliation1.npe5__Role__c === affiliation2.npe5__Role__c
+        && startdate1 === startdate2
+      ) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 })();

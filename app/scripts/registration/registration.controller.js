@@ -355,6 +355,14 @@
                 if (vm.debug) {
                   console.log('Not an NHRI though', vm.affiliation);
                 }
+              } else {
+                // save this to see if it is actually modified
+                vm.affiliationFound = {
+                  npe5__Organization__c: vm.affiliation.npe5__Organization__c,
+                  npe5__Role__c: vm.affiliation.npe5__Role__c,
+                  Department__c: vm.affiliation.Department__c,
+                  npe5__StartDate__c: vm.affiliation.npe5__StartDate__c
+                };
               }
               resolve(vm.affiliation);
             },
@@ -390,52 +398,124 @@
 
       vm.working = true;
 
+      // q.all works as it doesn't matter the order of processing
       $q.all([
         processOrganisationAffiliation(),
         processOrganisationContact()
       ]).then(
         function(data) {
-          console.log('Both promises have resolved', data);
+          if (vm.debug) {
+            console.log('Both promises have resolved', data);
+          }
+
+          // set the date on the affiliation to be an object again
+          vm.affiliation.npe5__StartDate__c =
+            new Date(vm.affiliation.npe5__StartDate__c);
 
           vm.organisationSectionStatus = 'complete';
           vm.preContact();
         },
         function(err) {
-          console.log('Something went wrong', err);
+          if (vm.debug) {
+            console.log('Something went wrong', err);
+          }
           vm.organisationSectionError = true;
         }
       );
     }
 
     function processOrganisationAffiliation() {
-      console.log(vm.affiliation);
       vm.affiliation.npe5__Contact__c = vm.contact.Id;
+      if (vm.debug) {
+        console.log('Saving affiliation', vm.affiliation);
+      }
       return $q(function(resolve, reject) {
-        if (vm.affiliation.Id === undefined) {
+        if (vm.affiliationFound === undefined) {
           vm.affiliation.npe5__Primary__c = true;
           vm.affiliation.npe5__Status__c = 'Current';
           vm.affiliation.$save(
             function(record) {
               if (record.success) {
-                resolve('Affiliation created');
+                resolve(vm.affiliation);
               } else {
-                console.log('There was an error creating the affiliation', err);
+                if (vm.debug) {
+                  console.log('There was an error creating the affiliation', err);
+                }
                 reject('An error occurred creating the affiliation');
               }
+            },
+            function(err) {
+              if (vm.debug) {
+                console.log('There was an error creating the affiliation', err);
+              }
+              reject(err);
             }
           );
         } else {
-          vm.affiliation.$update(
-            { affiliationid: vm.affiliation.Id },
-            function(record) {
-              if (record.success) {
-                resolve('Affiliation updated');
-              } else {
-                console.log('There was an error updating the affiliation', err);
-                reject('An error occurred updating the affiliation');
-              }
+          if (affiliationService.equalsOrganisation(
+            vm.affiliation,
+            vm.affiliationFound
+          ) === false) {
+            if (vm.debug) {
+              console.log('Org has changed');
             }
-          );
+            // they have changed organisations
+            // create new affiliation for them
+            vm.affiliation.Id = null;
+            vm.affiliation.npe5__Primary__c = true;
+            vm.affiliation.npe5__Status__c = 'Current';
+            vm.affiliation.$save(
+              function(record) {
+                if (record.success) {
+                  resolve(vm.affiliation);
+                } else {
+                  if (vm.debug) {
+                    console.log('There was an error creating the NEW affiliation', err);
+                  }
+                  reject('An error occurred creating the NEW affiliation');
+                }
+              },
+              function(err) {
+                if (vm.debug) {
+                  console.log('There was an error creating the NEW affiliation', err);
+                }
+                reject(err);
+              }
+            );
+          } else if (affiliationService.equalsOther(
+            vm.affiliation,
+            vm.affiliationFound
+          ) === false) {
+            if (vm.debug) {
+              console.log('Other info has changed');
+            }
+            // other info has changed
+            // update the current affiliation
+            vm.affiliation.$update(
+              { affiliationid: vm.affiliation.Id },
+              function(record) {
+                if (record.success) {
+                  resolve('Affiliation updated');
+                } else {
+                  if (vm.debug) {
+                    console.log('There was an error updating the affiliation', err);
+                  }
+                  reject('An error occurred updating the affiliation');
+                }
+              },
+              function(err) {
+                if (vm.debug) {
+                  console.log('There was an error updating the affiliation', err);
+                }
+                reject(err);
+              }
+            );
+          } else {
+            if (vm.debug) {
+              console.log('Affiliation unchanged, do not save');
+            }
+            resolve(vm.affiliation);
+          }
         }
       });
     }
@@ -443,7 +523,6 @@
     function processOrganisationContact() {
       console.log(vm.contact);
       vm.contact.Department = vm.affiliation.Department__c;
-      vm.contact.Title = vm.affiliation.npe5__Role__c;
       vm.contact.Title = vm.affiliation.npe5__Role__c;
       return $q(function(resolve, reject) {
         vm.contact.$update(
