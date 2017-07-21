@@ -150,7 +150,7 @@ section(ng-show='vm.actionLoaded')
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
               md-button(
                 ng-click="vm.processEmail()",
-                ng-disabled="vm.emailSectionNextDisabled(pageForm)"
+                ng-disabled="vm.emailSectionNextDisabled()"
               ) 
                 | Next
                 md-icon.md-material-icons navigate_next
@@ -268,8 +268,8 @@ section(ng-show='vm.actionLoaded')
                 md-icon.md-material-icons navigate_before
                 | Previous
               md-button(
-                ng-click="vm.processPersonal(pageForm)",
-                ng-disabled="vm.personalSectionNextDisabled(pageForm)"
+                ng-click="vm.processPersonal()",
+                ng-disabled="vm.personalSectionNextDisabled()"
               ) 
                 | Next
                 md-icon.md-material-icons navigate_next
@@ -371,8 +371,8 @@ section(ng-show='vm.actionLoaded')
                 md-icon.md-material-icons navigate_before
                 | Previous
               md-button(
-                ng-click="vm.processOrganisation(pageForm)",
-                ng-disabled="vm.organisationSectionNextDisabled(pageForm)"
+                ng-click="vm.processOrganisation()",
+                ng-disabled="vm.organisationSectionNextDisabled()"
               ) 
                 | Next
                 md-icon.md-material-icons navigate_next
@@ -406,9 +406,12 @@ section(ng-show='vm.actionLoaded')
                 strong work 
                 | email address?
               md-input-container.md-block(flex)
-                md-radio-group(ng-model='vm.emailIsWork')
+                md-radio-group(ng-model='vm.emailIsWork', name='emailIsWork', required)
                   md-radio-button.md-primary(value='yes', ng-click='vm.changeEmailWork()') Yes
                   md-radio-button(value='no', ng-click='vm.changeEmailWork()')  No
+                div(ng-messages='pageForm.emailIsWork.$error', role='alert')
+                  div(ng-message='required')
+                    | This field is required
               md-input-container.md-block(flex, ng-hide="vm.emailIsWork === 'yes'")
                 label What is your  
                   strong work 
@@ -481,8 +484,8 @@ section(ng-show='vm.actionLoaded')
                 md-icon.md-material-icons navigate_before
                 | Previous
               md-button(
-                ng-click="vm.processContact(pageForm)",
-                ng-disabled="vm.contactSectionNextDisabled(pageForm)"
+                ng-click="vm.processContact()",
+                ng-disabled="vm.contactSectionNextDisabled()"
               ) 
                 | Next
                 md-icon.md-material-icons navigate_next
@@ -510,11 +513,25 @@ section(ng-show='vm.actionLoaded')
               md-card-header-text
                 span.md-headline  {{ vm.experienceSectionTitle }}
             md-card-content
-              //- section intro
-              //- p stuff
+              
+              div.error(
+                layout='row'
+                layout-padding,
+                md-colors="{background: 'default-warn'}",
+                ng-show='vm.experienceSectionErrorTop'
+              )
+                div(flex='75', layout='row', layout-align='start center')
+                  | There was an error reaching the database. Please wait 5 
+                  | seconds and then try again.
+                div(flex='25', layout='row', layout-align='end center')
+                  md-button.md-background(
+                    ng-click='vm.preOrganisation()'
+                  ) Try again
+              
               p.question Please provide details of any knowledge and experience 
                 | you have with issues related to this topic
               md-input-container.md-block(flex)
+                label Knowledge and experience
                 textarea(
                   ng-model='vm.participant.Prior_experience_with_action_topic__c',
                   name='participantPriorExperienceTopic',
@@ -523,8 +540,6 @@ section(ng-show='vm.actionLoaded')
                   md-select-on-focus,
                   required
                 )
-                //- div.hint
-                //-   | Should we add some help text?
                 div(ng-messages='pageForm.participantPriorExperienceTopic.$error', role='alert')
                   div(ng-message='required')
                     | This field is required
@@ -539,23 +554,14 @@ section(ng-show='vm.actionLoaded')
                 | following on a scale of 1-5. 
                 | Where 1 indicates you have little 
                 | to no ability or knowledge and 5 indicates great ability or 
-                | knowledge on the topic. If you would like to comment on the 
+                | knowledge on the topic.
+                br
+                | If you would like to comment on the 
                 | topic please click on the comment button.
+              
               gz-response-form-input(
-                question='vm.experienceSectionTitle',
-                index='1'
-              )
-              gz-response-form-input(
-                question='vm.experienceSectionTitle',
-                index='1'
-              )
-              gz-response-form-input(
-                question='vm.experienceSectionTitle',
-                index='1'
-              )
-              gz-response-form-input(
-                question='vm.experienceSectionTitle',
-                index='1'
+                ng-repeat='question in vm.questions',
+                question='question'
               )
               p.intro(
                 layout='column'
@@ -564,29 +570,29 @@ section(ng-show='vm.actionLoaded')
               )
                 | Please rate your computer / IT skills and access:
               gz-slider-form-input(
-                question='vm.experienceSectionTitle',
+                question='Access to the Internet',
+                model='vm.contact.IT_Skill_access_to_the_Internet__c',
+                name='contactItDAccessInternet'
+              )
+              gz-slider-form-input(
+                question='Ability to download files',
                 model='vm.contact.IT_Skills_Ability_to_download_files__c',
                 name='contactItDownloadFiles'
               )
               gz-slider-form-input(
-                question='vm.experienceSectionTitle',
-                model='vm.contact.IT_Skills_Ability_to_download_files__c',
-                name='contactItDownloadFiles'
+                question='Ability to view vides online',
+                model='vm.contact.IT_Skills_Ability_to_view_online_videos__c',
+                name='contactItViewVideos'
               )
               gz-slider-form-input(
-                question='vm.experienceSectionTitle',
-                model='vm.contact.IT_Skills_Ability_to_download_files__c',
-                name='contactItDownloadFiles'
+                question='Ability to use Word documents',
+                model='vm.contact.IT_Skill_Ability_to_use_Word_documents__c',
+                name='contactItWord'
               )
               gz-slider-form-input(
-                question='vm.experienceSectionTitle',
-                model='vm.contact.IT_Skills_Ability_to_download_files__c',
-                name='contactItDownloadFiles'
-              )
-              gz-slider-form-input(
-                question='vm.experienceSectionTitle',
-                model='vm.contact.IT_Skills_Ability_to_download_files__c',
-                name='contactItDownloadFiles'
+                question='Ability to use spreadsheets',
+                model='vm.contact.IT_Skill_Ability_to_use_spreadsheets__c',
+                name='contactItSpreadsheets'
               )
               p.intro(
                 layout='column'
@@ -600,24 +606,19 @@ section(ng-show='vm.actionLoaded')
                 name='contactEnRead'
               )
               gz-slider-form-input(
-                question='Ability to read in English',
-                model='vm.contact.EN_Skills_Ability_to_read_in_English__c',
-                name='contactEnRead'
+                question='Ability to write in English',
+                model='vm.contact.EN_Skills_Ability_to_write_in_English__c',
+                name='contactEnWrite'
               )
               gz-slider-form-input(
-                question='Ability to read in English',
-                model='vm.contact.EN_Skills_Ability_to_read_in_English__c',
-                name='contactEnRead'
+                question='Ability to understand spoken English',
+                model='vm.contact.EN_Skills_Ability_to_understand_spoken__c',
+                name='contactEnSpoken'
               )
               gz-slider-form-input(
-                question='Ability to read in English',
-                model='vm.contact.EN_Skills_Ability_to_read_in_English__c',
-                name='contactEnRead'
-              )
-              gz-slider-form-input(
-                question='Ability to read in English',
-                model='vm.contact.EN_Skills_Ability_to_read_in_English__c',
-                name='contactEnRead'
+                question='Ability to speak in English',
+                model='vm.contact.EN_Skills_Ability_to_speak_English__c',
+                name='contactEnSpeak'
               )
               p.error(
                 layout='column'
@@ -644,8 +645,8 @@ section(ng-show='vm.actionLoaded')
                 md-icon.md-material-icons navigate_before
                 | Previous
               md-button(
-                ng-click="vm.processExperience(pageForm)",
-                ng-disabled="vm.experienceSectionNextDisabled(pageForm)"
+                ng-click="vm.processExperience()",
+                ng-disabled="vm.experienceSectionNextDisabled()"
               ) 
                 | Next
                 md-icon.md-material-icons navigate_next
@@ -751,8 +752,8 @@ section(ng-show='vm.actionLoaded')
                 md-icon.md-material-icons navigate_before
                 | Previous
               md-button(
-                ng-click="vm.processExpectations(pageForm)",
-                ng-disabled="vm.expectationsSectionNextDisabled(pageForm)"
+                ng-click="vm.processExpectations()",
+                ng-disabled="vm.expectationsSectionNextDisabled()"
               ) 
                 | Next
                 md-icon.md-material-icons navigate_next

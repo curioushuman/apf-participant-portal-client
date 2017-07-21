@@ -20,8 +20,7 @@
       controllerAs: 'vm',
       bindToController: true,
       scope: {
-        question: '=',
-        index: '='
+        question: '='
       }
     };
   }

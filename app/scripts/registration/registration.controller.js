@@ -151,14 +151,14 @@
     vm.emailSectionStatus = 'disabled';
     vm.emailSectionTitle = 'Email';
     vm.processEmail = processEmail;
-    vm.emailSectionNextDisabled = function(pageForm) {
+    vm.emailSectionNextDisabled = function() {
       if (vm.working) {
         return true;
       }
       if (vm.email === '') {
         return true;
       }
-      if (pageForm.contactEmail.$invalid) {
+      if ($scope.pageForm.contactEmail.$invalid) {
         return true;
       }
       return false;
@@ -207,7 +207,11 @@
     vm.processPersonal = processPersonal;
     vm.salutations = ['Mr.', 'Ms.', 'Mrs.', 'Dr.', 'Prof.'];
     vm.genders = ['Male', 'Female', 'Other', 'Prefer not to disclose'];
-    vm.personalSectionNextDisabled = function(pageForm) {
+    vm.personalRequired = [
+      'contactFirstName','contactLastName',
+      'contactSalutation','contactGender'
+    ];
+    vm.personalSectionNextDisabled = function() {
       if (vm.working) {
         return true;
       }
@@ -221,14 +225,9 @@
     }
 
     // process
-    function processPersonal(pageForm) {
+    function processPersonal() {
 
-      if (
-        pageForm.contactFirstName.$invalid
-        || pageForm.contactLastName.$invalid
-        || pageForm.contactSalutation.$invalid
-        || pageForm.contactGender.$invalid
-      ) {
+      if (isValid(vm.personalRequired) === false) {
         vm.personalSectionInvalid = true;
         return;
       }
@@ -246,6 +245,11 @@
               vm.personalSectionError = true;
               console.log('There was an error creating the contact');
               console.log(err);
+            }
+          },
+          function(err) {
+            if (vm.debug) {
+              console.log('There was an error creating the contact', err);
             }
           }
         );
@@ -281,7 +285,11 @@
     vm.organisationSectionTitle = 'Organisation';
     vm.preOrganisation = preOrganisation;
     vm.processOrganisation = processOrganisation;
-    vm.organisationSectionNextDisabled = function(pageForm) {
+    vm.organisationRequired = [
+      'affiliationOrganisation','affiliationStartDate',
+      'affiliationRole','affiliationDepartment'
+    ];
+    vm.organisationSectionNextDisabled = function() {
       if (vm.working) {
         return true;
       }
@@ -320,7 +328,7 @@
             console.log('There was an error retrieving the affiliation', err);
           }
         }
-      )
+      );
     }
 
     function preQueryNhris() {
@@ -386,14 +394,9 @@
     }
 
     // process
-    function processOrganisation(pageForm) {
+    function processOrganisation() {
 
-      if (
-        pageForm.affiliationOrganisation.$invalid
-        || pageForm.affiliationStartDate.$invalid
-        || pageForm.affiliationRole.$invalid
-        || pageForm.affiliationDepartment.$invalid
-      ) {
+      if (isValid(vm.organisationRequired) === false) {
         vm.organisationSectionInvalid = true;
         return;
       }
@@ -403,6 +406,9 @@
       // update some contact fields
       vm.contact.Department = vm.affiliation.Department__c;
       vm.contact.Title = vm.affiliation.npe5__Role__c;
+
+      // and some affiliation fields
+      vm.affiliation.npe5__Contact__c = vm.contact.Id;
 
       // q.all works as it doesn't matter the order of processing
       $q.all([
@@ -432,7 +438,6 @@
     }
 
     function processSaveAffiliation() {
-      vm.affiliation.npe5__Contact__c = vm.contact.Id;
       if (vm.debug) {
         console.log('Saving affiliation', vm.affiliation);
       }
@@ -527,27 +532,6 @@
       });
     }
 
-    function processSaveContact() {
-      if (vm.debug) {
-        console.log('Saving contact', vm.contact);
-      }
-      return $q(function(resolve, reject) {
-        vm.contact.$update(
-          { contactid: vm.contact.Id },
-          function(record) {
-            if (record.success) {
-              resolve(vm.contact);
-            } else {
-              if (vm.debug) {
-                console.log('There was an error updating the contact', err);
-              }
-              reject(err);
-            }
-          }
-        );
-      });
-    }
-
     // Contact section
     vm.emailIsWork = 'yes';
     vm.phoneTypes = ['Work', 'Mobile', 'Home', 'Other'];
@@ -557,7 +541,10 @@
     vm.contactSectionTitle = 'Contact details';
     vm.preContact = preContact;
     vm.processContact = processContact;
-    vm.contactSectionNextDisabled = function(pageForm) {
+    vm.contactRequired = [
+      'contactPhone','contactPreferredPhone','contactClosestAirport'
+    ];
+    vm.contactSectionNextDisabled = function() {
       if (vm.working) {
         return true;
       }
@@ -585,14 +572,9 @@
     }
 
     // process
-    function processContact(pageForm) {
+    function processContact() {
 
-      if (
-        pageForm.contactWorkEmail.$invalid
-        || pageForm.contactPhone.$invalid
-        || pageForm.contactPreferredPhone.$invalid
-        || pageForm.contactClosestAirport.$invalid
-      ) {
+      if (isValid(vm.contactRequired) === false) {
         vm.contactSectionInvalid = true;
         return;
       }
@@ -644,14 +626,19 @@
     }
 
     // Experience section
-    vm.responses = [];
+    vm.questions = [];
+    vm.participant = new participantService.Participant();
     vm.experienceSectionStatus = 'disabled';
     vm.experienceSectionInvalid = false;
     vm.experienceSectionError = false;
+    vm.experienceSectionErrorTop = false;
     vm.experienceSectionTitle = 'Experience';
     vm.preExperience = preExperience;
     vm.processExperience = processExperience;
-    vm.experienceSectionNextDisabled = function(pageForm) {
+    vm.experienceRequired = [
+      'participantPriorExperienceTopic'
+    ];
+    vm.experienceSectionNextDisabled = function() {
       if (vm.working) {
         return true;
       }
@@ -660,33 +647,109 @@
 
     // pre
     function preExperience() {
-      vm.working = false;
-      vm.editSection('experience');
-      // grab the self assessment questions for this action
-      // don't forget to include the help text in the output (if it exists)
+
+      preQueryQuestions()
+      .then(
+        function() {
+          vm.working = false;
+          vm.editSection('experience');
+        },
+        function(err) {
+          if (vm.debug) {
+            console.log('Error preExperience', err);
+          }
+          vm.experienceSectionErrorTop = true;
+          vm.working = false;
+        }
+      );
+    }
+
+    function preQueryQuestions() {
+
+      return questionService.list(
+        { actionid: vm.action.Id }
+      )
+      .$promise
+      .then(
+        function(data) {
+          vm.questions = data;
+          if (vm.debug) {
+            console.log(vm.questions);
+          }
+          angular.forEach(vm.questions, function(question, index) {
+            question.response = new responseService.Response();
+          });
+          return vm.questions;
+        },
+        function(err) {
+          return err;
+        }
+      );
     }
 
     // process
-    function processExperience(pageForm) {
+    function processExperience() {
 
-      if (
-        pageForm.participantPriorExperienceTopic.$invalid
-      ) {
+      if (isValid(vm.experienceRequired) === false) {
         vm.experienceSectionInvalid = true;
         return;
       }
 
-      // process the questions
-        // and save the responses
-      // save for the contact as well
-      // and for the participant I believe
-
       vm.working = true;
 
-      vm.experienceSectionStatus = 'complete';
+      // participant information
+      vm.participant.Contact__c = vm.contact.Id;
+      vm.participant.Action__c = vm.action.Id;
+      vm.participant.Organisation__c = vm.affiliation.npe5__Organization__c;
+      vm.participant.Type__c = 'Participant';
 
-      //
-      vm.preExpectations();
+      // chaining the promises as responses rely on participant Id
+      processSaveParticipant()
+      .then(
+        function(participant) {
+          // q.all works as it doesn't matter the order of processing
+          var promises = processSaveResponses();
+          promises.push(processSaveContact());
+          $q.all(promises).then(
+            function(data) {
+              if (vm.debug) {
+                console.log('All promises have resolved', data);
+              }
+
+              vm.experienceSectionStatus = 'complete';
+              vm.preExpectations();
+            },
+            function(err) {
+              if (vm.debug) {
+                console.log('Something went wrong', err);
+              }
+              vm.experienceSectionError = true;
+              vm.working = false;
+            }
+          );
+        },
+        function(err) {
+          vm.experienceSectionError = true;
+          vm.working = false;
+          if (vm.debug) {
+            console.log('There was an error saving the participant', err);
+          }
+        }
+      );
+    }
+
+    function processSaveResponses() {
+      var promises = [];
+      angular.forEach(vm.questions, function(question, index) {
+        question.response.Participant__c = vm.participant.Id;
+        question.response.Self_assessment_question__c = question.Id;
+        if (vm.debug) {
+          console.log('Response ' + index, question.response);
+        }
+        promises.push(processSaveResponse(question.response));
+      });
+
+      return promises;
     }
 
     // Expectations section
@@ -696,7 +759,10 @@
     vm.expectationsSectionTitle = 'Expectations';
     vm.preExpectations = preExpectations;
     vm.processExpectations = processExpectations;
-    vm.expectationsSectionNextDisabled = function(pageForm) {
+    vm.expectationsRequired = [
+      'participantKnowledgeGain','participantSkillsGain'
+    ];
+    vm.expectationsSectionNextDisabled = function() {
       if (vm.working) {
         return true;
       }
@@ -710,17 +776,22 @@
     }
 
     // process
-    function processExpectations(pageForm) {
+    function processExpectations() {
 
-      if (
-        pageForm.participantKnowledgeGain.$invalid
-        || pageForm.participantSkillsGain.$invalid
-      ) {
+      if (isValid(vm.expectationsRequired) === false) {
         vm.expectationsSectionInvalid = true;
         return;
       }
 
       // save the participant
+      // Prior_experience_with_action_topic__c: 1,
+      // Knowledge_they_would_like_to_gain__c: 1,
+      // Skills_they_would_like_to_gain__c: 1,
+      // Additional_information__c: 1,
+      // Contact__c: 1,
+      // Action__c: 1,
+      // Organisation__c: 1,
+      // Type__c: 1
 
       vm.working = true;
 
@@ -733,6 +804,91 @@
 
       // just submit, don't show a summary of all fields
 
+    }
+
+    function processSaveContact() {
+      if (vm.debug) {
+        console.log('Saving contact', vm.contact);
+      }
+      return $q(function(resolve, reject) {
+        vm.contact.$update(
+          { contactid: vm.contact.Id },
+          function(record) {
+            if (record.success) {
+              resolve(vm.contact);
+            } else {
+              if (vm.debug) {
+                console.log('There was an error updating the contact', err);
+              }
+              reject(err);
+            }
+          }
+        );
+      });
+    }
+
+    function processSaveParticipant() {
+      if (vm.debug) {
+        console.log('Saving participant', vm.participant);
+      }
+      return $q(function(resolve, reject) {
+        vm.participant.$save(
+          function(record) {
+            if (record.success) {
+              resolve(vm.participant);
+            } else {
+              if (vm.debug) {
+                console.log('There was an error creating the participant', err);
+              }
+              reject(err);
+            }
+          },
+          function(err) {
+            if (vm.debug) {
+              console.log('There was an error creating the participant', err);
+            }
+            reject(err);
+          }
+        );
+      });
+    }
+
+    function processSaveResponse(response) {
+      if (vm.debug) {
+        console.log('Saving response', response);
+      }
+      return $q(function(resolve, reject) {
+        response.$save(
+          function(record) {
+            if (record.success) {
+              resolve(response);
+            } else {
+              if (vm.debug) {
+                console.log('There was an error creating the response', err);
+              }
+              reject(err);
+            }
+          },
+          function(err) {
+            if (vm.debug) {
+              console.log('There was an error creating the response', err);
+            }
+            reject(err);
+          }
+        );
+      });
+    }
+
+    function isValid(requiredFields) {
+      var valid = true;
+      angular.forEach(requiredFields, function(field, index) {
+        if ($scope.pageForm[field].$invalid) {
+          valid = false;
+          $scope.pageForm[field].$setTouched();
+        }
+      });
+
+      return valid;
     }
 
   }
