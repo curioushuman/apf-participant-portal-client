@@ -402,10 +402,17 @@ section(ng-show='vm.actionLoaded')
             md-card-content
               //- section intro
               //- p stuff
+              p.question Is the email you've provided your 
+                strong work 
+                | email address?
               md-input-container.md-block(flex)
-                label Your 
+                md-radio-group(ng-model='vm.emailIsWork')
+                  md-radio-button.md-primary(value='yes', ng-click='vm.changeEmailWork()') Yes
+                  md-radio-button(value='no', ng-click='vm.changeEmailWork()')  No
+              md-input-container.md-block(flex, ng-hide="vm.emailIsWork === 'yes'")
+                label What is your  
                   strong work 
-                  | email address
+                  | email address?
                 input(
                   required,
                   type='email',
@@ -415,15 +422,12 @@ section(ng-show='vm.actionLoaded')
                   maxlength='155',
                   ng-pattern="/^.+@.+\..+$/"
                 )
-                div.hint
-                  | If the email address you have entered above is not your 
-                  | work email, please enter it here
                 div(ng-messages='pageForm.contactWorkEmail.$error', role='alert')
                   div(ng-message-exp="['minlength', 'maxlength', 'pattern']")
                     | Your email must be between 10 and 155 characters long and look like an e-mail address.
               md-input-container.md-block(flex)
                 label Phone 
-                input(ng-model='vm.contact.Phone', name='contactPhone', required)
+                input(ng-model='vm.Phone', name='contactPhone', required)
                 div(ng-messages='pageForm.contactPhone.$error', role='alert')
                   div(ng-message='required')
                     | This field is required

@@ -78,12 +78,6 @@
         startdate2 = new Date(affiliation2.npe5__StartDate__c);
       }
       startdate2 = $filter('date')(startdate2, "dd/MM/yyyy");
-      console.log(startdate1);
-      console.log(startdate2);
-      console.log(affiliation1.Department__c);
-      console.log(affiliation2.Department__c);
-      console.log(affiliation1.npe5__Role__c);
-      console.log(affiliation2.npe5__Role__c);
       if (
         affiliation1.Department__c === affiliation2.Department__c
         && affiliation1.npe5__Role__c === affiliation2.npe5__Role__c

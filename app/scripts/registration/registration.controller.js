@@ -143,7 +143,9 @@
     }
 
     // Email section
-    vm.email = 'mike@curioushuman.com.au'; // TESTING
+    if (vm.debug) {
+      vm.email = 'mike@curioushuman.com.au'; // TESTING
+    }
     vm.contactExists = false;
     vm.emailSectionError = false;
     vm.emailSectionStatus = 'disabled';
@@ -295,10 +297,10 @@
       }
 
       // chaining the promises as affiliation NRHI check relies on NHRI list
-      preOrganisationNhris()
+      preQueryNhris()
       .then(
         function(nhris) {
-          preOrganisationAffiliation();
+          preRetrieveAffiliation();
         },
         function(err) {
           vm.organisationSectionErrorTop = true;
@@ -321,7 +323,7 @@
       )
     }
 
-    function preOrganisationNhris() {
+    function preQueryNhris() {
 
       return accountService.listByType(
         { type: 'National Human Rights Institution' }
@@ -338,7 +340,7 @@
       );
     }
 
-    function preOrganisationAffiliation() {
+    function preRetrieveAffiliation() {
 
       return $q(function(resolve, reject) {
         if (vm.contactExists) {
@@ -398,10 +400,14 @@
 
       vm.working = true;
 
+      // update some contact fields
+      vm.contact.Department = vm.affiliation.Department__c;
+      vm.contact.Title = vm.affiliation.npe5__Role__c;
+
       // q.all works as it doesn't matter the order of processing
       $q.all([
-        processOrganisationAffiliation(),
-        processOrganisationContact()
+        processSaveAffiliation(),
+        processSaveContact()
       ]).then(
         function(data) {
           if (vm.debug) {
@@ -420,11 +426,12 @@
             console.log('Something went wrong', err);
           }
           vm.organisationSectionError = true;
+          vm.working = false;
         }
       );
     }
 
-    function processOrganisationAffiliation() {
+    function processSaveAffiliation() {
       vm.affiliation.npe5__Contact__c = vm.contact.Id;
       if (vm.debug) {
         console.log('Saving affiliation', vm.affiliation);
@@ -520,19 +527,21 @@
       });
     }
 
-    function processOrganisationContact() {
-      console.log(vm.contact);
-      vm.contact.Department = vm.affiliation.Department__c;
-      vm.contact.Title = vm.affiliation.npe5__Role__c;
+    function processSaveContact() {
+      if (vm.debug) {
+        console.log('Saving contact', vm.contact);
+      }
       return $q(function(resolve, reject) {
         vm.contact.$update(
           { contactid: vm.contact.Id },
           function(record) {
             if (record.success) {
-              resolve('Contact updated');
+              resolve(vm.contact);
             } else {
-              console.log('There was an error updating the contact', err);
-              reject('An error occurred updating the contact');
+              if (vm.debug) {
+                console.log('There was an error updating the contact', err);
+              }
+              reject(err);
             }
           }
         );
@@ -540,6 +549,7 @@
     }
 
     // Contact section
+    vm.emailIsWork = 'yes';
     vm.phoneTypes = ['Work', 'Mobile', 'Home', 'Other'];
     vm.contactSectionStatus = 'disabled';
     vm.contactSectionInvalid = false;
@@ -556,6 +566,20 @@
 
     // pre
     function preContact() {
+
+      switch (vm.contact.npe01__PreferredPhone__c) {
+        case 'Mobile':
+          vm.Phone = vm.contact.MobilePhone;
+          break;
+        case 'Home':
+          vm.Phone = vm.contact.HomePhone;
+          break;
+        case 'Work':
+        default:
+          vm.Phone = vm.contact.npe01__WorkPhone__c;
+          break;
+      }
+
       vm.working = false;
       vm.editSection('contact');
     }
@@ -564,7 +588,8 @@
     function processContact(pageForm) {
 
       if (
-        pageForm.contactPhone.$invalid
+        pageForm.contactWorkEmail.$invalid
+        || pageForm.contactPhone.$invalid
         || pageForm.contactPreferredPhone.$invalid
         || pageForm.contactClosestAirport.$invalid
       ) {
@@ -572,22 +597,50 @@
         return;
       }
 
-      // do the funky email stuff
-        // i.e. if they enter an email, we assume the previous email is home
-          // we also assume preferred is home email
-        // if they enter nothing
-          // we assume preferred is work email
-          // they have not provided a home email
-
-      // similary, but more simply, with the phone
-        // i.e. preferred phone and the phone type we actually have
-
       vm.working = true;
 
-      vm.contactSectionStatus = 'complete';
+      if (vm.emailIsWork === 'yes') {
+        vm.contact.npe01__Preferred_Email__c = 'Work';
+      } else {
+        vm.contact.npe01__Preferred_Email__c = 'Home';
+        vm.contact.npe01__HomeEmail__c = vm.email;
+      }
 
-      //
-      vm.preExperience();
+      switch (vm.contact.npe01__PreferredPhone__c) {
+        case 'Mobile':
+          vm.contact.MobilePhone = vm.Phone;
+          break;
+        case 'Home':
+          vm.contact.HomePhone = vm.Phone;
+          break;
+        case 'Work':
+        default:
+          vm.contact.npe01__WorkPhone__c = vm.Phone;
+          break;
+      }
+
+      processSaveContact()
+      .then(
+        function() {
+          vm.contactSectionStatus = 'complete';
+          vm.preExperience();
+        },
+        function(err) {
+          if (vm.debug) {
+            console.log('Error processingContact', err);
+          }
+          vm.contactSectionError = true;
+          vm.working = false;
+        }
+      );
+    }
+
+    vm.changeEmailWork = function() {
+      if (vm.emailIsWork === 'no') {
+        vm.contact.npe01__WorkEmail__c = vm.email;
+      } else {
+        vm.contact.npe01__WorkEmail__c = '';
+      }
     }
 
     // Experience section
