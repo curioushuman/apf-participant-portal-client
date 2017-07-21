@@ -43,6 +43,8 @@
   ) {
     var vm = this;
 
+    vm.debug = true;
+
     // debugging / developing
     vm.openAll = false;
 
@@ -288,25 +290,38 @@
     function preOrganisation() {
       vm.working = false;
       vm.organisationSectionErrorTop = false;
+      if (vm.debug) {
+        console.log('preOrganisation');
+      }
 
-      $q.all([
-        preOrganisationAccounts(),
-        preOrganisationAffiliation()
-      ]).then(
-        function(data) {
-          console.log('Both promises have resolved', data);
-
+      // chaining the promises as affiliation NRHI check relies on NHRI list
+      preOrganisationNhris()
+      .then(
+        function(nhris) {
+          preOrganisationAffiliation();
+        },
+        function(err) {
+          vm.organisationSectionErrorTop = true;
+          if (vm.debug) {
+            console.log('There was an error retrieving the NHRIs', err);
+          }
+        }
+      )
+      .then(
+        function(affiliation) {
           vm.working = false;
           vm.editSection('organisation');
         },
         function(err) {
-          console.log('Something went wrong', err);
           vm.organisationSectionErrorTop = true;
+          if (vm.debug) {
+            console.log('There was an error retrieving the affiliation', err);
+          }
         }
-      );
+      )
     }
 
-    function preOrganisationAccounts() {
+    function preOrganisationNhris() {
 
       return accountService.listByType(
         { type: 'National Human Rights Institution' }
@@ -315,10 +330,9 @@
       .then(
         function(data) {
           vm.nhris = data;
-          return 'NHRIs found';
+          return vm.nhris;
         },
         function(err) {
-          console.log('There was an error retrieving the NHRIs', err);
           return err;
         }
       );
@@ -333,21 +347,30 @@
             function () {
               vm.affiliation.npe5__StartDate__c =
                 new Date(vm.affiliation.npe5__StartDate__c);
+              if (vm.debug) {
+                console.log('found affiliation', vm.affiliation);
+              }
               if (affiliationService.isNhri(vm.affiliation, vm.nhris) === false) {
                 vm.affiliation = new affiliationService.Affiliation();
+                if (vm.debug) {
+                  console.log('Not an NHRI though', vm.affiliation);
+                }
               }
-              resolve('Affiliation found');
+              resolve(vm.affiliation);
             },
             function (err) {
               if (err.status !== 404) {
-                console.log('There was an error retrieving the Affiliation', err);
-                reject('An error occurred retrieving the affiliation');
+                // we don't are about 404, there may not be a record and that ok
+                reject(err);
               }
             }
           );
         } else {
           vm.affiliation = new affiliationService.Affiliation();
-          resolve('New Affiliation created');
+          if (vm.debug) {
+            console.log('Contact does not exist, creating empty affiliation', vm.affiliation);
+          }
+          resolve(vm.affiliation);
         }
       });
     }
