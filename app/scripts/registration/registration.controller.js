@@ -43,20 +43,17 @@
   ) {
     var vm = this;
 
-    vm.debug = true;
-
     // debugging / developing
+    vm.debug = true;
     vm.openAll = false;
 
     vm.navigate = layoutService.navigate;
-
     vm.working = false;
+    vm.formComplete = false;
 
     vm.actionLoaded = false;
     vm.actionError = false;
     vm.actionErrorMessage = {};
-
-    vm.register = register;
 
     // date stuff
     $mdDateLocale.formatDate = function(date) {
@@ -783,26 +780,28 @@
         return;
       }
 
-      // save the participant
-      // Prior_experience_with_action_topic__c: 1,
-      // Knowledge_they_would_like_to_gain__c: 1,
-      // Skills_they_would_like_to_gain__c: 1,
-      // Additional_information__c: 1,
-      // Contact__c: 1,
-      // Action__c: 1,
-      // Organisation__c: 1,
-      // Type__c: 1
-
       vm.working = true;
 
-      vm.expectationsSectionStatus = 'complete';
-
-      //
+      processUpdateParticipant()
+      .then(
+        function() {
+          vm.expectationsSectionStatus = 'complete';
+          vm.confirmation();
+        },
+        function(err) {
+          if (vm.debug) {
+            console.log('Error processExpectations', err);
+          }
+          vm.expectationsSectionError = true;
+          vm.working = false;
+        }
+      );
     }
 
-    function register() {
+    function confirmation() {
 
       // just submit, don't show a summary of all fields
+      vm.formComplete = true;
 
     }
 
@@ -846,6 +845,33 @@
           function(err) {
             if (vm.debug) {
               console.log('There was an error creating the participant', err);
+            }
+            reject(err);
+          }
+        );
+      });
+    }
+
+    function processUpdateParticipant() {
+      if (vm.debug) {
+        console.log('Updating participant', vm.participant);
+      }
+      return $q(function(resolve, reject) {
+        vm.participant.$update(
+          { participantid: vm.participant.Id },
+          function(record) {
+            if (record.success) {
+              resolve(vm.participant);
+            } else {
+              if (vm.debug) {
+                console.log('There was an error updating the participant', err);
+              }
+              reject(err);
+            }
+          },
+          function(err) {
+            if (vm.debug) {
+              console.log('There was an error updating the participant', err);
             }
             reject(err);
           }

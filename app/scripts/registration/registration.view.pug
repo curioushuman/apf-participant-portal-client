@@ -88,7 +88,7 @@ section(ng-show='vm.actionLoaded')
 
       //- Form
       div(flex, layout='column')
-        form(name='pageForm', ng-submit='pageForm.$valid && vm.register()')
+        form(name='pageForm', ng-submit='pageForm.$valid && vm.processExpectations()')
           
           //- Email section
           a(name='email')
@@ -757,3 +757,15 @@ section(ng-show='vm.actionLoaded')
               ) 
                 | Next
                 md-icon.md-material-icons navigate_next
+          md-card(
+            md-colors="{background: 'default-primary-hue-2'}",
+            ng-show='vm.formComplete'
+          )
+            md-card-header
+              md-card-avatar
+                img(
+                  ng-src='/images/APF-logo-circle.png',
+                  alt='Asia Pacific Forum logo'
+                )
+              md-card-header-text
+                span.md-headline Your registration has been received
