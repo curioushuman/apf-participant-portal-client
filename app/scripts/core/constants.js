@@ -5,5 +5,5 @@
   'use strict';
   angular
     .module('app.core')
-    .constant('API_URI', ['http://api.asiapacificforum.net']);
+    .constant('API_URI', ['https://apfapi.herokuapp.com']);
 })();
