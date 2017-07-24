@@ -8,7 +8,10 @@ section
       ng-src='/images/APF-logo-circle-32x32.png',
       alt='Asia Pacific Forum logo'
     )
-    h1.md-subhead Registration — Training Portal
+    h1.md-subhead Training Portal
+    
+  div.subheader(layout='row', md-colors="{background: 'default-primary-hue-1'}")
+    p.body-2 Registration for
 
   //- Hero
   div.hero(layout='row', layout-xs='column', md-colors="{background: 'default-primary-hue-2'}")
@@ -780,3 +783,22 @@ section(ng-show='vm.actionLoaded')
             md-card-content
               p Thank you for taking the time to complete our application form. 
                 | Someone from the APF wil be in contact soon.
+                
+  div.footer(layout='row', layout-padding, md-colors="{background: 'default-background-hue-3'}")
+    img.logo-icon(
+      ng-src='/images/APF-logo-footer-2x.png',
+      alt='Asia Pacific Forum logo'
+    )
+    p 2017 The Asia Pacific Forum of National Human Rights 
+      | Institutions. 
+      a(
+        href='http://asiapacificforum.net/accessibility-policy/',
+        title='The accessibility policy of the APF'
+      )
+        | Accessibility policy
+      |  -&nbsp;
+      a(
+        href='http://asiapacificforum.net/terms-and-conditions/',
+        title='The terms and conditions of the APF'
+      )
+        | Terms and conditions

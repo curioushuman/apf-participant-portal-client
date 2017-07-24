@@ -20,6 +20,7 @@
     $anchorScroll
   ) {
 
+    // note: this doesn't work
     $anchorScroll.yOffset = 30;
 
     var service = {
