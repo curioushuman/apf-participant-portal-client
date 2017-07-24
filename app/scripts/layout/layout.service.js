@@ -29,13 +29,10 @@
 
     function navigate(view, hash) {
       // still needs some work on resume and begin
-      console.log(view);
       if (view) {
-        console.log('change view');
         $location.path('/' + view);
       }
       if (hash) {
-        console.log('change hash : ' + hash);
         $anchorScroll(hash);
       }
     }

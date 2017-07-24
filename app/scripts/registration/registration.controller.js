@@ -48,8 +48,10 @@
     vm.openAll = false;
 
     vm.navigate = layoutService.navigate;
+
     vm.working = false;
     vm.formComplete = false;
+    vm.completeForm = completeForm;
 
     vm.actionLoaded = false;
     vm.actionError = false;
@@ -786,7 +788,7 @@
       .then(
         function() {
           vm.expectationsSectionStatus = 'complete';
-          vm.confirmation();
+          vm.completeForm();
         },
         function(err) {
           if (vm.debug) {
@@ -798,9 +800,12 @@
       );
     }
 
-    function confirmation() {
+    function completeForm() {
 
       // just submit, don't show a summary of all fields
+      vm.working = false;
+      vm.sectionActive = '';
+      vm.expectationsSectionStatus = 'complete';
       vm.formComplete = true;
 
     }
