@@ -46,7 +46,7 @@
     var vm = this;
 
     // debugging / developing
-    vm.debug = true;
+    vm.debug = false;
     vm.openAll = false;
 
     vm.navigate = layoutService.navigate;

@@ -114,21 +114,32 @@ gulp.task('scripts', () =>
       // Note: Since we are not using useref in the scripts build pipeline,
       //       you need to explicitly list your scripts here in the right order
       //       to be correctly concatenated
-      './app/scripts/main.js',
+      './app/scripts/main.js'
       // Other scripts
-      './app/scripts/app.module.js',
-
-      './app/scripts/landing/landing.module.js',
-      './app/scripts/landing/config.route.js',
-      './app/scripts/landing/landing.controller.js',
-
-      // './app/scripts/why/why.module.js',
-      // './app/scripts/why/config.route.js',
-
-      './app/scripts/core/core.module.js',
-
-      './app/scripts/layout/layout.module.js',
-      './app/scripts/layout/layout.service.js'
+      // './app/scripts/app.module.js',
+      //
+      // './app/scripts/landing/registration.module.js',
+      // './app/scripts/landing/config.route.js',
+      // './app/scripts/landing/registration.controller.js',
+      //
+      // './app/scripts/core/core.module.js',
+      // './app/scripts/core/constants.js',
+      // './app/scripts/core/account.service.js',
+      // './app/scripts/core/action.service.js',
+      // './app/scripts/core/affiliation.service.js',
+      // './app/scripts/core/contact.service.js',
+      // './app/scripts/core/participant.service.js',
+      // './app/scripts/core/question.service.js',
+      // './app/scripts/core/response.service.js',
+      //
+      // './app/scripts/layout/layout.module.js',
+      // './app/scripts/layout/layout.service.js',
+      // './appscripts/layout/directives/completeFormSection.directive.js',
+      // './appscripts/layout/directives/disabledFormSection.directive.js',
+      // './appscripts/layout/directives/footer.directive.js',
+      // './appscripts/layout/directives/navbar.directive.js',
+      // './appscripts/layout/directives/responseFormInput.directive.js',
+      // './appscripts/layout/directives/sliderFormInput.directive.js'
     ])
       .pipe($.newer('.tmp/scripts'))
       .pipe($.sourcemaps.init())
@@ -194,11 +205,24 @@ gulp.task('html', () => {
     .pipe(gulp.dest('dist'));
 });
 
+// Scan your HTML for assets & optimize them
+gulp.task('copy_all_scripts', () => {
+  return gulp.src('app/**/*.js')
+    .pipe($.useref({
+      searchPath: '{.tmp,app}',
+      noAssets: true
+    }))
+    // Output files
+    .pipe($.if('*.js', $.size({title: 'js', showFiles: true})))
+    .pipe(gulp.dest('dist'));
+});
+
 // Clean output directory
 gulp.task('clean', () => del(['.tmp', 'dist/*', '!dist/.git'], {dot: true}));
 
 // Watch files for changes & reload
-gulp.task('serve', ['scripts', 'styles', 'pug_core', 'pug_angular'], () => {
+// gulp.task('serve', ['scripts', 'styles', 'pug_core', 'pug_angular'], () => {
+gulp.task('serve', ['scripts', 'copy_all_scripts', 'styles', 'pug_core', 'pug_angular'], () => {
   browserSync({
     notify: false,
     // Customize the Browsersync console logging prefix
@@ -215,7 +239,8 @@ gulp.task('serve', ['scripts', 'styles', 'pug_core', 'pug_angular'], () => {
 
   gulp.watch(['app/**/*.html'], reload);
   gulp.watch(['app/styles/**/*.{scss,css}'], ['styles', reload]);
-  gulp.watch(['app/scripts/**/*.js'], ['lint', 'scripts', reload]);
+  // gulp.watch(['app/scripts/**/*.js'], ['lint', 'scripts', reload]);
+  gulp.watch(['app/scripts/**/*.js'], ['lint', 'scripts', 'copy_all_scripts', reload]);
   gulp.watch(['views/**/*.pug'], ['pug_core', reload]);
   gulp.watch(['app/scripts/**/*.pug'], ['pug_angular', reload]);
   gulp.watch(['app/images/**/*'], reload);
@@ -241,7 +266,8 @@ gulp.task('serve:dist', ['default'], () =>
 gulp.task('default', ['clean'], cb =>
   runSequence(
     'styles',
-    ['lint', 'pug_core', 'pug_angular', 'html', 'scripts', 'images', 'copy'],
+    // ['lint', 'pug_core', 'pug_angular', 'html', 'scripts', 'images', 'copy'],
+    ['lint', 'pug_core', 'pug_angular', 'html', 'scripts', 'copy_all_scripts', 'images', 'copy'],
     'generate-service-worker',
     cb
   )
