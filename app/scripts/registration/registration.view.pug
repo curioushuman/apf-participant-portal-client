@@ -73,10 +73,9 @@ section(ng-show='vm.actionLoaded')
           md-card-content
             md-list(ng-show='vm.action.registrationDateShow')
               md-list-item
-                md-icon.material-icons event
-                .md-list-item-text
-                  p Registrations close 
-                    strong {{ vm.action.registrationDate }}
+                md-icon.material-icons.md-avatar event
+                p Registrations close 
+                  strong {{ vm.action.registrationDate }}
             p {{ vm.action.Help_text__c }}
             
         md-card(ng-show='vm.hasSelectionCriteria')
@@ -108,11 +107,11 @@ section(ng-show='vm.actionLoaded')
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'email'")
             md-card-header
-              md-card-avatar
-                img(
-                  ng-src='/images/APF-logo-footer-2x.png',
-                  alt='Asia Pacific Forum logo'
-                )
+              //- md-card-avatar
+              //-   img(
+              //-     ng-src='/images/APF-logo-footer-2x.png',
+              //-     alt='Asia Pacific Forum logo'
+              //-   )
               md-card-header-text
                 span.md-headline {{ vm.emailSectionTitle }}
             md-card-content
@@ -173,11 +172,11 @@ section(ng-show='vm.actionLoaded')
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'personal'")
             md-card-header
-              md-card-avatar
-                img(
-                  ng-src='/images/APF-logo-footer-2x.png',
-                  alt='Asia Pacific Forum logo'
-                )
+              //- md-card-avatar
+              //-   img(
+              //-     ng-src='/images/APF-logo-footer-2x.png',
+              //-     alt='Asia Pacific Forum logo'
+              //-   )
               md-card-header-text
                 span.md-headline  {{ vm.personalSectionTitle }}
             md-card-content
@@ -292,11 +291,11 @@ section(ng-show='vm.actionLoaded')
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'organisation'")
             md-card-header
-              md-card-avatar
-                img(
-                  ng-src='/images/APF-logo-footer-2x.png',
-                  alt='Asia Pacific Forum logo'
-                )
+              //- md-card-avatar
+              //-   img(
+              //-     ng-src='/images/APF-logo-footer-2x.png',
+              //-     alt='Asia Pacific Forum logo'
+              //-   )
               md-card-header-text
                 span.md-headline  {{ vm.organisationSectionTitle }}
             md-card-content
@@ -395,11 +394,11 @@ section(ng-show='vm.actionLoaded')
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'contact'")
             md-card-header
-              md-card-avatar
-                img(
-                  ng-src='/images/APF-logo-footer-2x.png',
-                  alt='Asia Pacific Forum logo'
-                )
+              //- md-card-avatar
+              //-   img(
+              //-     ng-src='/images/APF-logo-footer-2x.png',
+              //-     alt='Asia Pacific Forum logo'
+              //-   )
               md-card-header-text
                 span.md-headline  {{ vm.contactSectionTitle }}
             md-card-content
@@ -508,11 +507,11 @@ section(ng-show='vm.actionLoaded')
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'experience'")
             md-card-header
-              md-card-avatar
-                img(
-                  ng-src='/images/APF-logo-footer-2x.png',
-                  alt='Asia Pacific Forum logo'
-                )
+              //- md-card-avatar
+              //-   img(
+              //-     ng-src='/images/APF-logo-footer-2x.png',
+              //-     alt='Asia Pacific Forum logo'
+              //-   )
               md-card-header-text
                 span.md-headline  {{ vm.experienceSectionTitle }}
             md-card-content
@@ -669,11 +668,11 @@ section(ng-show='vm.actionLoaded')
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'expectations'")
             md-card-header
-              md-card-avatar
-                img(
-                  ng-src='/images/APF-logo-footer-2x.png',
-                  alt='Asia Pacific Forum logo'
-                )
+              //- md-card-avatar
+              //-   img(
+              //-     ng-src='/images/APF-logo-footer-2x.png',
+              //-     alt='Asia Pacific Forum logo'
+              //-   )
               md-card-header-text
                 span.md-headline  {{ vm.expectationsSectionTitle }}
             md-card-content
@@ -772,4 +771,5 @@ section(ng-show='vm.actionLoaded')
               md-card-header-text
                 span.md-headline Your registration has been received
             md-card-content
-              p Hooray
+              p Thank you for taking the time to complete our application form. 
+                | Someone from the APF wil be in contact soon.
