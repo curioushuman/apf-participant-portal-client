@@ -82,5 +82,4 @@
   //   messagingSenderId: '412696605647'
   // };
   // firebase.initializeApp(config);
-
 })();

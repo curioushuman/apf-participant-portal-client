@@ -15,9 +15,8 @@
   function LandingController(
     $location
   ) {
-
     var vm = this;
-    
+
     // for now simply redirecting to registration
     // ACTUALLY unecessary as it has been handled by routeProvider
     // as it should be

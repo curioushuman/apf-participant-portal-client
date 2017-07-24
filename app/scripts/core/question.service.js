@@ -15,9 +15,10 @@
   ];
 
   function questionService($resource, API_URI) {
-
     var Question = $resource(API_URI + '/question/:actionid',
-      { actionid: '@actionid' }
+      {
+        actionid: '@actionid'
+      }
     );
 
     var service = {

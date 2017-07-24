@@ -1,5 +1,7 @@
 /* eslint no-unused-vars: 0 */
 /* eslint require-jsdoc: 0 */
+/* eslint quotes: 0 */
+/* eslint camelcase: 0 */
 /* global angular */
 (function() {
   'use strict';
@@ -59,13 +61,15 @@
 
     // date stuff
     $mdDateLocale.formatDate = function(date) {
-      return $filter('date')(date, "dd/MM/yyyy");
+      return $filter('date')(date, 'dd/MM/yyyy');
     };
 
     // find the action based on the slug
     vm.action = actionService.retrieve(
-      { slug: $routeParams.actionSlug },
-      function () {
+      {
+        slug: $routeParams.actionSlug
+      },
+      function() {
         vm.actionLoaded = true;
 
         // work out the correct start and end dates
@@ -102,25 +106,25 @@
         }
 
         // grab the training partner of the action
-        // TODO Needs review aftre we've changed how training partners work in SF
+        // Needs review aftre we've changed how training partners work in SF
         // console.log('Obtain training partner');
         // console.log(vm.action.Training_partner__c);
         // vm.action.trainingPartnerAccount = accountService.retrieve(
         //   { accountid: vm.action.Training_partner__c },
-        //   function () {
+        //   function() {
         //     console.log('Found the training partner');
         //     console.log(vm.action.trainingPartnerAccount);
         //   },
-        //   function (err) {
+        //   function(err) {
         //     console.log('Training partner could not be found');
         //   }
         // );
       },
-      function (err) {
+      function(err) {
         if (vm.debug) {
           console.log(err);
         }
-        if (err.status = 404) {
+        if (err.status === 404) {
           vm.actionErrorMessage = {
             title: 'No action found',
             message: 'Please check URL'
@@ -139,12 +143,12 @@
 
     vm.editSection = function(section) {
       vm.sectionActive = section;
-      layoutService.navigate(null,section);
-    }
+      layoutService.navigate(null, section);
+    };
 
     // Email section
     if (vm.debug) {
-      vm.email = 'mike@curioushuman.com.au'; // TESTING
+      vm.email = 'mike@curioushuman.com.au';
     }
     vm.contactExists = false;
     vm.emailSectionError = false;
@@ -166,12 +170,13 @@
 
     // process email
     function processEmail() {
-
       vm.working = true;
 
       vm.contact = contactService.retrieve(
-        { email: vm.email },
-        function () {
+        {
+          email: vm.email
+        },
+        function() {
           vm.contactExists = true;
           if (vm.debug) {
             console.log('Contact found');
@@ -179,7 +184,7 @@
           vm.emailSectionStatus = 'complete';
           vm.prePersonal();
         },
-        function (err) {
+        function(err) {
           if (vm.debug) {
             console.log('There was an error retrieving the contact');
             console.log(err);
@@ -189,14 +194,15 @@
             // carry on through, we just didn't find a record
             // create a new Contact object
             vm.contact = new contactService.Contact(
-              { email: vm.email }
+              {
+                email: vm.email
+              }
             );
             vm.emailSectionStatus = 'complete';
             vm.prePersonal();
           } else {
             vm.emailSectionError = true;
           }
-
         }
       );
     }
@@ -211,8 +217,8 @@
     vm.salutations = ['Mr.', 'Ms.', 'Mrs.', 'Dr.', 'Prof.'];
     vm.genders = ['Male', 'Female', 'Other', 'Prefer not to disclose'];
     vm.personalRequired = [
-      'contactFirstName','contactLastName',
-      'contactSalutation','contactGender'
+      'contactFirstName', 'contactLastName',
+      'contactSalutation', 'contactGender'
     ];
     vm.personalSectionNextDisabled = function() {
       if (vm.working) {
@@ -229,7 +235,6 @@
 
     // process
     function processPersonal() {
-
       if (isValid(vm.personalRequired) === false) {
         vm.personalSectionInvalid = true;
         return;
@@ -248,7 +253,6 @@
               vm.personalSectionError = true;
               if (vm.debug) {
                 console.log('There was an error creating the contact');
-                console.log(err);
               }
             }
           },
@@ -260,7 +264,9 @@
         );
       } else {
         vm.contact.$update(
-          { contactid: vm.contact.Id },
+          {
+            contactid: vm.contact.Id
+          },
           function(record) {
             if (record.success) {
               vm.personalSectionStatus = 'complete';
@@ -269,7 +275,6 @@
               vm.personalSectionError = true;
               if (vm.debug) {
                 console.log('There was an error updating the contact');
-                console.log(err);
               }
             }
           }
@@ -278,13 +283,7 @@
     }
 
     // Organisation section
-    // TODO - actually get the data from somewhere
-    vm.nhris = [
-      {
-        Id: 'nhri',
-        Name: 'An NHRI and stuff'
-      }
-    ];
+    vm.nhris = [];
     vm.organisationSectionStatus = 'disabled';
     vm.organisationSectionInvalid = false;
     vm.organisationSectionError = false;
@@ -293,8 +292,8 @@
     vm.preOrganisation = preOrganisation;
     vm.processOrganisation = processOrganisation;
     vm.organisationRequired = [
-      'affiliationOrganisation','affiliationStartDate',
-      'affiliationRole','affiliationDepartment'
+      'affiliationOrganisation', 'affiliationStartDate',
+      'affiliationRole', 'affiliationDepartment'
     ];
     vm.organisationSectionNextDisabled = function() {
       if (vm.working) {
@@ -339,9 +338,10 @@
     }
 
     function preQueryNhris() {
-
       return accountService.listByType(
-        { type: 'National Human Rights Institution' }
+        {
+          type: 'National Human Rights Institution'
+        }
       )
       .$promise
       .then(
@@ -356,18 +356,21 @@
     }
 
     function preRetrieveAffiliation() {
-
       return $q(function(resolve, reject) {
         if (vm.contactExists) {
           vm.affiliation = affiliationService.retrievePrimary(
-            { contactid: vm.contact.Id },
-            function () {
+            {
+              contactid: vm.contact.Id
+            },
+            function() {
               vm.affiliation.npe5__StartDate__c =
                 new Date(vm.affiliation.npe5__StartDate__c);
               if (vm.debug) {
                 console.log('found affiliation', vm.affiliation);
               }
-              if (affiliationService.isNhri(vm.affiliation, vm.nhris) === false) {
+              if (
+                affiliationService.isNhri(vm.affiliation, vm.nhris) === false
+              ) {
                 vm.affiliation = new affiliationService.Affiliation();
                 if (vm.debug) {
                   console.log('Not an NHRI though', vm.affiliation);
@@ -383,7 +386,7 @@
               }
               resolve(vm.affiliation);
             },
-            function (err) {
+            function(err) {
               if (err.status !== 404) {
                 // we don't are about 404, there may not be a record and that ok
                 reject(err);
@@ -393,7 +396,10 @@
         } else {
           vm.affiliation = new affiliationService.Affiliation();
           if (vm.debug) {
-            console.log('Contact does not exist, creating empty affiliation', vm.affiliation);
+            console.log(
+              'Contact does not exist, creating empty affiliation',
+              vm.affiliation
+            );
           }
           resolve(vm.affiliation);
         }
@@ -402,7 +408,6 @@
 
     // process
     function processOrganisation() {
-
       if (isValid(vm.organisationRequired) === false) {
         vm.organisationSectionInvalid = true;
         return;
@@ -458,7 +463,7 @@
                 resolve(vm.affiliation);
               } else {
                 if (vm.debug) {
-                  console.log('There was an error creating the affiliation', err);
+                  console.log('There was an error creating the affiliation');
                 }
                 reject('An error occurred creating the affiliation');
               }
@@ -470,71 +475,81 @@
               reject(err);
             }
           );
-        } else {
-          if (affiliationService.equalsOrganisation(
-            vm.affiliation,
-            vm.affiliationFound
-          ) === false) {
-            if (vm.debug) {
-              console.log('Org has changed');
-            }
-            // they have changed organisations
-            // create new affiliation for them
-            vm.affiliation.Id = null;
-            vm.affiliation.npe5__Primary__c = true;
-            vm.affiliation.npe5__Status__c = 'Current';
-            vm.affiliation.$save(
-              function(record) {
-                if (record.success) {
-                  resolve(vm.affiliation);
-                } else {
-                  if (vm.debug) {
-                    console.log('There was an error creating the NEW affiliation', err);
-                  }
-                  reject('An error occurred creating the NEW affiliation');
-                }
-              },
-              function(err) {
-                if (vm.debug) {
-                  console.log('There was an error creating the NEW affiliation', err);
-                }
-                reject(err);
-              }
-            );
-          } else if (affiliationService.equalsOther(
-            vm.affiliation,
-            vm.affiliationFound
-          ) === false) {
-            if (vm.debug) {
-              console.log('Other info has changed');
-            }
-            // other info has changed
-            // update the current affiliation
-            vm.affiliation.$update(
-              { affiliationid: vm.affiliation.Id },
-              function(record) {
-                if (record.success) {
-                  resolve('Affiliation updated');
-                } else {
-                  if (vm.debug) {
-                    console.log('There was an error updating the affiliation', err);
-                  }
-                  reject('An error occurred updating the affiliation');
-                }
-              },
-              function(err) {
-                if (vm.debug) {
-                  console.log('There was an error updating the affiliation', err);
-                }
-                reject(err);
-              }
-            );
-          } else {
-            if (vm.debug) {
-              console.log('Affiliation unchanged, do not save');
-            }
-            resolve(vm.affiliation);
+        } else if (affiliationService.equalsOrganisation(
+          vm.affiliation,
+          vm.affiliationFound
+        ) === false) {
+          if (vm.debug) {
+            console.log('Org has changed');
           }
+          // they have changed organisations
+          // create new affiliation for them
+          vm.affiliation.Id = null;
+          vm.affiliation.npe5__Primary__c = true;
+          vm.affiliation.npe5__Status__c = 'Current';
+          vm.affiliation.$save(
+            function(record) {
+              if (record.success) {
+                resolve(vm.affiliation);
+              } else {
+                if (vm.debug) {
+                  console.log(
+                    'There was an error creating the NEW affiliation'
+                  );
+                }
+                reject('An error occurred creating the NEW affiliation');
+              }
+            },
+            function(err) {
+              if (vm.debug) {
+                console.log(
+                  'There was an error creating the NEW affiliation',
+                  err
+                );
+              }
+              reject(err);
+            }
+          );
+        } else if (affiliationService.equalsOther(
+          vm.affiliation,
+          vm.affiliationFound
+        ) === false) {
+          if (vm.debug) {
+            console.log('Other info has changed');
+          }
+          // other info has changed
+          // update the current affiliation
+          vm.affiliation.$update(
+            {
+              affiliationid: vm.affiliation.Id
+            },
+            function(record) {
+              if (record.success) {
+                resolve('Affiliation updated');
+              } else {
+                if (vm.debug) {
+                  console.log(
+                    'There was an error updating the affiliation'
+                  );
+                }
+                reject('An error occurred updating the affiliation');
+              }
+            },
+            function(err) {
+              if (vm.debug) {
+                console.log(
+                  'There was an error updating the affiliation',
+                  err
+                );
+              }
+              reject(err);
+            }
+          );
+        } else {
+          if (vm.debug) {
+            console.log('Affiliation unchanged, do not save');
+          }
+          resolve(vm.affiliation);
         }
       });
     }
@@ -549,7 +564,7 @@
     vm.preContact = preContact;
     vm.processContact = processContact;
     vm.contactRequired = [
-      'contactPhone','contactPreferredPhone','contactClosestAirport'
+      'contactPhone', 'contactPreferredPhone', 'contactClosestAirport'
     ];
     vm.contactSectionNextDisabled = function() {
       if (vm.working) {
@@ -560,7 +575,6 @@
 
     // pre
     function preContact() {
-
       switch (vm.contact.npe01__PreferredPhone__c) {
         case 'Mobile':
           vm.Phone = vm.contact.MobilePhone;
@@ -580,7 +594,6 @@
 
     // process
     function processContact() {
-
       if (isValid(vm.contactRequired) === false) {
         vm.contactSectionInvalid = true;
         return;
@@ -630,7 +643,7 @@
       } else {
         vm.contact.npe01__WorkEmail__c = '';
       }
-    }
+    };
 
     // Experience section
     vm.questions = [];
@@ -666,7 +679,6 @@
 
     // pre
     function preExperience() {
-
       preQueryQuestions()
       .then(
         function() {
@@ -684,9 +696,10 @@
     }
 
     function preQueryQuestions() {
-
       return questionService.list(
-        { actionid: vm.action.Id }
+        {
+          actionid: vm.action.Id
+        }
       )
       .$promise
       .then(
@@ -708,7 +721,6 @@
 
     // process
     function processExperience() {
-
       if (isValid(vm.experienceRequired) === false) {
         vm.experienceSectionInvalid = true;
       }
@@ -809,7 +821,7 @@
     vm.preExpectations = preExpectations;
     vm.processExpectations = processExpectations;
     vm.expectationsRequired = [
-      'participantKnowledgeGain','participantSkillsGain'
+      'participantKnowledgeGain', 'participantSkillsGain'
     ];
     vm.expectationsSectionNextDisabled = function() {
       if (vm.working) {
@@ -826,7 +838,6 @@
 
     // process
     function processExpectations() {
-
       if (isValid(vm.expectationsRequired) === false) {
         vm.expectationsSectionInvalid = true;
         return;
@@ -851,13 +862,11 @@
     }
 
     function completeForm() {
-
       // just submit, don't show a summary of all fields
       vm.working = false;
       vm.sectionActive = '';
       vm.expectationsSectionStatus = 'complete';
       vm.formComplete = true;
-
     }
 
     function processSaveContact() {
@@ -866,15 +875,17 @@
       }
       return $q(function(resolve, reject) {
         vm.contact.$update(
-          { contactid: vm.contact.Id },
+          {
+            contactid: vm.contact.Id
+          },
           function(record) {
             if (record.success) {
               resolve(vm.contact);
             } else {
               if (vm.debug) {
-                console.log('There was an error updating the contact', err);
+                console.log('There was an error updating the contact');
               }
-              reject(err);
+              reject('There was an error updating the contact');
             }
           }
         );
@@ -892,9 +903,9 @@
               resolve(vm.participant);
             } else {
               if (vm.debug) {
-                console.log('There was an error creating the participant', err);
+                console.log('There was an error creating the participant');
               }
-              reject(err);
+              reject('There was an error creating the participant');
             }
           },
           function(err) {
@@ -913,15 +924,17 @@
       }
       return $q(function(resolve, reject) {
         vm.participant.$update(
-          { participantid: vm.participant.Id },
+          {
+            participantid: vm.participant.Id
+          },
           function(record) {
             if (record.success) {
               resolve(vm.participant);
             } else {
               if (vm.debug) {
-                console.log('There was an error updating the participant', err);
+                console.log('There was an error updating the participant');
               }
-              reject(err);
+              reject('There was an error updating the participant');
             }
           },
           function(err) {
@@ -945,9 +958,9 @@
               resolve(response);
             } else {
               if (vm.debug) {
-                console.log('There was an error creating the response', err);
+                console.log('There was an error creating the response');
               }
-              reject(err);
+              reject('There was an error creating the response');
             }
           },
           function(err) {
@@ -971,6 +984,5 @@
 
       return valid;
     }
-
   }
 })();

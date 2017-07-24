@@ -32,7 +32,7 @@
     layoutService
   ) {
     var vm = this;
-    
+
     vm.navigate = layoutService.navigate;
   }
 })();

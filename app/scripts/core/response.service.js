@@ -15,19 +15,23 @@
   ];
 
   function responseService($resource, API_URI) {
-
     var Response = $resource(API_URI + '/response',
       {},
       {
-        'get': {
-          method:'GET',
+        get: {
+          method: 'GET',
           url: API_URI + '/response/:participantid/:questionid',
-          params: { participantid: '@participantid', questionid: '@questionid' }
+          params: {
+            participantid: '@participantid',
+            questionid: '@questionid'
+          }
         },
-        'update': {
-          method:'PUT',
+        update: {
+          method: 'PUT',
           url: API_URI + '/response/:responseid',
-          params: { responseid: '@responseid' }
+          params: {
+            responseid: '@responseid'
+          }
         }
       }
     );

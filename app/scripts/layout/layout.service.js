@@ -19,7 +19,6 @@
     $filter,
     $anchorScroll
   ) {
-
     var debug = false;
 
     // note: this doesn't work

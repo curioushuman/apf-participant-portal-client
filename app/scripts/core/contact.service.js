@@ -15,19 +15,22 @@
   ];
 
   function contactService($resource, API_URI) {
-
     var Contact = $resource(API_URI + '/contact',
       {},
       {
-        'get': {
-          method:'GET',
+        get: {
+          method: 'GET',
           url: API_URI + '/contact/:email',
-          params: { email: '@email' }
+          params: {
+            email: '@email'
+          }
         },
-        'update': {
-          method:'PUT',
+        update: {
+          method: 'PUT',
           url: API_URI + '/contact/:contactid',
-          params: { contactid: '@contactid' }
+          params: {
+            contactid: '@contactid'
+          }
         }
       }
     );

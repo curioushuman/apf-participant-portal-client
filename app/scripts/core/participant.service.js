@@ -15,19 +15,23 @@
   ];
 
   function participantService($resource, API_URI) {
-
     var Participant = $resource(API_URI + '/participant',
       {},
       {
-        'get': {
-          method:'GET',
+        get: {
+          method: 'GET',
           url: API_URI + '/participant/:contactid/:actionid',
-          params: { contactid: '@contactid', actionid: '@actionid' }
+          params: {
+            contactid: '@contactid',
+            actionid: '@actionid'
+          }
         },
-        'update': {
-          method:'PUT',
+        update: {
+          method: 'PUT',
           url: API_URI + '/participant/:participantid',
-          params: { participantid: '@participantid' }
+          params: {
+            participantid: '@participantid'
+          }
         }
       }
     );

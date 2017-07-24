@@ -14,7 +14,8 @@
 
   function gzDisabledFormSection(layoutService) {
     return {
-      templateUrl: 'scripts/layout/directives/disabledFormSection.template.html',
+      templateUrl:
+        'scripts/layout/directives/disabledFormSection.template.html',
       restrict: 'E',
       controller: DisabledFormSectionController,
       controllerAs: 'vm',

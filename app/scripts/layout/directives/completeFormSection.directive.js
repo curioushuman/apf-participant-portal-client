@@ -14,7 +14,8 @@
 
   function gzCompleteFormSection(layoutService) {
     return {
-      templateUrl: 'scripts/layout/directives/completeFormSection.template.html',
+      templateUrl:
+        'scripts/layout/directives/completeFormSection.template.html',
       restrict: 'E',
       controller: CompleteFormSectionController,
       controllerAs: 'vm',

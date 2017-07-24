@@ -15,9 +15,10 @@
   ];
 
   function actionService($resource, API_URI) {
-
     var Action = $resource(API_URI + '/action/:slug',
-      { slug: '@slug' }
+      {
+        slug: '@slug'
+      }
     );
 
     var service = {

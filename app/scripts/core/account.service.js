@@ -15,25 +15,30 @@
   ];
 
   function accountService($resource, API_URI) {
-
     var Account = $resource(API_URI + '/account',
       {},
       {
-        'get': {
-          method:'GET',
+        get: {
+          method: 'GET',
           url: API_URI + '/account/:accountid',
-          params: { accountid: '@accountid' }
+          params: {
+            accountid: '@accountid'
+          }
         },
-        'queryType': {
-          method:'GET',
+        queryType: {
+          method: 'GET',
           url: API_URI + '/account/type/:type',
-          params: { type: '@type' },
+          params: {
+            type: '@type'
+          },
           isArray: true
         },
-        'update': {
-          method:'PUT',
+        update: {
+          method: 'PUT',
           url: API_URI + '/account/:accountid',
-          params: { accountid: '@accountid' }
+          params: {
+            accountid: '@accountid'
+          }
         }
       }
     );
