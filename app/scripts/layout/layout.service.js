@@ -20,6 +20,8 @@
     $anchorScroll
   ) {
 
+    $anchorScroll.yOffset = 30;
+
     var service = {
       navigate: navigate,
       formatDate: formatDate
@@ -33,6 +35,7 @@
         $location.path('/' + view);
       }
       if (hash) {
+        console.log('navigate', hash);
         $anchorScroll(hash);
       }
     }
