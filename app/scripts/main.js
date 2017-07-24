@@ -73,5 +73,14 @@
   }
 
   // Your custom JavaScript goes here
+  // var config = {
+  //   apiKey: 'AIzaSyD7EolC5c-dPJfjREPJs4nenbFKthU8Ogg',
+  //   authDomain: 'apf-portal.firebaseapp.com',
+  //   databaseURL: 'https://apf-portal.firebaseio.com',
+  //   projectId: 'apf-portal',
+  //   storageBucket: '',
+  //   messagingSenderId: '412696605647'
+  // };
+  // firebase.initializeApp(config);
 
 })();
