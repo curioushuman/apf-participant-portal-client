@@ -10,18 +10,20 @@ div.response
       )
         md-icon comment
   md-slider-container.md-block(flex)
-    span 1
+    span 0
     md-slider(
       ng-model='vm.question.response.Score__c',
       name='responseScore{{ vm.question.Name }}',
       flex,
       md-discrete,
       step='1',
-      min='1',
+      min='0',
       max='5',
       aria-label='{{ vm.question.Question_text__c }}'
     )
     span 5
+  div.slider-invalid(ng-show='vm.question.response.error')
+    | This field is required
   md-input-container.md-block(flex, ng-hide='vm.hideComment')
     label Would you like to add any comments about this rating?
     textarea(

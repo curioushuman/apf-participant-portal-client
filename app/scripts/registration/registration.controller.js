@@ -631,12 +631,24 @@
     vm.experienceSectionStatus = 'disabled';
     vm.experienceSectionInvalid = false;
     vm.experienceSectionError = false;
+    vm.experienceErrors = {};
     vm.experienceSectionErrorTop = false;
     vm.experienceSectionTitle = 'Experience';
     vm.preExperience = preExperience;
     vm.processExperience = processExperience;
     vm.experienceRequired = [
       'participantPriorExperienceTopic'
+    ];
+    vm.experienceRequiredSliders = [
+      'IT_Skill_access_to_the_Internet__c',
+      'IT_Skills_Ability_to_download_files__c',
+      'IT_Skills_Ability_to_view_online_videos__c',
+      'IT_Skill_Ability_to_use_Word_documents__c',
+      'IT_Skill_Ability_to_use_spreadsheets__c',
+      'EN_Skills_Ability_to_read_in_English__c',
+      'EN_Skills_Ability_to_write_in_English__c',
+      'EN_Skills_Ability_to_understand_spoken__c',
+      'EN_Skills_Ability_to_speak_English__c'
     ];
     vm.experienceSectionNextDisabled = function() {
       if (vm.working) {
@@ -692,6 +704,25 @@
 
       if (isValid(vm.experienceRequired) === false) {
         vm.experienceSectionInvalid = true;
+      }
+
+      // special validation for experience
+      angular.forEach(vm.experienceRequiredSliders, function(slider, index) {
+        if (isValidSlider(slider) === false) {
+          vm.experienceSectionInvalid = true;
+        }
+      });
+      angular.forEach(vm.questions, function(question, index) {
+        if (
+          question.response.Score__c === undefined ||
+          question.response.Score__c === 0
+        ) {
+          question.response.error = true;
+          vm.experienceSectionInvalid = true;
+        }
+      });
+
+      if (vm.experienceSectionInvalid === true) {
         return;
       }
 
@@ -736,6 +767,17 @@
           }
         }
       );
+    }
+
+    function isValidSlider(slider) {
+      if (
+        vm.contact[slider] === null ||
+        vm.contact[slider] === 0
+      ) {
+        vm.experienceErrors[slider] = true;
+        return false;
+      }
+      return true;
     }
 
     function processSaveResponses() {

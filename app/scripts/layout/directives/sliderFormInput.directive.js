@@ -22,7 +22,8 @@
       scope: {
         question: '@',
         model: '=',
-        name: '@'
+        name: '@',
+        error: '=',
       }
     };
   }

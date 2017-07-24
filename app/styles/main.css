@@ -72,6 +72,11 @@ p.intro {
   margin: 0;
 }
 
+.slider-invalid {
+  color: rgb(221,44,0);
+  font-size: 0.8em;
+}
+
 /* footer */
 div.footer p {
   padding: 0;
