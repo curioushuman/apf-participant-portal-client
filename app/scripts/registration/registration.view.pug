@@ -79,12 +79,15 @@ section(ng-show='vm.actionLoaded')
                     strong {{ vm.action.registrationDate }}
             p {{ vm.action.Help_text__c }}
             
-        md-card
+        md-card(ng-show='vm.hasSelectionCriteria')
           md-card-title
             md-card-title-text.md-headline
               | Selection criteria
           md-card-content
-            p {{ vm.action.Selection_criteria__c }}
+            md-list(ng-show='vm.action.registrationDateShow')
+              md-list-item(ng-repeat='criteria in vm.selectionCriteria')
+                .md-list-item-text
+                  p {{ criteria }}
 
       //- Form
       div(flex, layout='column')

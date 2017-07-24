@@ -97,10 +97,11 @@
         }
 
         // sort out the selection criteria
-        // split based on new line
-        // turn it into an array
-        // make it a list
-        // vm.action.Selection_criteria__c
+        vm.hasSelectionCriteria = false;
+        if (vm.action.Selection_criteria__c !== null) {
+          vm.hasSelectionCriteria = true;
+          vm.selectionCriteria = vm.action.Selection_criteria__c.split("\n");
+        }
 
         // grab the training partner of the action
         // TODO Needs review aftre we've changed how training partners work in SF
