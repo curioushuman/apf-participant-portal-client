@@ -5,5 +5,6 @@
   'use strict';
   angular
     .module('app.core')
-    .constant('API_URI', ['https://apfapi.herokuapp.com']);
+    .constant('API_URI', ['https://apfapi.herokuapp.com:9000/salesforce']);
+    // .constant('API_URI', ['http://localhost:9000/salesforce']);
 })();
