@@ -20,6 +20,8 @@
     $anchorScroll
   ) {
 
+    var debug = false;
+
     // note: this doesn't work
     $anchorScroll.yOffset = 30;
 
@@ -36,7 +38,9 @@
         $location.path('/' + view);
       }
       if (hash) {
-        console.log('navigate', hash);
+        if (debug) {
+          console.log('navigate', hash);
+        }
         $anchorScroll(hash);
       }
     }

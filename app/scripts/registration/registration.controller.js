@@ -66,8 +66,6 @@
     vm.action = actionService.retrieve(
       { slug: $routeParams.actionSlug },
       function () {
-        // console.log('retrieved');
-        // console.log(vm.action);
         vm.actionLoaded = true;
 
         // work out the correct start and end dates
@@ -119,7 +117,9 @@
         // );
       },
       function (err) {
-        console.log(err);
+        if (vm.debug) {
+          console.log(err);
+        }
         if (err.status = 404) {
           vm.actionErrorMessage = {
             title: 'No action found',
@@ -167,20 +167,23 @@
     // process email
     function processEmail() {
 
-      console.log(vm.email);
       vm.working = true;
 
       vm.contact = contactService.retrieve(
         { email: vm.email },
         function () {
           vm.contactExists = true;
-          console.log('Contact found');
+          if (vm.debug) {
+            console.log('Contact found');
+          }
           vm.emailSectionStatus = 'complete';
           vm.prePersonal();
         },
         function (err) {
-          console.log('There was an error retrieving the contact');
-          console.log(err);
+          if (vm.debug) {
+            console.log('There was an error retrieving the contact');
+            console.log(err);
+          }
 
           if (err.status === 404) {
             // carry on through, we just didn't find a record
@@ -243,8 +246,10 @@
               vm.preOrganisation();
             } else {
               vm.personalSectionError = true;
-              console.log('There was an error creating the contact');
-              console.log(err);
+              if (vm.debug) {
+                console.log('There was an error creating the contact');
+                console.log(err);
+              }
             }
           },
           function(err) {
@@ -262,8 +267,10 @@
               vm.preOrganisation();
             } else {
               vm.personalSectionError = true;
-              console.log('There was an error updating the contact');
-              console.log(err);
+              if (vm.debug) {
+                console.log('There was an error updating the contact');
+                console.log(err);
+              }
             }
           }
         );
