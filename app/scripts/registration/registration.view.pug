@@ -584,27 +584,32 @@ section(ng-show='vm.actionLoaded')
               gz-slider-form-input(
                 question='Access to the Internet',
                 model='vm.contact.IT_Skill_access_to_the_Internet__c',
+                name='contactItAccessInternet',
                 error='vm.experienceErrors.IT_Skill_access_to_the_Internet__c'
               )
               gz-slider-form-input(
                 question='Ability to download files',
                 model='vm.contact.IT_Skills_Ability_to_download_files__c',
-                name='contactItDownloadFiles'
+                name='contactItDownloadFiles',
+                error='vm.experienceErrors.IT_Skills_Ability_to_download_files__c'
               )
               gz-slider-form-input(
                 question='Ability to view vides online',
                 model='vm.contact.IT_Skills_Ability_to_view_online_videos__c',
-                name='contactItViewVideos'
+                name='contactItViewVideos',
+                error='vm.experienceErrors.IT_Skills_Ability_to_view_online_videos__c'
               )
               gz-slider-form-input(
                 question='Ability to use Word documents',
                 model='vm.contact.IT_Skill_Ability_to_use_Word_documents__c',
-                name='contactItWord'
+                name='contactItWord',
+                error='vm.experienceErrors.IT_Skill_Ability_to_use_Word_documents__c'
               )
               gz-slider-form-input(
                 question='Ability to use spreadsheets',
                 model='vm.contact.IT_Skill_Ability_to_use_spreadsheets__c',
-                name='contactItSpreadsheets'
+                name='contactItSpreadsheets',
+                error='vm.experienceErrors.IT_Skill_Ability_to_use_spreadsheets__c'
               )
               p.intro(
                 layout='column'
@@ -615,23 +620,26 @@ section(ng-show='vm.actionLoaded')
               gz-slider-form-input(
                 question='Ability to read in English',
                 model='vm.contact.EN_Skills_Ability_to_read_in_English__c',
-                name='contactEnRead'
+                name='contactEnRead',
+                error='vm.experienceErrors.EN_Skills_Ability_to_read_in_English__c'
               )
               gz-slider-form-input(
                 question='Ability to write in English',
                 model='vm.contact.EN_Skills_Ability_to_write_in_English__c',
-                name='contactEnWrite'
+                name='contactEnWrite',
+                error='vm.experienceErrors.EN_Skills_Ability_to_write_in_English__c'
               )
               gz-slider-form-input(
                 question='Ability to understand spoken English',
                 model='vm.contact.EN_Skills_Ability_to_understand_spoken__c',
-                name='contactEnSpoken'
+                name='contactEnSpoken',
+                error='vm.experienceErrors.EN_Skills_Ability_to_understand_spoken__c'
               )
               gz-slider-form-input(
                 question='Ability to speak in English',
                 model='vm.contact.EN_Skills_Ability_to_speak_English__c',
                 name='contactEnSpeak',
-                error=''
+                error='vm.experienceErrors.EN_Skills_Ability_to_speak_English__c'
               )
               p.error(
                 layout='column'

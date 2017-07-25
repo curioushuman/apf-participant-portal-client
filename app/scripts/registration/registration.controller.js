@@ -721,14 +721,22 @@
 
     // process
     function processExperience() {
+      vm.experienceSectionInvalid = false;
+
       if (isValid(vm.experienceRequired) === false) {
         vm.experienceSectionInvalid = true;
       }
 
       // special validation for experience
       angular.forEach(vm.experienceRequiredSliders, function(slider, index) {
-        if (isValidSlider(slider) === false) {
+        if (
+          vm.contact[slider] === null ||
+          vm.contact[slider] === 0
+        ) {
+          vm.experienceErrors[slider] = true;
           vm.experienceSectionInvalid = true;
+        } else {
+          vm.experienceErrors[slider] = false;
         }
       });
       angular.forEach(vm.questions, function(question, index) {
