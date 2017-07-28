@@ -33,6 +33,14 @@
           },
           isArray: true
         },
+        queryTypeExclude: {
+          method: 'GET',
+          url: API_URI + '/account/type/:type?exclude=true',
+          params: {
+            type: '@type'
+          },
+          isArray: true
+        },
         update: {
           method: 'PUT',
           url: API_URI + '/account/:accountid',
@@ -47,6 +55,7 @@
       Account: Account,
       list: Account.query,
       listByType: Account.queryType,
+      listByOtherTypes: Account.queryTypeExclude,
       retrieve: Account.get
     };
 
