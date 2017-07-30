@@ -146,7 +146,7 @@ section(ng-show='vm.actionLoaded')
                 )
                 //- div.hint
                 //-   | Please enter an email address that is the most convenient
-                div(ng-messages='pageForm.contactEmail.$error', role='alert')
+                div(ng-messages='pageForm.contactEmail.$error')
                   div(ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']")
                     | Your email must be between 10 and 155 characters long and look like an e-mail address.
                     
@@ -203,13 +203,13 @@ section(ng-show='vm.actionLoaded')
               md-input-container.md-block(flex)
                 label First name
                 input(ng-model='vm.contact.FirstName', name='contactFirstName', required)
-                div(ng-messages='pageForm.contactFirstName.$error', role='alert')
+                div(ng-messages='pageForm.contactFirstName.$error')
                   div(ng-message='required')
                     | Please enter a first name
               md-input-container.md-block(flex)
                 label Last name
                 input(ng-model='vm.contact.LastName', name='contactLastName', required)
-                div(ng-messages='pageForm.contactLastName.$error', role='alert')
+                div(ng-messages='pageForm.contactLastName.$error')
                   div(ng-message='required')
                     | Please enter a last name
               md-input-container.md-block(flex)
@@ -217,7 +217,7 @@ section(ng-show='vm.actionLoaded')
                 md-select(ng-model='vm.contact.Salutation', name='contactSalutation', required)
                   md-option(ng-repeat='salutation in vm.salutations', value='{{ salutation }}')
                     | {{ salutation }}
-                div(ng-messages='pageForm.contactSalutation.$error', role='alert')
+                div(ng-messages='pageForm.contactSalutation.$error')
                   div(ng-message='required')
                     | This field is required
               md-input-container.md-block(flex)
@@ -225,7 +225,7 @@ section(ng-show='vm.actionLoaded')
                 md-select(ng-model='vm.contact.Gender__c', name='contactGender', required)
                   md-option(ng-repeat='gender in vm.genders', value='{{ gender }}')
                     | {{ gender }}
-                div(ng-messages='pageForm.contactGender.$error', role='alert')
+                div(ng-messages='pageForm.contactGender.$error')
                   div(ng-message='required')
                     | This field is required
               md-input-container.md-block(flex)
@@ -239,7 +239,7 @@ section(ng-show='vm.actionLoaded')
                 )
                 //- div.hint
                 //-   | Should we add some help text?
-                //- div(ng-messages='pageForm.contactDietaryRequirements.$error', role='alert')
+                //- div(ng-messages='pageForm.contactDietaryRequirements.$error')
                 //-   div(ng-message='required')
                 //-     | This field is required
               md-input-container.md-block(flex)
@@ -253,7 +253,7 @@ section(ng-show='vm.actionLoaded')
                 )
                 //- div.hint
                 //-   | Should we add some help text?
-                //- div(ng-messages='pageForm.contactAccessibilityRequirements.$error', role='alert')
+                //- div(ng-messages='pageForm.contactAccessibilityRequirements.$error')
                 //-   div(ng-message='required')
                 //-     | This field is required
               p.error(
@@ -344,7 +344,7 @@ section(ng-show='vm.actionLoaded')
                     ng-hide='vm.actionIsTraining'
                   )
                     | I am not representing an organisation
-                div(ng-messages='pageForm.organisationType.$error', role='alert')
+                div(ng-messages='pageForm.organisationType.$error')
                   div(ng-message='required')
                     | This field is required
               md-input-container.md-block(flex, ng-show="vm.organisationType === 'nhri'")
@@ -354,25 +354,27 @@ section(ng-show='vm.actionLoaded')
                     | {{ nhri.Name }}
                   md-option(value='0', ng-hide="vm.organisationType === 'no'")
                     | Not
-                div(ng-messages='pageForm.affiliationOrganisation.$error', role='alert')
+                div(ng-messages='pageForm.affiliationOrganisation.$error')
                   div(ng-message='required')
                     | This field is required
-              //- md-input-container.md-block(flex, ng-show="vm.organisationType === 'organisation'")
-              //-   label Your organisation
-              //-     md-autocomplete(
-              //-       md-input-name='affiliationOrganisation',
-              //-       required,
-              //-       md-selected-item='vm.organisationSelected',
-              //-       md-search-text='vm.affiliation.npe5__Organization__c',
-              //-       md-items='organisation in vm.filterOrganisations(vm.affiliation.npe5__Organization__c)',
-              //-       md-item-text='organisation.Name',
-              //-       md-min-length='0'
-              //-     )
-              //-       md-item-template
-              //-           span(md-highlight-text='ctrl.searchText', md-highlight-flags='^i') {{item.display}}
-              //-       md-not-found
-              //-         | No states matching &quot;{{ctrl.searchText}}&quot; were found. 
-              //-         a(ng-click='ctrl.newState(ctrl.searchText)') Create a new one!
+              md-autocomplete(
+                flex,
+                required,
+                md-input-name='affiliationOrganisationName',
+                md-selected-item='vm.organisationSelected',
+                md-search-text='vm.affiliation.organisationName',
+                md-selected-item-change='vm.enterOrganisation(organisation)'
+                md-items='organisation in vm.filterOrganisations(vm.affiliation.organisationName)',
+                md-item-text='organisation.Name',
+                md-min-length='0',
+                md-floating-label='Your organisation',
+                ng-show="vm.organisationType === 'organisation'"
+              )
+                md-item-template
+                    span(md-highlight-text='vm.affiliation.organisationName') {{organisation.Name}}
+                div(ng-messages='pageForm.affiliationOrganisationName.$error')
+                  div(ng-message='required')
+                    | This field is required
               p.question When did you start working at this organisation?
               md-input-container.md-block(flex)
                 label Enter date
@@ -383,19 +385,19 @@ section(ng-show='vm.actionLoaded')
                   md-open-on-focus,
                   md-placeholder='Enter date'
                 )
-                div(ng-messages='pageForm.affiliationStartDate.$error', role='alert')
+                div(ng-messages='pageForm.affiliationStartDate.$error')
                   div(ng-message='required')
                     | Please enter a valid date
               md-input-container.md-block(flex)
                 label Role
                 input(ng-model='vm.affiliation.npe5__Role__c', name='affiliationRole', required)
-                div(ng-messages='pageForm.affiliationRole.$error', role='alert')
+                div(ng-messages='pageForm.affiliationRole.$error')
                   div(ng-message='required')
                     | This field is required
               md-input-container.md-block(flex)
                 label Department
                 input(ng-model='vm.affiliation.Department__c', name='affiliationDepartment', required)
-                div(ng-messages='pageForm.affiliationDepartment.$error', role='alert')
+                div(ng-messages='pageForm.affiliationDepartment.$error')
                   div(ng-message='required')
                     | This field is required
               p.error(
@@ -461,7 +463,7 @@ section(ng-show='vm.actionLoaded')
                 md-radio-group(ng-model='vm.emailIsWork', name='emailIsWork', required)
                   md-radio-button.md-primary(value='yes', ng-click='vm.changeEmailWork()') Yes
                   md-radio-button(value='no', ng-click='vm.changeEmailWork()')  No
-                div(ng-messages='pageForm.emailIsWork.$error', role='alert')
+                div(ng-messages='pageForm.emailIsWork.$error')
                   div(ng-message='required')
                     | This field is required
               md-input-container.md-block(flex, ng-hide="vm.emailIsWork === 'yes'")
@@ -477,13 +479,13 @@ section(ng-show='vm.actionLoaded')
                   maxlength='155',
                   ng-pattern="/^.+@.+\..+$/"
                 )
-                div(ng-messages='pageForm.contactWorkEmail.$error', role='alert')
+                div(ng-messages='pageForm.contactWorkEmail.$error')
                   div(ng-message-exp="['minlength', 'maxlength', 'pattern']")
                     | Your email must be between 10 and 155 characters long and look like an e-mail address.
               md-input-container.md-block(flex)
                 label Phone 
                 input(ng-model='vm.Phone', name='contactPhone', required)
-                div(ng-messages='pageForm.contactPhone.$error', role='alert')
+                div(ng-messages='pageForm.contactPhone.$error')
                   div(ng-message='required')
                     | This field is required
               md-input-container.md-block(flex)
@@ -493,13 +495,13 @@ section(ng-show='vm.actionLoaded')
                     | {{ phoneType }}
                 //- div.hint
                 //-   | Is it you work phone, mobile phone, home phone?
-                div(ng-messages='pageForm.contactPreferredPhone.$error', role='alert')
+                div(ng-messages='pageForm.contactPreferredPhone.$error')
                   div(ng-message='required')
                     | This field is required
               md-input-container.md-block(flex)
                 label Fax 
                 input(ng-model='vm.contact.Fax', name='contactFax')
-                //- div(ng-messages='pageForm.contactFax.$error', role='alert')
+                //- div(ng-messages='pageForm.contactFax.$error')
                 //-   div(ng-message='required')
                 //-     | This field is required
               md-input-container.md-block(flex)
@@ -508,7 +510,7 @@ section(ng-show='vm.actionLoaded')
                 div.hint
                   | If you attend the face to face component we'll need to know 
                   | where to book your ticket.
-                div(ng-messages='pageForm.contactClosestAirport.$error', role='alert')
+                div(ng-messages='pageForm.contactClosestAirport.$error')
                   div(ng-message='required')
                     | This field is required
               p.error(
@@ -592,7 +594,7 @@ section(ng-show='vm.actionLoaded')
                   md-select-on-focus,
                   required
                 )
-                div(ng-messages='pageForm.participantPriorExperienceTopic.$error', role='alert')
+                div(ng-messages='pageForm.participantPriorExperienceTopic.$error')
                   div(ng-message='required')
                     | This field is required
               p.intro(
@@ -752,7 +754,7 @@ section(ng-show='vm.actionLoaded')
                 )
                 //- div.hint
                 //-   | Should we add some help text?
-                div(ng-messages='pageForm.participantKnowledgeGain.$error', role='alert')
+                div(ng-messages='pageForm.participantKnowledgeGain.$error')
                   div(ng-message='required')
                     | This field is required
               p.question What skills do you hope to gain through 
@@ -770,7 +772,7 @@ section(ng-show='vm.actionLoaded')
                 )
                 //- div.hint
                 //-   | Should we add some help text?
-                div(ng-messages='pageForm.participantSkillsGain.$error', role='alert')
+                div(ng-messages='pageForm.participantSkillsGain.$error')
                   div(ng-message='required')
                     | This field is required
               p.question Is there any additional information you would like to 
@@ -785,7 +787,7 @@ section(ng-show='vm.actionLoaded')
                 )
                 //- div.hint
                 //-   | Should we add some help text?
-                //- div(ng-messages='pageForm.participantAdditionalInfo.$error', role='alert')
+                //- div(ng-messages='pageForm.participantAdditionalInfo.$error')
                 //-   div(ng-message='required')
                 //-     | This field is required
               p.error(

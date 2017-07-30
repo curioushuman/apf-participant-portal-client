@@ -10,6 +10,7 @@
       'ngRoute',
       'ngMaterial',
       'ngResource',
+      'ngMessages',
 
       // Custom modules.
       'app.core',

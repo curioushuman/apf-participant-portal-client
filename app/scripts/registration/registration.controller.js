@@ -292,6 +292,7 @@
     vm.nhris = [];
     vm.organisations = [];
     vm.organisationSelected = null;
+    vm.filterOrganisations = filterOrganisations;
     vm.affiliations = [];
     vm.affiliationsRecord = {
       nhri: null,
@@ -330,7 +331,7 @@
       preQueryNhris()
       .then(
         function(nhris) {
-          preRetrieveAffiliations();
+          preQueryNonNhris();
         },
         function(err) {
           vm.organisationSectionErrorTop = true;
@@ -340,8 +341,8 @@
         }
       )
       .then(
-        function(affiliations) {
-          preQueryNonNhris();
+        function(organisations) {
+          preRetrieveAffiliations();
         },
         function(err) {
           vm.organisationSectionErrorTop = true;
@@ -351,7 +352,7 @@
         }
       )
       .then(
-        function(organisations) {
+        function(affiliations) {
           vm.working = false;
           vm.editSection('organisation');
         },
@@ -415,8 +416,14 @@
               angular.forEach(vm.affiliations, function(affiliation, index) {
                 affiliation.npe5__StartDate__c =
                   new Date(affiliation.npe5__StartDate__c);
+                affiliation.organisationName =
+                  affiliationService.organisationName(
+                    affiliation,
+                    vm.organisations
+                  );
+                console.log('org name', affiliation.organisationName);
                 affiliation.type = 'organisation';
-                if (affiliationService.isNhri(affiliation, vm.nhris)) {
+                if (affiliation.organisationName === null) {
                   affiliation.type = 'nhri';
                 }
                 if (vm.debug) {
@@ -487,14 +494,30 @@
       });
     }
 
-    // vm.filterOrganisations = function(searchText) {
-    //   retur $filter('filter')(
-    //     vm.organisations,
-    //     {
-    //       Name: searchText
-    //     }
-    //   );
-    // };
+    function selectOrganisation(organisation) {
+      vm.affiliation.npe5__Organization__c = organisation.Id;
+      if (vm.debug) {
+        console.log('org selected', vm.affiliation.npe5__Organization__c);
+      }
+    }
+
+    function filterOrganisations(query) {
+      var results = query ?
+        vm.organisations.filter(createFilterFor(query)) :
+        vm.organisations;
+      return results;
+    }
+
+    function createFilterFor(query) {
+      var lowercaseQuery = angular.lowercase(query);
+
+      return function filterFn(organisation) {
+        var lowercaseName = angular.lowercase(organisation.Name);
+
+        return (lowercaseName.indexOf(lowercaseQuery) === 0);
+      };
+
+    }
 
     vm.changeOrganisationType = function() {
       if (vm.debug) {

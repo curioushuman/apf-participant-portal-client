@@ -77,6 +77,14 @@ p.intro {
   font-size: 0.8em;
 }
 
+md-autocomplete {
+  margin-top: -18px;
+}
+
+md-autocomplete md-input-container {
+  /*margin-bottom: -18px;*/
+}
+
 /* footer */
 div.footer p {
   padding: 0;

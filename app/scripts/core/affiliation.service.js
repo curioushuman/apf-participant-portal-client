@@ -57,24 +57,24 @@
       retrieve: Affiliation.get,
       retrievePrimary: Affiliation.primary,
       listByContact: Affiliation.queryByContact,
-      isNhri: isNhri,
+      organisationName: organisationName,
       equalsOrganisation: equalsOrganisation,
       equalsOther: equalsOther
     };
 
     return service;
 
-    function isNhri(affiliation, nhris) {
-      var fi = $filter('filter')(
-        nhris,
+    function organisationName(affiliation, organisations) {
+      var matching = $filter('filter')(
+        organisations,
         {
           Id: affiliation.npe5__Organization__c
         }
-      ).length;
-      if (fi > 0) {
-        return true;
+      );
+      if (matching.length > 0) {
+        return matching[0].Name;
       }
-      return false;
+      return null;
     }
 
     function equalsOrganisation(affiliation1, affiliation2) {
