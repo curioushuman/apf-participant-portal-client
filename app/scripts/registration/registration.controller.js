@@ -46,7 +46,7 @@
     var vm = this;
 
     // debugging / developing
-    vm.debug = false;
+    vm.debug = true;
     vm.openAll = false;
 
     vm.navigate = layoutService.navigate;
@@ -57,6 +57,7 @@
 
     vm.actionLoaded = false;
     vm.actionError = false;
+    vm.actionIsTraining = false;
     vm.actionErrorMessage = {};
 
     // date stuff
@@ -103,6 +104,11 @@
         if (vm.action.Selection_criteria__c !== null) {
           vm.hasSelectionCriteria = true;
           vm.selectionCriteria = vm.action.Selection_criteria__c.split("\n");
+        }
+
+        // is training an action?
+        if (vm.action.RecordTypeId === '0126F000000iyY7QAI') {
+          vm.actionIsTraining = true;
         }
 
         // grab the training partner of the action
@@ -284,6 +290,16 @@
 
     // Organisation section
     vm.nhris = [];
+    vm.organisations = [];
+    vm.organisationSelected = null;
+    vm.affiliations = [];
+    vm.affiliationsRecord = {
+      nhri: null,
+      nhriFound: null,
+      organisation: null,
+      organisationFound: null
+    };
+    vm.organisationType = 'nhri';
     vm.organisationSectionStatus = 'disabled';
     vm.organisationSectionInvalid = false;
     vm.organisationSectionError = false;
@@ -314,7 +330,7 @@
       preQueryNhris()
       .then(
         function(nhris) {
-          preRetrieveAffiliation();
+          preRetrieveAffiliations();
         },
         function(err) {
           vm.organisationSectionErrorTop = true;
@@ -324,7 +340,18 @@
         }
       )
       .then(
-        function(affiliation) {
+        function(affiliations) {
+          preQueryNonNhris();
+        },
+        function(err) {
+          vm.organisationSectionErrorTop = true;
+          if (vm.debug) {
+            console.log('There was an error retrieving other organisations', err);
+          }
+        }
+      )
+      .then(
+        function(organisations) {
           vm.working = false;
           vm.editSection('organisation');
         },
@@ -355,42 +382,96 @@
       );
     }
 
-    function preRetrieveAffiliation() {
+    function preQueryNonNhris() {
+      return accountService.listByOtherTypes(
+        {
+          type: 'National Human Rights Institution'
+        }
+      )
+      .$promise
+      .then(
+        function(data) {
+          vm.organisations = data;
+          return vm.organisations;
+        },
+        function(err) {
+          return err;
+        }
+      );
+    }
+
+    function preRetrieveAffiliations() {
       return $q(function(resolve, reject) {
         if (vm.contactExists) {
-          vm.affiliation = affiliationService.retrievePrimary(
+          vm.affiliations = affiliationService.listByContact(
             {
               contactid: vm.contact.Id
             },
             function() {
-              vm.affiliation.npe5__StartDate__c =
-                new Date(vm.affiliation.npe5__StartDate__c);
               if (vm.debug) {
-                console.log('found affiliation', vm.affiliation);
+                console.log('found affiliations', vm.affiliations);
               }
-              if (
-                affiliationService.isNhri(vm.affiliation, vm.nhris) === false
-              ) {
-                vm.affiliation = new affiliationService.Affiliation();
-                if (vm.debug) {
-                  console.log('Not an NHRI though', vm.affiliation);
+              // cycle through affiliations
+              angular.forEach(vm.affiliations, function(affiliation, index) {
+                affiliation.npe5__StartDate__c =
+                  new Date(affiliation.npe5__StartDate__c);
+                affiliation.type = 'organisation';
+                if (affiliationService.isNhri(affiliation, vm.nhris)) {
+                  affiliation.type = 'nhri';
                 }
-              } else {
-                // save this to see if it is actually modified
-                vm.affiliationFound = {
-                  npe5__Organization__c: vm.affiliation.npe5__Organization__c,
-                  npe5__Role__c: vm.affiliation.npe5__Role__c,
-                  Department__c: vm.affiliation.Department__c,
-                  npe5__StartDate__c: vm.affiliation.npe5__StartDate__c
-                };
+                if (vm.debug) {
+                  console.log('processing affiliation', affiliation);
+                }
+                if (
+                  affiliation.type === 'nhri' &&
+                  (
+                    vm.affiliationsRecord['nhriFound'] === null ||
+                    affiliation.npe5__Primary__c === true
+                  )
+                ) {
+                  vm.affiliation = affiliation;
+                  vm.affiliationsRecord['nhriFound'] = affiliation;
+                  if (vm.debug) {
+                    console.log('setting affiliation to NHRI');
+                  }
+                } else if (
+                  affiliation.type === 'organisation' &&
+                  (
+                    vm.affiliationsRecord['organisationFound'] === null ||
+                    affiliation.npe5__Primary__c === true
+                  )
+                ) {
+                  if (vm.debug) {
+                    console.log('found an organisation');
+                  }
+                  vm.affiliationsRecord['organisationFound'] = affiliation;
+                  if (affiliation.npe5__Primary__c === true) {
+                    if (vm.debug) {
+                      console.log('it is primary, setting affiliation to org');
+                    }
+                    vm.affiliation = affiliation;
+                  }
+                }
+              });
+              if (
+                vm.affiliation === undefined &&
+                vm.affiliationsRecord['organisationFound']
+              ) {
+                if (vm.debug) {
+                  console.log('if we are here it means org found, not primary');
+                }
+                vm.affiliation = vm.affiliationsRecord['organisationFound'];
+                vm.organisationType = 'organisation';
+              } else if (vm.affiliation === undefined) {
+                if (vm.debug) {
+                  console.log('if we are here it means no affiliations found');
+                }
+                vm.affiliation = new affiliationService.Affiliation();
               }
-              resolve(vm.affiliation);
+              resolve(vm.affiliations);
             },
             function(err) {
-              if (err.status !== 404) {
-                // we don't are about 404, there may not be a record and that ok
-                reject(err);
-              }
+              reject(err);
             }
           );
         } else {
@@ -401,10 +482,51 @@
               vm.affiliation
             );
           }
-          resolve(vm.affiliation);
+          resolve(vm.affiliations);
         }
       });
     }
+
+    // vm.filterOrganisations = function(searchText) {
+    //   retur $filter('filter')(
+    //     vm.organisations,
+    //     {
+    //       Name: searchText
+    //     }
+    //   );
+    // };
+
+    vm.changeOrganisationType = function() {
+      if (vm.debug) {
+        console.log('organisationType', vm.organisationType);
+      }
+      if (vm.organisationType === 'organisation') {
+        vm.affiliationsRecord['nhri'] = vm.affiliation;
+        if (vm.affiliationsRecord['organisation'] === null) {
+          vm.affiliationsRecord['organisation'] =
+            vm.affiliationsRecord['organisationFound'];
+        }
+        vm.affiliation = vm.affiliationsRecord['organisation'];
+        if (vm.debug) {
+          console.log('affiliation switch to org', vm.affiliation);
+        }
+      } else if (vm.organisationType === 'nhri') {
+        vm.affiliationsRecord['organisation'] = vm.affiliation;
+        if (vm.affiliationsRecord['nhri'] === null) {
+          vm.affiliationsRecord['nhri'] =
+            vm.affiliationsRecord['nhriFound'];
+        }
+        vm.affiliation = vm.affiliationsRecord['nhri'];
+        if (vm.debug) {
+          console.log('affiliation switch to nhri', vm.affiliation);
+        }
+      } else {
+        vm.affiliation = {};
+        if (vm.debug) {
+          console.log('affiliation emptied');
+        }
+      }
+    };
 
     // process
     function processOrganisation() {
@@ -416,8 +538,17 @@
       vm.working = true;
 
       // update some contact fields
-      vm.contact.Department = vm.affiliation.Department__c;
-      vm.contact.Title = vm.affiliation.npe5__Role__c;
+      // Set on contact if no affiliation existed before
+      // OR if affiliations did exist
+      // and the one they're updating is the primary
+      if (
+        vm.affiliationFound === undefined  ||
+        (vm.affiliationFound !== undefined &&
+        vm.affiliationFound.npe5__Primary__c === true)
+      ) {
+        vm.contact.Department = vm.affiliation.Department__c;
+        vm.contact.Title = vm.affiliation.npe5__Role__c;
+      }
 
       // and some affiliation fields
       vm.affiliation.npe5__Contact__c = vm.contact.Id;

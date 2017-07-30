@@ -323,16 +323,56 @@ section(ng-show='vm.actionLoaded')
                   md-button.md-background(
                     ng-click='vm.preOrganisation()'
                   ) Try again
-              
-              
+              p.question For this event which organisation do you represent?
               md-input-container.md-block(flex)
+                md-radio-group(
+                  ng-model='vm.organisationType',
+                  name='organisationType',
+                  required,
+                  ng-change='vm.changeOrganisationType()'
+                )
+                  md-radio-button.md-primary(
+                    value='nhri'
+                  )
+                    | A National Human Rights Institution (NHRI)
+                  md-radio-button(
+                    value='organisation'
+                  )
+                    | Another organisation
+                  md-radio-button(
+                    value='individual',
+                    ng-hide='vm.actionIsTraining'
+                  )
+                    | I am not representing an organisation
+                div(ng-messages='pageForm.organisationType.$error', role='alert')
+                  div(ng-message='required')
+                    | This field is required
+              md-input-container.md-block(flex, ng-show="vm.organisationType === 'nhri'")
                 label Your National Human Rights Institution
                 md-select(ng-model='vm.affiliation.npe5__Organization__c', name='affiliationOrganisation', required)
                   md-option(ng-repeat='nhri in vm.nhris', value='{{ nhri.Id }}')
                     | {{ nhri.Name }}
+                  md-option(value='0', ng-hide="vm.organisationType === 'no'")
+                    | Not
                 div(ng-messages='pageForm.affiliationOrganisation.$error', role='alert')
                   div(ng-message='required')
                     | This field is required
+              //- md-input-container.md-block(flex, ng-show="vm.organisationType === 'organisation'")
+              //-   label Your organisation
+              //-     md-autocomplete(
+              //-       md-input-name='affiliationOrganisation',
+              //-       required,
+              //-       md-selected-item='vm.organisationSelected',
+              //-       md-search-text='vm.affiliation.npe5__Organization__c',
+              //-       md-items='organisation in vm.filterOrganisations(vm.affiliation.npe5__Organization__c)',
+              //-       md-item-text='organisation.Name',
+              //-       md-min-length='0'
+              //-     )
+              //-       md-item-template
+              //-           span(md-highlight-text='ctrl.searchText', md-highlight-flags='^i') {{item.display}}
+              //-       md-not-found
+              //-         | No states matching &quot;{{ctrl.searchText}}&quot; were found. 
+              //-         a(ng-click='ctrl.newState(ctrl.searchText)') Create a new one!
               p.question When did you start working at this organisation?
               md-input-container.md-block(flex)
                 label Enter date

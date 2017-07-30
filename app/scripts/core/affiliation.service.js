@@ -27,6 +27,14 @@
             accountid: '@accountid'
           }
         },
+        queryByContact: {
+          method: 'GET',
+          url: API_URI + '/affiliation/contact/:contactid?current=true',
+          params: {
+            contactid: '@contactid'
+          },
+          isArray: true
+        },
         primary: {
           method: 'GET',
           url: API_URI + '/affiliation/primary/:contactid',
@@ -48,6 +56,7 @@
       Affiliation: Affiliation,
       retrieve: Affiliation.get,
       retrievePrimary: Affiliation.primary,
+      listByContact: Affiliation.queryByContact,
       isNhri: isNhri,
       equalsOrganisation: equalsOrganisation,
       equalsOther: equalsOther
