@@ -293,6 +293,7 @@
     vm.organisations = [];
     vm.organisationSelected = null;
     vm.filterOrganisations = filterOrganisations;
+    vm.selectOrganisation = selectOrganisation;
     vm.affiliations = [];
     vm.affiliationsRecord = {
       nhri: null,
@@ -331,7 +332,10 @@
       preQueryNhris()
       .then(
         function(nhris) {
-          preQueryNonNhris();
+          if (vm.debug) {
+            console.log('found nhris', nhris.length);
+          }
+          return preQueryNonNhris();
         },
         function(err) {
           vm.organisationSectionErrorTop = true;
@@ -342,7 +346,10 @@
       )
       .then(
         function(organisations) {
-          preRetrieveAffiliations();
+          if (vm.debug) {
+            console.log('found non-nhris', organisations.length);
+          }
+          return preRetrieveAffiliations();
         },
         function(err) {
           vm.organisationSectionErrorTop = true;
@@ -353,6 +360,9 @@
       )
       .then(
         function(affiliations) {
+          if (vm.debug) {
+            console.log('found affiliations', affiliations.length);
+          }
           vm.working = false;
           vm.editSection('organisation');
         },
@@ -495,9 +505,11 @@
     }
 
     function selectOrganisation(organisation) {
-      vm.affiliation.npe5__Organization__c = organisation.Id;
-      if (vm.debug) {
-        console.log('org selected', vm.affiliation.npe5__Organization__c);
+      if (organisation !== undefined) {
+        vm.affiliation.npe5__Organization__c = organisation.Id;
+        if (vm.debug) {
+          console.log('org selected', vm.affiliation.npe5__Organization__c);
+        }
       }
     }
 
@@ -553,6 +565,18 @@
 
     // process
     function processOrganisation() {
+      // if not representing org
+      // skip straight through
+      if (vm.organisationType === 'individual') {
+        vm.organisationSectionStatus = 'complete';
+        vm.preContact();
+        return;
+      } else if (vm.organisationType === 'nhri') {
+        vm.affiliationFound = vm.affiliationsRecord['nhriFound'];
+      } else if (vm.organisationType === 'organisation') {
+        vm.affiliationFound = vm.affiliationsRecord['organisationFound'];
+      }
+
       if (isValid(vm.organisationRequired) === false) {
         vm.organisationSectionInvalid = true;
         return;
@@ -575,6 +599,11 @@
 
       // and some affiliation fields
       vm.affiliation.npe5__Contact__c = vm.contact.Id;
+
+      // THIS IS WHERE YOU ARE
+      // IF ORGANISATION NAME EQUALS SOMETHING
+      // THEN YOU'LL NEED TO CREATE AN ACCOUNT AS WELL
+      // AND A TASK FOR KATE
 
       // q.all works as it doesn't matter the order of processing
       $q.all([

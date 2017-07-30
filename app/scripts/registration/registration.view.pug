@@ -363,12 +363,13 @@ section(ng-show='vm.actionLoaded')
                 md-input-name='affiliationOrganisationName',
                 md-selected-item='vm.organisationSelected',
                 md-search-text='vm.affiliation.organisationName',
-                md-selected-item-change='vm.enterOrganisation(organisation)'
+                md-selected-item-change='vm.selectOrganisation(organisation)'
                 md-items='organisation in vm.filterOrganisations(vm.affiliation.organisationName)',
                 md-item-text='organisation.Name',
                 md-min-length='0',
                 md-floating-label='Your organisation',
-                ng-show="vm.organisationType === 'organisation'"
+                ng-show="vm.organisationType === 'organisation'",
+                md-select-on-match='true'
               )
                 md-item-template
                     span(md-highlight-text='vm.affiliation.organisationName') {{organisation.Name}}
