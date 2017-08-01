@@ -52,7 +52,7 @@
     vm.navigate = layoutService.navigate;
 
     vm.working = false;
-    vm.formComplete = false;
+    vm.formStatus = 'open';
     vm.completeForm = completeForm;
 
     vm.actionLoaded = false;
@@ -92,11 +92,18 @@
         }
 
         // see if there is a due date
-        vm.action.registrationDateShow = false;
         if (vm.action.Registrations_due_date__c !== null) {
-          vm.action.registrationDateShow = true;
+          // format accordingly
           vm.action.registrationDate =
             layoutService.formatDate(vm.action.Registrations_due_date__c);
+          // determine if it has passed
+          var registrationDate = new Date(vm.action.Registrations_due_date__c);
+          var nowDate = new Date();
+          if (nowDate.getTime() > registrationDate.getTime()) {
+            vm.formStatus = 'closed';
+          }
+        } else {
+          vm.formStatus = 'closed';
         }
 
         // sort out the selection criteria
@@ -1176,7 +1183,8 @@
       vm.working = false;
       vm.sectionActive = '';
       vm.expectationsSectionStatus = 'complete';
-      vm.formComplete = true;
+      vm.formStatus = 'complete';
+      layoutService.navigate(null, 'top');
     }
 
     function processSaveContact() {

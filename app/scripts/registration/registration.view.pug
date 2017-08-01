@@ -81,7 +81,7 @@ section(ng-show='vm.actionLoaded')
             md-card-title-text.md-headline
               | To register for this course
           md-card-content
-            md-list(ng-show='vm.action.registrationDateShow')
+            md-list
               md-list-item
                 md-icon.material-icons.md-avatar event
                 p Registrations close 
@@ -93,14 +93,18 @@ section(ng-show='vm.actionLoaded')
             md-card-title-text.md-headline
               | Selection criteria
           md-card-content
-            md-list(ng-show='vm.action.registrationDateShow')
+            md-list
               md-list-item(ng-repeat='criteria in vm.selectionCriteria')
                 .md-list-item-text
                   p {{ criteria }}
 
       //- Form
       div(flex, layout='column')
-        form(name='pageForm', ng-submit='pageForm.$valid && vm.processExpectations()')
+        form(
+          name='pageForm',
+          ng-submit='pageForm.$valid && vm.processExpectations()',
+          ng-show="vm.formStatus === 'open'"
+        )
           
           //- Email section
           a(name='email')
@@ -113,7 +117,7 @@ section(ng-show='vm.actionLoaded')
           gz-complete-form-section(
             title='vm.emailSectionTitle',
             ng-click="vm.editSection('email')",
-            ng-show="vm.formComplete === false && vm.emailSectionStatus === 'complete' && vm.sectionActive !== 'email'"
+            ng-show="vm.emailSectionStatus === 'complete' && vm.sectionActive !== 'email'"
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'email'")
             md-card-header
@@ -178,7 +182,7 @@ section(ng-show='vm.actionLoaded')
           gz-complete-form-section(
             title='vm.personalSectionTitle',
             ng-click="vm.editSection('personal')",
-            ng-show="vm.formComplete === false && vm.personalSectionStatus === 'complete' && vm.sectionActive !== 'personal'"
+            ng-show="vm.personalSectionStatus === 'complete' && vm.sectionActive !== 'personal'"
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'personal'")
             md-card-header
@@ -294,7 +298,7 @@ section(ng-show='vm.actionLoaded')
           gz-complete-form-section(
             title='vm.organisationSectionTitle',
             ng-click="vm.editSection('organisation')",
-            ng-show="vm.formComplete === false && vm.organisationSectionStatus === 'complete' && vm.sectionActive !== 'organisation'"
+            ng-show="vm.organisationSectionStatus === 'complete' && vm.sectionActive !== 'organisation'"
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'organisation'")
             md-card-header
@@ -437,7 +441,7 @@ section(ng-show='vm.actionLoaded')
           gz-complete-form-section(
             title='vm.contactSectionTitle',
             ng-click="vm.editSection('contact')",
-            ng-show="vm.formComplete === false && vm.contactSectionStatus === 'complete' && vm.sectionActive !== 'contact'"
+            ng-show="vm.contactSectionStatus === 'complete' && vm.sectionActive !== 'contact'"
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'contact'")
             md-card-header
@@ -550,7 +554,7 @@ section(ng-show='vm.actionLoaded')
           gz-complete-form-section(
             title='vm.experienceSectionTitle',
             ng-click="vm.editSection('experience')",
-            ng-show="vm.formComplete === false && vm.experienceSectionStatus === 'complete' && vm.sectionActive !== 'experience'"
+            ng-show="vm.experienceSectionStatus === 'complete' && vm.sectionActive !== 'experience'"
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'experience'")
             md-card-header
@@ -721,7 +725,7 @@ section(ng-show='vm.actionLoaded')
           gz-complete-form-section(
             title='vm.expectationsSectionTitle',
             ng-click="vm.editSection('expectations')",
-            ng-show="vm.formComplete === false && vm.expectationsSectionStatus === 'complete' && vm.sectionActive !== 'expectations'"
+            ng-show="vm.expectationsSectionStatus === 'complete' && vm.sectionActive !== 'expectations'"
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'expectations'")
             md-card-header
@@ -816,20 +820,33 @@ section(ng-show='vm.actionLoaded')
               ) 
                 | Next
                 md-icon.md-material-icons navigate_next
-          md-card(
-            ng-show='vm.formComplete'
-          )
-            md-card-header(md-colors="{background: 'default-primary-hue-2'}")
-              md-card-avatar
-                img(
-                  ng-src='/images/APF-logo-circle.png',
-                  alt='Asia Pacific Forum logo'
-                )
-              md-card-header-text
-                span.md-headline Your registration has been received
-            md-card-content
-              p Thank you for taking the time to complete our application form. 
-                | Someone from the APF wil be in contact soon.
+        md-card(
+          ng-show="vm.formStatus === 'complete'"
+        )
+          md-card-header(md-colors="{background: 'default-primary-hue-2'}")
+            md-card-avatar
+              img(
+                ng-src='/images/APF-logo-circle.png',
+                alt='Asia Pacific Forum logo'
+              )
+            md-card-header-text
+              span.md-headline Your registration has been received
+          md-card-content
+            p Thank you for taking the time to complete our application form. 
+              | Someone from the APF wil be in contact soon.
+        md-card(
+          ng-show="vm.formStatus === 'closed'"
+        )
+          md-card-header(md-colors="{background: 'default-primary-hue-2'}")
+            md-card-avatar
+              img(
+                ng-src='/images/APF-logo-circle.png',
+                alt='Asia Pacific Forum logo'
+              )
+            md-card-header-text
+              span.md-headline Registrations closed
+          md-card-content
+            p Please contact the Asia Pacific Forum Training Department for more information.
                 
   div.footer(layout='row', layout-padding, md-colors="{background: 'default-background-hue-3'}")
     img.logo-icon(
