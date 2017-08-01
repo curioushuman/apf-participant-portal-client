@@ -57,27 +57,17 @@
       retrieve: Affiliation.get,
       retrievePrimary: Affiliation.primary,
       listByContact: Affiliation.queryByContact,
-      organisationName: organisationName,
       equalsOrganisation: equalsOrganisation,
-      equalsOther: equalsOther
+      equalsOther: equalsOther,
+      saveFoundAffiliation: saveFoundAffiliation
     };
 
     return service;
 
-    function organisationName(affiliation, organisations) {
-      var matching = $filter('filter')(
-        organisations,
-        {
-          Id: affiliation.npe5__Organization__c
-        }
-      );
-      if (matching.length > 0) {
-        return matching[0].Name;
-      }
-      return null;
-    }
-
     function equalsOrganisation(affiliation1, affiliation2) {
+      if (!affiliation1 || !affiliation2) {
+        return false;
+      }
       var equals = false;
       if (
         affiliation1.npe5__Organization__c ===
@@ -89,6 +79,9 @@
     }
 
     function equalsOther(affiliation1, affiliation2) {
+      if (!affiliation1 || !affiliation2) {
+        return false;
+      }
       var equals = false;
       var startdate1 = affiliation1.npe5__StartDate__c;
       var startdate2 = affiliation2.npe5__StartDate__c;
@@ -108,6 +101,15 @@
         equals = true;
       }
       return equals;
+    }
+
+    function saveFoundAffiliation(affiliation) {
+      return {
+        npe5__Organization__c: affiliation.npe5__Organization__c,
+        Department__c: affiliation.Department__c,
+        npe5__Role__c: affiliation.npe5__Role__c,
+        npe5__StartDate__c: affiliation.npe5__StartDate__c
+      };
     }
   }
 })();

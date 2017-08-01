@@ -11,10 +11,11 @@
 
   accountService.$inject = [
     '$resource',
+    '$filter',
     'API_URI'
   ];
 
-  function accountService($resource, API_URI) {
+  function accountService($resource, $filter, API_URI) {
     var Account = $resource(API_URI + '/account',
       {},
       {
@@ -56,9 +57,21 @@
       list: Account.query,
       listByType: Account.queryType,
       listByOtherTypes: Account.queryTypeExclude,
-      retrieve: Account.get
+      retrieve: Account.get,
+      findAccountInAccounts: findAccountInAccounts
     };
 
     return service;
+
+    function findAccountInAccounts(account, accounts) {
+      var matching = $filter('filter')(
+        accounts,
+        account
+      );
+      if (matching.length > 0) {
+        return matching[0];
+      }
+      return null;
+    }
   }
 })();

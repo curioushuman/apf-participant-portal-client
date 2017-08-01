@@ -214,12 +214,9 @@ section(ng-show='vm.actionLoaded')
                     | Please enter a last name
               md-input-container.md-block(flex)
                 label Salutation
-                md-select(ng-model='vm.contact.Salutation', name='contactSalutation', required)
+                md-select(ng-model='vm.contact.Salutation', name='contactSalutation')
                   md-option(ng-repeat='salutation in vm.salutations', value='{{ salutation }}')
                     | {{ salutation }}
-                div(ng-messages='pageForm.contactSalutation.$error')
-                  div(ng-message='required')
-                    | This field is required
               md-input-container.md-block(flex)
                 label Gender
                 md-select(ng-model='vm.contact.Gender__c', name='contactGender', required)
@@ -360,11 +357,11 @@ section(ng-show='vm.actionLoaded')
               md-autocomplete(
                 flex,
                 required,
-                md-input-name='affiliationOrganisationName',
-                md-selected-item='vm.organisationSelected',
-                md-search-text='vm.affiliation.organisationName',
-                md-selected-item-change='vm.selectOrganisation(organisation)'
-                md-items='organisation in vm.filterOrganisations(vm.affiliation.organisationName)',
+                md-input-name='organisationName',
+                md-selected-item='vm.organisationMatch',
+                md-search-text='vm.organisationName',
+                md-selected-item-change='vm.selectOrganisation(organisation)',
+                md-items='organisation in vm.filterOrganisations(vm.organisationName)',
                 md-item-text='organisation.Name',
                 md-min-length='0',
                 md-floating-label='Your organisation',
@@ -372,12 +369,12 @@ section(ng-show='vm.actionLoaded')
                 md-select-on-match='true'
               )
                 md-item-template
-                    span(md-highlight-text='vm.affiliation.organisationName') {{organisation.Name}}
-                div(ng-messages='pageForm.affiliationOrganisationName.$error')
+                    span(md-highlight-text='vm.organisationName') {{organisation.Name}}
+                div(ng-messages='pageForm.organisationName.$error')
                   div(ng-message='required')
                     | This field is required
-              p.question When did you start working at this organisation?
-              md-input-container.md-block(flex)
+              p.question(ng-hide="vm.organisationType === 'individual'") When did you start working at this organisation?
+              md-input-container.md-block(flex, ng-hide="vm.organisationType === 'individual'")
                 label Enter date
                 md-datepicker(
                   ng-model='vm.affiliation.npe5__StartDate__c',
@@ -389,18 +386,15 @@ section(ng-show='vm.actionLoaded')
                 div(ng-messages='pageForm.affiliationStartDate.$error')
                   div(ng-message='required')
                     | Please enter a valid date
-              md-input-container.md-block(flex)
+              md-input-container.md-block(flex, ng-hide="vm.organisationType === 'individual'")
                 label Role
                 input(ng-model='vm.affiliation.npe5__Role__c', name='affiliationRole', required)
                 div(ng-messages='pageForm.affiliationRole.$error')
                   div(ng-message='required')
                     | This field is required
-              md-input-container.md-block(flex)
+              md-input-container.md-block(flex, ng-hide="vm.organisationType === 'individual'")
                 label Department
-                input(ng-model='vm.affiliation.Department__c', name='affiliationDepartment', required)
-                div(ng-messages='pageForm.affiliationDepartment.$error')
-                  div(ng-message='required')
-                    | This field is required
+                input(ng-model='vm.affiliation.Department__c', name='affiliationDepartment')
               p.error(
                 layout='column'
                 layout-padding,
