@@ -357,7 +357,10 @@
         function(err) {
           vm.organisationSectionErrorTop = true;
           if (vm.debug) {
-            console.log('There was an error retrieving other organisations', err);
+            console.log(
+              'There was an error retrieving other organisations',
+              err
+            );
           }
         }
       )
@@ -461,33 +464,33 @@
                 if (
                   affiliation.type === 'nhri' &&
                   (
-                    vm.affiliationsFound['nhri'] === null ||
+                    vm.affiliationsFound.nhri === null ||
                     affiliation.npe5__Primary__c === true
                   )
                 ) {
                   vm.affiliation = affiliation;
-                  vm.affiliationsFound['nhri'] =
+                  vm.affiliationsFound.nhri =
                     affiliationService.saveFoundAffiliation(affiliation);
-                  vm.affiliationsSwitching['nhri'] = affiliation;
+                  vm.affiliationsSwitching.nhri = affiliation;
                   if (vm.debug) {
-                    console.log('NHRI found', vm.affiliationsFound['nhri']);
+                    console.log('NHRI found', vm.affiliationsFound.nhri);
                   }
                 } else if (
                   affiliation.type === 'organisation' &&
                   (
-                    vm.affiliationsFound['organisation'] === null ||
+                    vm.affiliationsFound.organisation === null ||
                     affiliation.npe5__Primary__c === true
                   )
                 ) {
                   vm.organisationName = organisation.Name;
                   vm.organisationFound = organisation;
-                  vm.affiliationsFound['organisation'] =
+                  vm.affiliationsFound.organisation =
                     affiliationService.saveFoundAffiliation(affiliation);
-                  vm.affiliationsSwitching['organisation'] = affiliation;
+                  vm.affiliationsSwitching.organisation = affiliation;
                   if (vm.debug) {
                     console.log(
                       'found an organisation',
-                      vm.affiliationsFound['organisation']
+                      vm.affiliationsFound.organisation
                     );
                   }
                   if (affiliation.npe5__Primary__c === true) {
@@ -506,12 +509,12 @@
               // set affiliation to that
               if (
                 vm.affiliation === undefined &&
-                vm.affiliationsFound['organisation']
+                vm.affiliationsFound.organisation
               ) {
                 if (vm.debug) {
                   console.log('if we are here it means org found, not primary');
                 }
-                vm.affiliation = vm.affiliationsFound['organisation'];
+                vm.affiliation = vm.affiliationsFound.organisation;
                 vm.organisationType = 'organisation';
               } else if (vm.affiliation === undefined) {
                 if (vm.debug) {
@@ -572,7 +575,6 @@
 
         return (lowercaseName.indexOf(lowercaseQuery) === 0);
       };
-
     }
 
     vm.changeOrganisationType = function() {
@@ -580,11 +582,11 @@
         console.log('changeOrganisationType', vm.organisationType);
       }
       if (vm.organisationType === 'organisation') {
-        vm.affiliationsSwitching['nhri'] = vm.affiliation;
-        vm.affiliation = vm.affiliationsSwitching['organisation'];
+        vm.affiliationsSwitching.nhri = vm.affiliation;
+        vm.affiliation = vm.affiliationsSwitching.organisation;
       } else if (vm.organisationType === 'nhri') {
-        vm.affiliationsSwitching['organisation'] = vm.affiliation;
-        vm.affiliation = vm.affiliationsSwitching['nhri'];
+        vm.affiliationsSwitching.organisation = vm.affiliation;
+        vm.affiliation = vm.affiliationsSwitching.nhri;
       } else {
         vm.affiliation = {};
         if (vm.debug) {
@@ -709,7 +711,6 @@
         console.log('processSaveOrganisation-match', vm.organisationMatch);
       }
       return $q(function(resolve, reject) {
-
         // determine if this is requires a new org or not
         // if org.name empty, or we found a match
         if (
@@ -734,7 +735,10 @@
             },
             function(err) {
               if (vm.debug) {
-                console.log('There was an error creating the organisation', err);
+                console.log(
+                  'There was an error creating the organisation',
+                  err
+                );
               }
               reject(err);
             }
