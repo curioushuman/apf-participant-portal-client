@@ -92,7 +92,7 @@
         }
 
         // see if there is a due date
-        if (vm.action.Registrations_due_date__c !== null) {
+        if (vm.action.Registrations_due_date__c) {
           // format accordingly
           vm.action.registrationDate =
             layoutService.formatDate(vm.action.Registrations_due_date__c);
