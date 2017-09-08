@@ -46,7 +46,7 @@
     var vm = this;
 
     // debugging / developing
-    vm.debug = true;
+    vm.debug = false;
     vm.openAll = false;
 
     vm.navigate = layoutService.navigate;
@@ -111,6 +111,11 @@
         if (vm.action.Selection_criteria__c !== null) {
           vm.hasSelectionCriteria = true;
           vm.selectionCriteria = vm.action.Selection_criteria__c.split("\n");
+        }
+        vm.hasParticipantsMust = false;
+        if (vm.action.Participants_must__c !== null) {
+          vm.hasParticipantsMust = true;
+          vm.participantsMust = vm.action.Participants_must__c.split("\n");
         }
 
         // is training an action?
