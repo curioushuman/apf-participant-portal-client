@@ -1,5 +1,5 @@
 div.response
-  div(layout='row')
+  div(layout='row', ng-show='vm.question.Type__c==="Score and comment"')
     div(flex='85', layout='row', layout-align='start center')
       p.question {{ vm.question.Question_text__c }}
     div(flex='15', layout='row', layout-align='end center')
@@ -9,7 +9,10 @@ div.response
         ng-show='vm.hideComment'
       )
         md-icon comment
-  md-slider-container.md-block(flex)
+  div(layout='row', ng-hide='vm.question.Type__c==="Score and comment"')
+    div(flex, layout='row', layout-align='start center')
+      p.question {{ vm.question.Question_text__c }}
+  md-slider-container.md-block(flex, ng-hide='vm.question.Type__c==="Comment only"')
     span 0
     md-slider(
       ng-model='vm.question.response.Score__c',
@@ -25,11 +28,12 @@ div.response
   div.slider-invalid(ng-show='vm.question.response.error')
     | This field is required
   md-input-container.md-block(flex, ng-hide='vm.hideComment')
-    label Would you like to add any comments about this rating?
+    label(ng-hide='vm.question.Type__c==="Comment only"')
+      | Would you like to add any comments about this rating?
     textarea(
       ng-model='vm.question.response.Comments__c',
       name='responseComment{{ vm.question.Name }}',
-      md-maxlength='150',
+      md-maxlength='500',
       rows='3',
       md-select-on-focus
     )

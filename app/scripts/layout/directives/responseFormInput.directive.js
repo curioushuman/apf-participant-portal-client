@@ -34,7 +34,13 @@
   ) {
     var vm = this;
 
+    vm.type = vm.question.Type__c;
     vm.hideComment = true;
+    if (vm.question.Type__c === 'Comment only') {
+      vm.hideComment = false;
+      vm.question.response.Score__c = 0;
+      vm.question.response.NoScore = true;
+    }
     vm.showComment = showComment;
 
     vm.navigate = layoutService.navigate;

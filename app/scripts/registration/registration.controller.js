@@ -108,14 +108,14 @@
 
         // sort out the selection criteria
         vm.hasSelectionCriteria = false;
-        if (vm.action.Selection_criteria__c !== null) {
+        if (vm.action.Selection_criteria__c) {
           vm.hasSelectionCriteria = true;
           vm.selectionCriteria = vm.action.Selection_criteria__c.split("\n");
         }
-        vm.hasParticipantsMust = false;
-        if (vm.action.Participants_must__c !== null) {
-          vm.hasParticipantsMust = true;
-          vm.participantsMust = vm.action.Participants_must__c.split("\n");
+        vm.hasIdealCandidate = false;
+        if (vm.action.Ideal_candidate__c) {
+          vm.hasIdealCandidate = true;
+          vm.idealCandidate = vm.action.Ideal_candidate__c.split("\n");
         }
 
         // is training an action?
@@ -1056,7 +1056,10 @@
       angular.forEach(vm.questions, function(question, index) {
         if (
           question.response.Score__c === undefined ||
-          question.response.Score__c === 0
+          (
+            question.response.Score__c === 0 &&
+            question.response.NoScore === undefined
+          )
         ) {
           question.response.error = true;
           vm.experienceSectionInvalid = true;
