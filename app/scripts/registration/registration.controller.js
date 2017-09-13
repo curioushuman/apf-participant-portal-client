@@ -73,6 +73,10 @@
       function() {
         vm.actionLoaded = true;
 
+        if (vm.debug === true) {
+          console.log(vm.action);
+        }
+
         // work out the correct start and end dates
         vm.action.datesShow = false;
         if (vm.action.Digital_component__c === true) {
@@ -1044,6 +1048,7 @@
       // special validation for experience
       angular.forEach(vm.experienceRequiredSliders, function(slider, index) {
         if (
+          vm.contact[slider] === undefined ||
           vm.contact[slider] === null ||
           vm.contact[slider] === 0
         ) {

@@ -98,13 +98,13 @@ section(ng-show='vm.actionLoaded')
                 .md-list-item-text
                   p {{ criteria }}
                   
-        md-card(ng-show='vm.hasParticipantsMust')
+        md-card(ng-show='vm.hasIdealCandidate')
           md-card-title
             md-card-title-text.md-headline
               | Ideal candidates will have one or more of
           md-card-content
             md-list
-              md-list-item(ng-repeat='criteria in vm.participantsMust')
+              md-list-item(ng-repeat='criteria in vm.idealCandidate')
                 .md-list-item-text
                   p {{ criteria }}
 
