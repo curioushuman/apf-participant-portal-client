@@ -233,7 +233,7 @@
     vm.prePersonal = prePersonal;
     vm.processPersonal = processPersonal;
     vm.salutations = ['Mr.', 'Ms.', 'Mrs.', 'Dr.', 'Prof.'];
-    vm.genders = ['Male', 'Female', 'Other', 'Prefer not to disclose'];
+    vm.genders = ['Male', 'Female', 'Another term', 'Prefer not to disclose'];
     vm.personalRequired = [
       'contactFirstName', 'contactLastName',
       'contactSalutation', 'contactGender'
