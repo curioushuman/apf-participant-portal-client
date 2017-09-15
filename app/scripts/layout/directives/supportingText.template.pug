@@ -1,0 +1,10 @@
+md-card(ng-show='vm.content || vm.list')
+  md-card-title(ng-show='vm.title')
+    md-card-title-text.md-headline
+      | {{ vm.title }}
+  md-card-content
+    md-list(ng-show='vm.list')
+      md-list-item(ng-repeat='item in vm.list')
+        .md-list-item-text
+          p {{ item }}
+    div(ng-show='vm.content', ng-bind-html='vm.content | trust')

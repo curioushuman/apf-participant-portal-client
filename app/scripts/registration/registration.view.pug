@@ -88,25 +88,20 @@ section(ng-show='vm.actionLoaded')
                   strong {{ vm.action.registrationDate }}
             p {{ vm.action.Help_text__c }}
             
-        md-card(ng-show='vm.hasSelectionCriteria')
-          md-card-title
-            md-card-title-text.md-headline
-              | Participants must
-          md-card-content
-            md-list
-              md-list-item(ng-repeat='criteria in vm.selectionCriteria')
-                .md-list-item-text
-                  p {{ criteria }}
-                  
-        md-card(ng-show='vm.hasIdealCandidate')
-          md-card-title
-            md-card-title-text.md-headline
-              | Ideal candidates will have one or more of
-          md-card-content
-            md-list
-              md-list-item(ng-repeat='criteria in vm.idealCandidate')
-                .md-list-item-text
-                  p {{ criteria }}
+        gz-supporting-text(
+          list='vm.action.selectionCriteria',
+          title='Participants must'
+        )
+        
+        gz-supporting-text(
+          list='vm.action.idealCandidate',
+          title='Ideal candidates will have one or more of'
+        )
+        
+        gz-supporting-text(
+          content='vm.action.Supporting_text__c',
+          list='true'
+        )
 
       //- Form
       div(flex, layout='column')
@@ -142,7 +137,8 @@ section(ng-show='vm.actionLoaded')
               p.intro(
                 layout='column'
                 layout-padding,
-                md-colors="{background: 'default-background-hue-2'}"
+                md-colors="{background: 'default-background-hue-2'}",
+                ng-show='vm.actionIsTraining'
               )
                 | The main form of communication for this training will be via 
                 | email. Please ensure you enter a valid email address that 

@@ -16,6 +16,7 @@
     '$q',
     '$location',
     '$filter',
+    '$sce',
     '$mdDateLocale',
     'layoutService',
     'actionService',
@@ -34,6 +35,7 @@
     $q,
     $location,
     $filter,
+    $sce,
     $mdDateLocale,
     layoutService,
     actionService,
@@ -83,7 +85,6 @@
         }
 
         // work out the correct start and end dates
-        // TODAY: THIS COULD MOVE TO SALESFORCE
         vm.action.datesShow = false;
         if (vm.action.Start_date__c !== null && vm.action.Finish_date__c !== null) {
           vm.action.datesShow = true;
@@ -107,15 +108,14 @@
         }
 
         // sort out the selection criteria
-        vm.hasSelectionCriteria = false;
         if (vm.action.Selection_criteria__c) {
-          vm.hasSelectionCriteria = true;
-          vm.selectionCriteria = vm.action.Selection_criteria__c.split("\n");
+          vm.action.selectionCriteria =
+            layoutService.listFromString(vm.action.Selection_criteria__c);
         }
-        vm.hasIdealCandidate = false;
+
         if (vm.action.Ideal_candidate__c) {
-          vm.hasIdealCandidate = true;
-          vm.idealCandidate = vm.action.Ideal_candidate__c.split("\n");
+          vm.action.idealCandidate =
+            layoutService.listFromString(vm.action.Ideal_candidate__c);
         }
 
         // is training an action?

@@ -26,7 +26,8 @@
 
     var service = {
       navigate: navigate,
-      formatDate: formatDate
+      formatDate: formatDate,
+      listFromString: listFromString
     };
 
     return service;
@@ -46,6 +47,10 @@
 
     function formatDate(dateString) {
       return $filter('date')(dateString, 'd MMMM yyyy');
+    }
+
+    function listFromString(str) {
+      return str.split("\n");
     }
   }
 })();
