@@ -24,7 +24,8 @@
     'affiliationService',
     'participantService',
     'questionService',
-    'responseService'
+    'responseService',
+    'DEBUG'
   ];
 
   function RegistrationController(
@@ -41,13 +42,17 @@
     affiliationService,
     participantService,
     questionService,
-    responseService
+    responseService,
+    DEBUG
   ) {
     var vm = this;
 
     // debugging / developing
-    vm.debug = false;
+    vm.debug = DEBUG;
     vm.openAll = false;
+    if (vm.debug === true) {
+      console.log('DEBUGing is ON');
+    }
 
     vm.navigate = layoutService.navigate;
 

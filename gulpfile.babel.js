@@ -41,6 +41,24 @@ import pkg from './package.json';
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
+// environment config
+gulp.task('config_local', function () {
+  gulp.src('app/scripts/core/config.json')
+  .pipe($.ngConfig('app.core', {
+    environment: 'local',
+    templateFilePath: 'app/scripts/core/config.template.js'
+  }))
+  .pipe(gulp.dest('app/scripts/core'))
+});
+gulp.task('config_production', function () {
+  gulp.src('app/scripts/core/config.json')
+  .pipe($.ngConfig('app.core', {
+    environment: 'production',
+    templateFilePath: 'app/scripts/core/config.template.js'
+  }))
+  .pipe(gulp.dest('app/scripts/core'))
+});
+
 // Lint JavaScript
 gulp.task('lint', () =>
   gulp.src(['app/scripts/**/*.js','!node_modules/**'])
@@ -222,7 +240,7 @@ gulp.task('clean', () => del(['.tmp', 'dist/*', '!dist/.git'], {dot: true}));
 
 // Watch files for changes & reload
 // gulp.task('serve', ['scripts', 'styles', 'pug_core', 'pug_angular'], () => {
-gulp.task('serve', ['scripts', 'copy_all_scripts', 'styles', 'pug_core', 'pug_angular'], () => {
+gulp.task('serve', ['config_local', 'scripts', 'copy_all_scripts', 'styles', 'pug_core', 'pug_angular'], () => {
   browserSync({
     notify: false,
     // Customize the Browsersync console logging prefix
@@ -267,7 +285,7 @@ gulp.task('default', ['clean'], cb =>
   runSequence(
     'styles',
     // ['lint', 'pug_core', 'pug_angular', 'html', 'scripts', 'images', 'copy'],
-    ['lint', 'pug_core', 'pug_angular', 'html', 'scripts', 'copy_all_scripts', 'images', 'copy'],
+    ['config_production', 'lint', 'pug_core', 'pug_angular', 'html', 'scripts', 'copy_all_scripts', 'images', 'copy'],
     'generate-service-worker',
     cb
   )
