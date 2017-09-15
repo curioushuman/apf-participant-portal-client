@@ -244,6 +244,24 @@
       }
       return false;
     };
+    vm.populateBadgeName = function() {
+      if (
+        vm.contact.Name_as_appears_on_badge__c === '' ||
+        vm.contact.Name_as_appears_on_badge__c === null
+      ) {
+        vm.contact.Name_as_appears_on_badge__c = '';
+        if (
+          vm.contact.Salutation !== '' ||
+          vm.contact.Salutation !== null
+        ) {
+          vm.contact.Name_as_appears_on_badge__c +=
+            vm.contact.Salutation + ' ';
+        }
+        vm.contact.Name_as_appears_on_badge__c +=
+          vm.contact.FirstName + ' ' +
+          vm.contact.LastName;
+      }
+    }
 
     // pre
     function prePersonal() {

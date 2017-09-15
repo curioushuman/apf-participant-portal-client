@@ -211,6 +211,11 @@ section(ng-show='vm.actionLoaded')
                 | database. Please check to ensure your information is up to 
                 | date.
               md-input-container.md-block(flex)
+                label Salutation
+                md-select(ng-model='vm.contact.Salutation', name='contactSalutation')
+                  md-option(ng-repeat='salutation in vm.salutations', value='{{ salutation }}')
+                    | {{ salutation }}
+              md-input-container.md-block(flex)
                 label First name
                 input(ng-model='vm.contact.FirstName', name='contactFirstName', required)
                 div(ng-messages='pageForm.contactFirstName.$error')
@@ -223,10 +228,16 @@ section(ng-show='vm.actionLoaded')
                   div(ng-message='required')
                     | Please enter a last name
               md-input-container.md-block(flex)
-                label Salutation
-                md-select(ng-model='vm.contact.Salutation', name='contactSalutation')
-                  md-option(ng-repeat='salutation in vm.salutations', value='{{ salutation }}')
-                    | {{ salutation }}
+                label How would you like your name to appear on your name badge?
+                input(
+                  ng-model='vm.contact.Name_as_appears_on_badge__c',
+                  name='contactBadgeName',
+                  ng-focus='vm.populateBadgeName()',
+                  required
+                )
+                div(ng-messages='pageForm.contactBadgeName.$error')
+                  div(ng-message='required')
+                    | Please enter your name how you would like it to appear on your name badge
               md-input-container.md-block(flex)
                 label Gender
                 md-select(ng-model='vm.contact.Gender__c', name='contactGender', required)
