@@ -51,7 +51,7 @@
     vm.debug = DEBUG;
     vm.openAll = false;
     if (vm.debug === true) {
-      console.log('DEBUGing is ON');
+      console.log('DEBUG is ON');
     }
 
     vm.navigate = layoutService.navigate;
@@ -83,21 +83,12 @@
         }
 
         // work out the correct start and end dates
+        // TODAY: THIS COULD MOVE TO SALESFORCE
         vm.action.datesShow = false;
-        if (vm.action.Digital_component__c === true) {
-          vm.action.startDate = vm.action.Digital_start_date__c;
-        } else {
-          vm.action.startDate = vm.action.Face_to_face_start_date__c;
-        }
-        if (vm.action.Face_to_face_component__c === true) {
-          vm.action.finishDate = vm.action.Face_to_face_finish_date__c;
-        } else {
-          vm.action.finishDate = vm.action.Digital_finish_date__c;
-        }
-        if (vm.action.startDate !== null && vm.action.finishDate !== null) {
+        if (vm.action.Start_date__c !== null && vm.action.Finish_date__c !== null) {
           vm.action.datesShow = true;
-          vm.action.startDate = layoutService.formatDate(vm.action.startDate);
-          vm.action.finishDate = layoutService.formatDate(vm.action.finishDate);
+          vm.action.startDate = layoutService.formatDate(vm.action.Start_date__c);
+          vm.action.finishDate = layoutService.formatDate(vm.action.Finish_date__c);
         }
 
         // see if there is a due date

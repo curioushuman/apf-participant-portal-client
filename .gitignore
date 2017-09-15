@@ -7,3 +7,5 @@ app.yaml
 database.rules.json
 firebase.json
 functions/
+app/scripts/core/config.js
+app/scripts/core/config.json

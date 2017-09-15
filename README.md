@@ -2,6 +2,23 @@
 
 This repo is built on the web starter kit (which is awesome!).
 
+## config.json
+
+You need a config.json file in /app/scripts/core that has the format:
+
+```
+{
+  "local": {
+    "API_URI": "http://localhost:9000/salesforce",
+    "DEBUG": true
+  },
+  "production": {
+    "API_URI": "https://apiurl.com/salesforce",
+    "DEBUG": false
+  }
+}
+```
+
 ## Web Starter Kit notes
 
 ### Overview
