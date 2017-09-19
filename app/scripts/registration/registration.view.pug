@@ -79,7 +79,7 @@ section(ng-show='vm.actionLoaded')
         md-card
           md-card-title
             md-card-title-text.md-headline
-              | To register for this course
+              | Registration information
           md-card-content
             md-list
               md-list-item
@@ -228,16 +228,14 @@ section(ng-show='vm.actionLoaded')
                   div(ng-message='required')
                     | Please enter a last name
               md-input-container.md-block(flex)
-                label How would you like your name to appear on your name badge?
+                label Your preferred name
                 input(
-                  ng-model='vm.contact.Name_as_appears_on_badge__c',
-                  name='contactBadgeName',
-                  ng-focus='vm.populateBadgeName()',
-                  required
+                  ng-model='vm.contact.Preferred_name__c',
+                  name='contactPreferredName'
                 )
-                div(ng-messages='pageForm.contactBadgeName.$error')
-                  div(ng-message='required')
-                    | Please enter your name how you would like it to appear on your name badge
+                div.hint
+                  | Do you have another name 
+                  | you would prefer to be addressed by?
               md-input-container.md-block(flex)
                 label Gender
                 md-select(ng-model='vm.contact.Gender__c', name='contactGender', required)
@@ -355,7 +353,7 @@ section(ng-show='vm.actionLoaded')
                   required,
                   ng-change='vm.changeOrganisationType()'
                 )
-                  md-radio-button.md-primary(
+                  md-radio-button(
                     value='nhri'
                   )
                     | A National Human Rights Institution (NHRI)
@@ -400,19 +398,21 @@ section(ng-show='vm.actionLoaded')
                 div(ng-messages='pageForm.organisationName.$error')
                   div(ng-message='required')
                     | This field is required
-              p.question(ng-hide="vm.organisationType === 'individual'") When did you start working at this organisation?
-              md-input-container.md-block(flex, ng-hide="vm.organisationType === 'individual'")
-                label Enter date
-                md-datepicker(
-                  ng-model='vm.affiliation.npe5__StartDate__c',
-                  name='affiliationStartDate',
-                  required,
-                  md-open-on-focus,
-                  md-placeholder='Enter date'
-                )
-                div(ng-messages='pageForm.affiliationStartDate.$error')
-                  div(ng-message='required')
-                    | Please enter a valid date
+              div(ng-hide="vm.organisationType === 'individual' || vm.actionIsTraining !== true")
+                p.question(ng-hide="vm.organisationType === 'individual'")
+                  | When did you start working at this organisation?
+                md-input-container.md-block(flex)
+                  label Enter date
+                  md-datepicker(
+                    ng-model='vm.affiliation.npe5__StartDate__c',
+                    name='affiliationStartDate',
+                    required,
+                    md-open-on-focus,
+                    md-placeholder='Enter date'
+                  )
+                  div(ng-messages='pageForm.affiliationStartDate.$error')
+                    div(ng-message='required')
+                      | Please enter a valid date
               md-input-container.md-block(flex, ng-hide="vm.organisationType === 'individual'")
                 label Role
                 input(ng-model='vm.affiliation.npe5__Role__c', name='affiliationRole', required)
@@ -484,7 +484,7 @@ section(ng-show='vm.actionLoaded')
                   | email address?
                 md-input-container.md-block(flex)
                   md-radio-group(ng-model='vm.emailIsWork', name='emailIsWork', required)
-                    md-radio-button.md-primary(value='yes', ng-click='vm.changeEmailWork()') Yes
+                    md-radio-button(value='yes', ng-click='vm.changeEmailWork()') Yes
                     md-radio-button(value='no', ng-click='vm.changeEmailWork()')  No
                   div(ng-messages='pageForm.emailIsWork.$error')
                     div(ng-message='required')
@@ -509,8 +509,8 @@ section(ng-show='vm.actionLoaded')
                 p.question Would you like your email added to the APF mailing list?
                 md-input-container.md-block(flex)
                   md-radio-group(ng-model='vm.contact.HasOptedOutOfEmail', name='contactEmailOptOut', required)
-                    md-radio-button(value='false') Yes
-                    md-radio-button(value='true')  No
+                    md-radio-button(value='0') Yes
+                    md-radio-button(value='1') No
                   div(ng-messages='pageForm.contactEmailOptOut.$error')
                     div(ng-message='required')
                       | This field is required
@@ -577,7 +577,7 @@ section(ng-show='vm.actionLoaded')
                 md-icon.md-material-icons navigate_next
               
           //- Experience and knowledge section
-          div#pageForm-experience(ng-hide='vm.actionIsTraining')
+          div#pageForm-experience(ng-show='vm.actionIsTraining')
             a(name='experience')
             //- Disabled version
             gz-disabled-form-section(
@@ -750,7 +750,7 @@ section(ng-show='vm.actionLoaded')
                   md-icon.md-material-icons navigate_next
               
           //- Expectations and learning needs section
-          div#pageForm-expectations(ng-hide='vm.actionIsTraining')
+          div#pageForm-expectations(ng-show='vm.actionIsTraining')
             a(name='expectations')
             //- Disabled version
             gz-disabled-form-section(
@@ -786,6 +786,7 @@ section(ng-show='vm.actionLoaded')
                     md-maxlength='300',
                     rows='3',
                     md-select-on-focus,
+                    aria-label='What knowledge do you hope to gain through participation in this course?',
                     required
                   )
                   //- div.hint
@@ -803,6 +804,7 @@ section(ng-show='vm.actionLoaded')
                     name='participantSkillsGain',
                     md-maxlength='300',
                     rows='3',
+                    aria-label='What skills do you hope to gain through participation in this course?',
                     md-select-on-focus,
                     required
                   )
@@ -819,6 +821,7 @@ section(ng-show='vm.actionLoaded')
                     name='participantAdditionalInfo',
                     md-maxlength='300',
                     rows='3',
+                    aria-label='Is there any additional information you would like to add to your application?',
                     md-select-on-focus
                   )
                   //- div.hint
@@ -850,13 +853,111 @@ section(ng-show='vm.actionLoaded')
                 ) 
                   md-icon.md-material-icons navigate_before
                   | Previous
-                md-button(
+                md-button.md-raised.md-accent(
                   ng-click="vm.processExpectations()",
                   ng-disabled="vm.expectationsSectionNextDisabled()"
                 ) 
-                  | Next
-                  md-icon.md-material-icons navigate_next
+                  | Register
                   
+          //- Sessions section
+          div#pageForm-sessions(ng-hide='vm.actionIsTraining')
+            a(name='sessions')
+            //- Disabled version
+            gz-disabled-form-section(
+              title='vm.sessionsSectionTitle',
+              ng-hide="vm.openAll || vm.sectionActive === 'sessions' || vm.sessionsSectionStatus === 'complete'"
+            )
+            //- Complete version
+            gz-complete-form-section(
+              title='vm.sessionsSectionTitle',
+              ng-click="vm.editSection('sessions')",
+              ng-show="vm.sessionsSectionStatus === 'complete' && vm.sectionActive !== 'sessions'"
+            )
+            md-card(ng-show="vm.openAll || vm.sectionActive === 'sessions'")
+              md-card-header
+                //- md-card-avatar
+                //-   img(
+                //-     ng-src='/images/APF-logo-footer-2x.png',
+                //-     alt='Asia Pacific Forum logo'
+                //-   )
+                md-card-header-text
+                  span.md-headline  {{ vm.sessionsSectionTitle }}
+              md-card-content
+                
+                div.error(
+                  layout='row'
+                  layout-padding,
+                  md-colors="{background: 'default-warn'}",
+                  ng-show='vm.sessionsSectionErrorTop'
+                )
+                  div(flex='75', layout='row', layout-align='start center')
+                    | There was an error reaching the database. Please wait 5 
+                    | seconds and then try again.
+                  div(flex='25', layout='row', layout-align='end center')
+                    md-button.md-background(
+                      ng-click='vm.preOrganisation()'
+                    ) Try again
+                
+                div.sessions(ng-hide='vm.sessions.length === 0')
+                  p.intro(
+                    layout='column'
+                    layout-padding,
+                    md-colors="{background: 'default-background-hue-2'}"
+                  )
+                    | This event involves the following parallel sessions. 
+                    | Please select your preferred session, by selecting ‘1’ 
+                    | next to your first preference, and ‘2’ for your second 
+                    | preference. 
+                    br
+                    br
+                    | Please note that all groups will be limited to the maximum 
+                    | number of seating available. The APF shall endeavour to 
+                    | place you within the first group of your choice, and where 
+                    | this is not possible, you will be provided with your second 
+                    | preference. Preferences will be allocated on a first 
+                    | come, first serve basis.
+
+                  
+                  gz-session-participation-form-input(
+                    ng-repeat='session in vm.sessions',
+                    session='session',
+                    displayDayHeadings='vm.sessionsDisplayDayHeadings',
+                    sessionsDays='vm.sessionsDays',
+                  )
+                
+                p.error(
+                  layout='column'
+                  layout-padding,
+                  md-colors="{background: 'default-warn'}",
+                  ng-show='vm.sessionsSectionInvalid'
+                )
+                  | Please make sure you have entered a '1' for your first 
+                  | preference, and a '2' for your second. You can only include 
+                  | a single '1' and a single '2'.
+                  
+                p.error(
+                  layout='column'
+                  layout-padding,
+                  md-colors="{background: 'default-warn'}",
+                  ng-show='vm.sessionsSectionError'
+                )
+                  | There was an error saving your information. Please wait 5 
+                  | seconds and try again.
+                        
+              md-card-actions(layout='row', layout-align='end center', layout-padding)
+                md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
+                md-button(
+                  ng-click="vm.editSection('contact')"
+                ) 
+                  md-icon.md-material-icons navigate_before
+                  | Previous
+                md-button.md-raised.md-accent(
+                  ng-click="vm.processSessions()",
+                  ng-disabled="vm.sessionsSectionNextDisabled()"
+                ) 
+                  | Register
+        
+        //- Thank you section
         md-card(
           ng-show="vm.formStatus === 'complete'"
         )

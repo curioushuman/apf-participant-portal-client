@@ -26,6 +26,8 @@
     'participantService',
     'questionService',
     'responseService',
+    'sessionService',
+    'sessionParticipationService',
     'DEBUG'
   ];
 
@@ -45,6 +47,8 @@
     participantService,
     questionService,
     responseService,
+    sessionService,
+    sessionParticipationService,
     DEBUG
   ) {
     var vm = this;
@@ -244,24 +248,6 @@
       }
       return false;
     };
-    vm.populateBadgeName = function() {
-      if (
-        vm.contact.Name_as_appears_on_badge__c === '' ||
-        vm.contact.Name_as_appears_on_badge__c === null
-      ) {
-        vm.contact.Name_as_appears_on_badge__c = '';
-        if (
-          vm.contact.Salutation !== '' ||
-          vm.contact.Salutation !== null
-        ) {
-          vm.contact.Name_as_appears_on_badge__c +=
-            vm.contact.Salutation + ' ';
-        }
-        vm.contact.Name_as_appears_on_badge__c +=
-          vm.contact.FirstName + ' ' +
-          vm.contact.LastName;
-      }
-    }
 
     // pre
     function prePersonal() {
@@ -343,10 +329,7 @@
     vm.organisationSectionTitle = 'Organisation';
     vm.preOrganisation = preOrganisation;
     vm.processOrganisation = processOrganisation;
-    vm.organisationRequired = [
-      'affiliationStartDate',
-      'affiliationRole'
-    ];
+    vm.organisationRequired = [];
     vm.organisationSectionNextDisabled = function() {
       if (vm.working) {
         return true;
@@ -635,17 +618,18 @@
         return;
       }
 
+      vm.organisationRequired = [
+        'affiliationRole'
+      ];
       vm.affiliationFound = vm.affiliationsFound[vm.organisationType];
       if (vm.organisationType === 'nhri') {
-        vm.organisationRequired = [
-          'affiliationOrganisation',
-          'affiliationStartDate',
-          'affiliationRole'
-        ];
+        vm.organisationRequired.push('affiliationOrganisation');
       } else if (vm.organisationType === 'organisation') {
-        vm.organisationRequired = [
-          'organisationName', 'affiliationStartDate', 'affiliationRole'
-        ];
+        vm.organisationRequired.push('organisationName');
+      }
+
+      if (vm.actionIsTraining === true) {
+        vm.organisationRequired.push('affiliationStartDate');
       }
 
       if (isValid(vm.organisationRequired) === false) {
@@ -896,7 +880,8 @@
     vm.preContact = preContact;
     vm.processContact = processContact;
     vm.contactRequired = [
-      'contactPhone', 'contactPreferredPhone', 'contactClosestAirport'
+      'contactPhone',
+      'contactPreferredPhone'
     ];
     vm.contactSectionNextDisabled = function() {
       if (vm.working) {
@@ -920,18 +905,32 @@
           break;
       }
 
+      if (vm.contact.HasOptedOutOfEmail === undefined) {
+        vm.contact.HasOptedOutOfEmail = true;
+      }
+      console.log(vm.contact);
+
       vm.working = false;
       vm.editSection('contact');
     }
 
     // process
     function processContact() {
+      if (vm.actionIsTraining) {
+        vm.contactRequired.push('contactClosestAirport');
+      }
       if (isValid(vm.contactRequired) === false) {
         vm.contactSectionInvalid = true;
         return;
       }
 
       vm.working = true;
+
+      if (vm.contact.HasOptedOutOfEmail === '1') {
+        vm.contact.HasOptedOutOfEmail = true;
+      } else if (vm.contact.HasOptedOutOfEmail === '2') {
+        vm.contact.HasOptedOutOfEmail = false;
+      }
 
       if (vm.emailIsWork === 'yes') {
         vm.contact.npe01__Preferred_Email__c = 'Work';
@@ -957,7 +956,11 @@
       .then(
         function() {
           vm.contactSectionStatus = 'complete';
-          vm.preExperience();
+          if (vm.actionIsTraining) {
+            vm.preExperience();
+          } else {
+            vm.preSessions();
+          }
         },
         function(err) {
           if (vm.debug) {
@@ -1205,6 +1208,271 @@
       );
     }
 
+    // Sessions section
+    vm.sessions = [];
+    vm.sessionsDays = {};
+    vm.sessionsDaysCount = 0;
+    vm.sessionsPeriodsCount = 0;
+    vm.sessionsPeriodOptions = [
+      '1',
+      '2'
+    ];
+    vm.sessionsDisplayDayHeadings = false;
+    function SessionsDay(day) {
+        this.id = day.replace(' ','');
+        this.heading = day;
+        this.periods = {};
+        this.periodsCount = 0;
+        this.displayHeading = false;
+        this.displayPeriodHeadings = false;
+    }
+    function SessionsDayPeriod(period) {
+        this.id = period.replace(' ','');
+        this.heading = period;
+        this.displayHeading = false;
+        this.options = vm.sessionsPeriodOptions;
+        this.selectedPreferences = [];
+        this.valid = true;
+    }
+    vm.sessionDayCurrent = null;
+    vm.sessionsSectionStatus = 'disabled';
+    vm.sessionsSectionInvalid = false;
+    vm.sessionsSectionError = false;
+    vm.sessionsErrors = {};
+    vm.sessionsSectionErrorTop = false;
+    vm.sessionsSectionTitle = 'Sessions';
+    vm.preSessions = preSessions;
+    vm.processSessions = processSessions;
+    // not required for Sessions as there are no additional questions
+    // vm.sessionsRequired = [];
+    vm.sessionsSectionNextDisabled = function() {
+      if (vm.working) {
+        return true;
+      }
+      return false;
+    };
+
+    // pre
+    function preSessions() {
+      preQuerySessions()
+      .then(
+        function() {
+          vm.working = false;
+          vm.editSection('sessions');
+        },
+        function(err) {
+          if (vm.debug) {
+            console.log('Error preSessions', err);
+          }
+          vm.sessionsSectionErrorTop = true;
+          vm.working = false;
+        }
+      );
+    }
+
+    function preQuerySessions() {
+      return sessionService.list(
+        {
+          actionid: vm.action.Id
+        }
+      )
+      .$promise
+      .then(
+        function(data) {
+          vm.sessions = data;
+          if (vm.debug) {
+            console.log('sessions', vm.sessions);
+          }
+          var sessionsDay = null;
+          var sessionsDayPeriod = null;
+          vm.sessionsDaysCount = 0;
+          vm.sessionsPeriodsCount = 0;
+          angular.forEach(vm.sessions, function(session, index) {
+            if (
+              sessionsDay === null ||
+              sessionsDay.heading !== session.Day__c
+            ) {
+              // it's a new day
+              vm.sessionsDaysCount++;
+              sessionsDay = new SessionsDay(session.Day__c);
+              sessionsDay.displayHeading = true;
+              vm.sessionsDays[sessionsDay.id] = sessionsDay;
+            } else {
+              sessionsDay.displayHeading = false;
+            }
+            session.day = sessionsDay;
+            if (
+              sessionsDayPeriod === null ||
+              sessionsDayPeriod.heading !== session.Period__c
+            ) {
+              // it's a new period
+              sessionsDay.periodsCount++;
+              vm.sessionsPeriodsCount++;
+              if (vm.debug) {
+                console.log('session.Period__c',session.Period__c);
+              }
+              sessionsDayPeriod = new SessionsDayPeriod(session.Period__c);
+              sessionsDayPeriod.displayHeading = true;
+              vm.sessionsDays[sessionsDay.id]
+                .periods[sessionsDayPeriod.id] = sessionsDayPeriod;
+            } else {
+              sessionsDayPeriod.displayHeading = false;
+            }
+            session.period = sessionsDayPeriod;
+            if (sessionsDay.periodsCount > 1) {
+              vm.sessionsDays[sessionsDay.id].displayPeriodHeadings = true;
+            }
+            session.sessionParticipation =
+              new sessionParticipationService.SessionParticipation();
+          });
+          if (vm.sessionsDaysCount > 1) {
+            vm.sessionsDisplayDayHeadings = true;
+          }
+          if (vm.debug) {
+            console.log('vm.sessionsDays', vm.sessionsDays);
+            console.log('vm.sessionsPeriodsCount', vm.sessionsPeriodsCount);
+            console.log('vm.sessionsDaysCount', vm.sessionsDaysCount);
+          }
+          return vm.sessions;
+        },
+        function(err) {
+          return err;
+        }
+      );
+    }
+
+    // process
+    function processSessions() {
+      vm.sessionsSectionInvalid = false;
+
+      // not required for Sessions as there are no additional questions
+      // if (isValid(vm.sessionsRequired) === false) {
+      //   vm.sessionsSectionInvalid = true;
+      // }
+
+      // special validation for sessions
+      angular.forEach(vm.sessionsDays, function(sessionsDay, index) {
+        angular.forEach(sessionsDay.periods, function(sessionsDayPeriod, index) {
+          sessionsDayPeriod.selectedPreferences = [];
+        });
+      });
+      angular.forEach(vm.sessions, function(session, index) {
+        if (vm.debug === true) {
+          console.log('session', session);
+        }
+        vm.sessionsDays[session.day.id]
+          .periods[session.period.id]
+          .selectedPreferences.push(
+            session.sessionParticipation.Registration_preference__c
+          );
+      });
+      if (vm.debug === true) {
+        console.log('sessionsDays', vm.sessionsDays);
+      }
+      var periodsValid = 0;
+      angular.forEach(vm.sessionsDays, function(sessionsDay, index) {
+        angular.forEach(sessionsDay.periods, function(sessionsDayPeriod, index) {
+          var periodOptionsSelected = 0;
+          angular.forEach(
+            vm.sessionsPeriodOptions,
+            function(option, index) {
+              if (
+                $filter('filter')
+                  (sessionsDayPeriod.selectedPreferences,option).length === 1
+              ) {
+                periodOptionsSelected++;
+              }
+            }
+          );
+          if (periodOptionsSelected === vm.sessionsPeriodOptions.length) {
+            sessionsDayPeriod.valid = true;
+            periodsValid++;
+          } else {
+            sessionsDayPeriod.valid = false;
+          }
+        });
+      });
+      if (vm.debug === true) {
+        console.log('periodsValid', periodsValid);
+        console.log('sessionsPeriodsCount', vm.sessionsPeriodsCount);
+      }
+      vm.sessionsSectionInvalid = false;
+      if (periodsValid < vm.sessionsPeriodsCount) {
+        vm.sessionsSectionInvalid = true;
+      }
+
+      if (vm.sessionsSectionInvalid === true) {
+        return;
+      }
+
+      vm.working = true;
+
+      // participant information
+      // THIS IS DUPLICATED FROM EXPERIENCE
+      // NEEDS TO BE REMOVED INTO IT'S OWN FUNCTION AT SOME POINT
+      vm.participant.Contact__c = vm.contact.Id;
+      vm.participant.Action__c = vm.action.Id;
+      vm.participant.Organisation__c = vm.affiliation.npe5__Organization__c;
+      vm.participant.Type__c = 'Participant';
+
+      // chaining the promises as responses rely on participant Id
+      processSaveParticipant()
+      .then(
+        function(participant) {
+          // q.all works as it doesn't matter the order of processing
+          var promises = processSaveSessionParticipations();
+          $q.all(promises).then(
+            function(data) {
+              if (vm.debug) {
+                console.log('All promises have resolved', data);
+              }
+
+              vm.sessionsSectionStatus = 'complete';
+              vm.completeForm();
+            },
+            function(err) {
+              if (vm.debug) {
+                console.log('Something went wrong', err);
+              }
+              vm.sessionsSectionError = true;
+              vm.working = false;
+            }
+          );
+        },
+        function(err) {
+          vm.sessionsSectionError = true;
+          vm.working = false;
+          if (vm.debug) {
+            console.log('There was an error saving the participant', err);
+          }
+        }
+      );
+    }
+
+    function processSaveSessionParticipations() {
+      var promises = [];
+      angular.forEach(vm.sessions, function(session, index) {
+        session.sessionParticipation.Status__c = 'Registered';
+        session.sessionParticipation.Participant__c = vm.participant.Id;
+        session.sessionParticipation.Session__c = session.Id;
+        if (vm.debug) {
+          console.log('Session ' + index, session.sessionParticipation);
+        }
+        if (
+          session.sessionParticipation.Registration_preference__c
+            !== undefined &&
+          session.sessionParticipation.Registration_preference__c !== null
+        ) {
+          promises
+            .push(
+              processSaveSessionParticipation(session.sessionParticipation)
+            );
+        }
+      });
+
+      return promises;
+    }
+
     function completeForm() {
       // just submit, don't show a summary of all fields
       vm.working = false;
@@ -1311,6 +1579,37 @@
           function(err) {
             if (vm.debug) {
               console.log('There was an error creating the response', err);
+            }
+            reject(err);
+          }
+        );
+      });
+    }
+
+    function processSaveSessionParticipation(sessionParticipation) {
+      if (vm.debug) {
+        console.log('Saving sessionParticipation', sessionParticipation);
+      }
+      return $q(function(resolve, reject) {
+        sessionParticipation.$save(
+          function(record) {
+            if (record.success) {
+              resolve(sessionParticipation);
+            } else {
+              if (vm.debug) {
+                console.log(
+                  'There was an error creating the sessionParticipation'
+                );
+              }
+              reject('There was an error creating the sessionParticipation');
+            }
+          },
+          function(err) {
+            if (vm.debug) {
+              console.log(
+                'There was an error creating the sessionParticipation',
+                err
+              );
             }
             reject(err);
           }
