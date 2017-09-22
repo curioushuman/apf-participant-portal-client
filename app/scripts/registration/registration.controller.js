@@ -16,7 +16,7 @@
     '$q',
     '$location',
     '$filter',
-    '$sce',
+    '$timeout',
     '$mdDateLocale',
     'layoutService',
     'actionService',
@@ -27,6 +27,7 @@
     'questionService',
     'responseService',
     'sessionService',
+    'detectionService',
     'sessionParticipationService',
     'DEBUG',
     'API_URI'
@@ -38,7 +39,7 @@
     $q,
     $location,
     $filter,
-    $sce,
+    $timeout,
     $mdDateLocale,
     layoutService,
     actionService,
@@ -49,6 +50,7 @@
     questionService,
     responseService,
     sessionService,
+    detectionService,
     sessionParticipationService,
     DEBUG,
     API_URI
@@ -168,6 +170,17 @@
         vm.actionError = true;
       }
     );
+
+    // Tech and connection detection
+    // start the image download
+    // set a timeout of 10 seconds perhaps
+    // write the callback and pass it in
+    var processConnectionResults = function() {
+      if (vm.debug) {
+        console.log('Results', detectionService.connectionResults);
+      }
+    }
+    $timeout(detectionService.detectConnection(processConnectionResults), 3000);
 
     vm.sectionActive = 'email';
 
