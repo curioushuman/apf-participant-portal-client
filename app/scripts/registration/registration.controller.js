@@ -1532,9 +1532,7 @@
           vm.sessionsDaysCount = 0;
           vm.sessionsPeriodsCount = 0;
           angular.forEach(vm.sessions, function(session, index) {
-
             vm.processSessionsProcessing.processes++;
-
             if (
               sessionsDay === null ||
               sessionsDay.heading !== session.Day__c
