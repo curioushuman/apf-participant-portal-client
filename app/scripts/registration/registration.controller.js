@@ -1762,24 +1762,49 @@
         console.log('Saving participant', vm.participant);
       }
       return $q(function(resolve, reject) {
-        vm.participant.$save(
+        if (vm.participant.Id === undefined) {
+          vm.participant.$save(
+            function(record) {
+              if (record.success) {
+                resolve(vm.participant);
+              } else {
+                if (vm.debug) {
+                  console.log('There was an error creating the participant');
+                }
+                reject('There was an error creating the participant');
+              }
+            },
+            function(err) {
+              if (vm.debug) {
+                console.log('There was an error creating the participant', err);
+              }
+              reject(err);
+            }
+          );
+
+        } else {
+          vm.participant.$update(
+          {
+            participantid: vm.participant.Id
+          },
           function(record) {
             if (record.success) {
               resolve(vm.participant);
             } else {
               if (vm.debug) {
-                console.log('There was an error creating the participant');
+                console.log('There was an error updating the participant');
               }
-              reject('There was an error creating the participant');
+              reject('There was an error updating the participant');
             }
           },
           function(err) {
             if (vm.debug) {
-              console.log('There was an error creating the participant', err);
+              console.log('There was an error updating the participant', err);
             }
             reject(err);
           }
         );
+        }
       });
     }
 
