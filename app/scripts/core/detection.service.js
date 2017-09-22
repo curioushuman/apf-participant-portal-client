@@ -2,12 +2,15 @@
 /* eslint require-jsdoc: 0 */
 /* global angular */
 /* global firebase */
+/* global Image */
+/* global platform */
+/* global window */
 (function() {
   'use strict';
 
   angular
-    .module('app.core')
-    .factory('detectionService', detectionService);
+  .module('app.core')
+  .factory('detectionService', detectionService);
 
   detectionService.$inject = [
     '$http',
@@ -16,7 +19,6 @@
   ];
 
   function detectionService($http, DEBUG, API_URI) {
-
     // connection detection
     var imgUrl = API_URI.replace('salesforce', 'img') + '/test.jpg';
     var imgSize = 4995374;
@@ -49,8 +51,8 @@
     return service;
 
     function detectConnection(callback) {
-	    var download = new Image();
-	    download.onload = function () {
+      var download = new Image();
+      download.onload = function() {
         if (DEBUG) {
           console.log('Loading image...');
         }
@@ -59,18 +61,18 @@
         // this is a bit old school but...
         // I don't know if onload (and IE10) will support promises
         callback();
-	    }
+      };
 
-      download.onerror = function (err, msg) {
+      download.onerror = function(err, msg) {
         if (DEBUG) {
           console.log('Error', err);
           console.log('Error msg', msg);
         }
-	    }
+      };
 
-	    startTime = (new Date()).getTime();
-	    var cacheBuster = "?nnn=" + startTime;
-	    download.src = imgUrl + cacheBuster;
+      startTime = (new Date()).getTime();
+      var cacheBuster = '?nnn=' + startTime;
+      download.src = imgUrl + cacheBuster;
       if (DEBUG) {
         console.log('Src set...', download.src);
       }
@@ -83,20 +85,20 @@
       connectionResults.duration = (endTime - startTime) / 1000;
       connectionResults.bitsLoaded = imgSize * 8;
       connectionResults.speedBps =
-        (connectionResults.bitsLoaded / connectionResults.duration).toFixed(2);
+      (connectionResults.bitsLoaded / connectionResults.duration).toFixed(2);
       connectionResults.speedKbps =
-        (connectionResults.speedBps / 1024).toFixed(2);
+      (connectionResults.speedBps / 1024).toFixed(2);
       connectionResults.speedMbps =
-        (connectionResults.speedKbps / 1024).toFixed(2);
-	  }
+      (connectionResults.speedKbps / 1024).toFixed(2);
+    }
 
     function detectPlatform(callback) {
       platformResults.os =
-        platform.os.family + ' ' + platform.os.version;
+      platform.os.family + ' ' + platform.os.version;
       platformResults.browser =
-        platform.name + ' ' + platform.version;
+      platform.name + ' ' + platform.version;
       platformResults.resolution =
-        window.screen.availWidth + ' x ' + window.screen.availHeight;
+      window.screen.availWidth + ' x ' + window.screen.availHeight;
 
       callback();
     }

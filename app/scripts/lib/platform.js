@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /*!
  * Platform.js <https://mths.be/platform>
  * Copyright 2014-2016 Benjamin Tan <https://demoneaux.github.io/>
@@ -768,7 +770,7 @@
               name = 'NW.js';
               version = data.versions.nw;
             }
-          } 
+          }
           if (!name) {
             name = 'Node.js';
             arch = data.arch;
