@@ -1098,6 +1098,10 @@ section(ng-show='vm.actionLoaded')
                   | seconds and try again.
                         
               md-card-actions(layout='row', layout-align='end center', layout-padding)
+                span(ng-show='vm.working')
+                  | Please be patient, we are saving 
+                  | {{ vm.processSessionsProcessing.processing }} of 
+                  | {{ vm.processSessionsProcessing.processes }} preferences
                 md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
                 md-button(
                   ng-click="vm.editSection('contact')",

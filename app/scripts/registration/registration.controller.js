@@ -1483,6 +1483,10 @@
     vm.sessionsSectionTitle = 'Sessions';
     vm.preSessions = preSessions;
     vm.processSessions = processSessions;
+    vm.processSessionsProcessing = {
+      processes: 1,
+      processing: 1
+    };
     // not required for Sessions as there are no additional questions
     // vm.sessionsRequired = [];
     vm.sessionsSectionNextDisabled = function() {
@@ -1528,6 +1532,9 @@
           vm.sessionsDaysCount = 0;
           vm.sessionsPeriodsCount = 0;
           angular.forEach(vm.sessions, function(session, index) {
+
+            vm.processSessionsProcessing.processes++;
+
             if (
               sessionsDay === null ||
               sessionsDay.heading !== session.Day__c
@@ -1658,6 +1665,9 @@
       vm.participant.Organisation__c = vm.affiliation.npe5__Organization__c;
       // also indicate that the participant has actually finished the form
       vm.participant.Registration_complete__c = true;
+
+      // reset processing count
+      vm.processSessionsProcessing.processing = 1;
 
       // chaining the promises as responses rely on participant Id
       processSaveParticipant()
@@ -1853,29 +1863,40 @@
         console.log('Saving sessionParticipation', sessionParticipation);
       }
       return $q(function(resolve, reject) {
-        sessionParticipation.$save(
-          function(record) {
-            if (record.success) {
-              resolve(sessionParticipation);
-            } else {
+        if (
+          sessionParticipation.Registration_preference__c === null ||
+          sessionParticipation.Registration_preference__c === undefined ||
+          sessionParticipation.Registration_preference__c === 0
+        ) {
+          // don't save it, just send it back
+          vm.processSessionsProcessing.processing++;
+          resolve(sessionParticipation);
+        } else {
+          sessionParticipation.$save(
+            function(record) {
+              if (record.success) {
+                vm.processSessionsProcessing.processing++;
+                resolve(sessionParticipation);
+              } else {
+                if (vm.debug) {
+                  console.log(
+                    'There was an error creating the sessionParticipation'
+                  );
+                }
+                reject('There was an error creating the sessionParticipation');
+              }
+            },
+            function(err) {
               if (vm.debug) {
                 console.log(
-                  'There was an error creating the sessionParticipation'
+                  'There was an error creating the sessionParticipation',
+                  err
                 );
               }
-              reject('There was an error creating the sessionParticipation');
+              reject(err);
             }
-          },
-          function(err) {
-            if (vm.debug) {
-              console.log(
-                'There was an error creating the sessionParticipation',
-                err
-              );
-            }
-            reject(err);
-          }
-        );
+          );
+        }
       });
     }
 
