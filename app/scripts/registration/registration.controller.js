@@ -1716,25 +1716,42 @@
         console.log('Saving response', response);
       }
       return $q(function(resolve, reject) {
-        response.$save(
-          function(record) {
-            if (record.success) {
-              vm.processExperienceProcessing.processing++;
-              resolve(response);
-            } else {
-              if (vm.debug) {
-                console.log('There was an error creating the response');
+        if (
+          (
+            response.Score__c === null ||
+            response.Score__c === undefined ||
+            response.Score__c === 0
+          ) &&
+          (
+            response.Comments__c === null ||
+            response.Comments__c === undefined ||
+            response.Comments__c === 0
+          )
+        ) {
+          // don't save it, just send it back
+          vm.processExperienceProcessing.processing++;
+          resolve(response);
+        } else {
+          response.$save(
+            function(record) {
+              if (record.success) {
+                vm.processExperienceProcessing.processing++;
+                resolve(response);
+              } else {
+                if (vm.debug) {
+                  console.log('There was an error creating the response');
+                }
+                reject('There was an error creating the response');
               }
-              reject('There was an error creating the response');
+            },
+            function(err) {
+              if (vm.debug) {
+                console.log('There was an error creating the response', err);
+              }
+              reject(err);
             }
-          },
-          function(err) {
-            if (vm.debug) {
-              console.log('There was an error creating the response', err);
-            }
-            reject(err);
-          }
-        );
+          );
+        }
       });
     }
 
