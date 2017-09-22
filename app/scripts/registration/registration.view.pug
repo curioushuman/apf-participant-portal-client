@@ -612,7 +612,7 @@ section(ng-show='vm.actionLoaded')
                     | seconds and then try again.
                   div(flex='25', layout='row', layout-align='end center')
                     md-button.md-background(
-                      ng-click='vm.preOrganisation()'
+                      ng-click='vm.preExperience()'
                     ) Try again
                 
                 p.question Please provide details of any knowledge and experience 
@@ -652,72 +652,7 @@ section(ng-show='vm.actionLoaded')
                     ng-repeat='question in vm.questions',
                     question='question'
                   )
-                p.intro(
-                  layout='column'
-                  layout-padding,
-                  md-colors="{background: 'default-background-hue-2'}"
-                )
-                  | Please rate your computer / IT skills and access:
-                gz-slider-form-input(
-                  question='Access to the Internet',
-                  model='vm.contact.IT_Skill_access_to_the_Internet__c',
-                  name='contactItAccessInternet',
-                  error='vm.experienceErrors.IT_Skill_access_to_the_Internet__c'
-                )
-                gz-slider-form-input(
-                  question='Ability to download files',
-                  model='vm.contact.IT_Skills_Ability_to_download_files__c',
-                  name='contactItDownloadFiles',
-                  error='vm.experienceErrors.IT_Skills_Ability_to_download_files__c'
-                )
-                gz-slider-form-input(
-                  question='Ability to view vides online',
-                  model='vm.contact.IT_Skills_Ability_to_view_online_videos__c',
-                  name='contactItViewVideos',
-                  error='vm.experienceErrors.IT_Skills_Ability_to_view_online_videos__c'
-                )
-                gz-slider-form-input(
-                  question='Ability to use Word documents',
-                  model='vm.contact.IT_Skill_Ability_to_use_Word_documents__c',
-                  name='contactItWord',
-                  error='vm.experienceErrors.IT_Skill_Ability_to_use_Word_documents__c'
-                )
-                gz-slider-form-input(
-                  question='Ability to use spreadsheets',
-                  model='vm.contact.IT_Skill_Ability_to_use_spreadsheets__c',
-                  name='contactItSpreadsheets',
-                  error='vm.experienceErrors.IT_Skill_Ability_to_use_spreadsheets__c'
-                )
-                p.intro(
-                  layout='column'
-                  layout-padding,
-                  md-colors="{background: 'default-background-hue-2'}"
-                )
-                  | Please rate your English language competency
-                gz-slider-form-input(
-                  question='Ability to read in English',
-                  model='vm.contact.EN_Skills_Ability_to_read_in_English__c',
-                  name='contactEnRead',
-                  error='vm.experienceErrors.EN_Skills_Ability_to_read_in_English__c'
-                )
-                gz-slider-form-input(
-                  question='Ability to write in English',
-                  model='vm.contact.EN_Skills_Ability_to_write_in_English__c',
-                  name='contactEnWrite',
-                  error='vm.experienceErrors.EN_Skills_Ability_to_write_in_English__c'
-                )
-                gz-slider-form-input(
-                  question='Ability to understand spoken English',
-                  model='vm.contact.EN_Skills_Ability_to_understand_spoken__c',
-                  name='contactEnSpoken',
-                  error='vm.experienceErrors.EN_Skills_Ability_to_understand_spoken__c'
-                )
-                gz-slider-form-input(
-                  question='Ability to speak in English',
-                  model='vm.contact.EN_Skills_Ability_to_speak_English__c',
-                  name='contactEnSpeak',
-                  error='vm.experienceErrors.EN_Skills_Ability_to_speak_English__c'
-                )
+
                 p.error(
                   layout='column'
                   layout-padding,
@@ -745,6 +680,142 @@ section(ng-show='vm.actionLoaded')
                 md-button(
                   ng-click="vm.processExperience()",
                   ng-disabled="vm.experienceSectionNextDisabled()"
+                ) 
+                  | Next
+                  md-icon.md-material-icons navigate_next
+                  
+          //- IT and English skills section
+          div#pageForm-itEnglish(ng-show='vm.actionIsTraining')
+            a(name='itEnglish')
+            //- Disabled version
+            gz-disabled-form-section(
+              title='vm.itEnglishSectionTitle',
+              ng-hide="vm.openAll || vm.sectionActive === 'itEnglish' || vm.itEnglishSectionStatus === 'complete'"
+            )
+            //- Complete version
+            gz-complete-form-section(
+              title='vm.itEnglishSectionTitle',
+              ng-click="vm.editSection('itEnglish')",
+              ng-show="vm.itEnglishSectionStatus === 'complete' && vm.sectionActive !== 'itEnglish'"
+            )
+            md-card(ng-show="vm.openAll || vm.sectionActive === 'itEnglish'")
+              md-card-header
+                //- md-card-avatar
+                //-   img(
+                //-     ng-src='/images/APF-logo-footer-2x.png',
+                //-     alt='Asia Pacific Forum logo'
+                //-   )
+                md-card-header-text
+                  span.md-headline  {{ vm.itEnglishSectionTitle }}
+              md-card-content
+                
+                div.error(
+                  layout='row'
+                  layout-padding,
+                  md-colors="{background: 'default-warn'}",
+                  ng-show='vm.itEnglishSectionErrorTop'
+                )
+                  div(flex='75', layout='row', layout-align='start center')
+                    | There was an error reaching the database. Please wait 5 
+                    | seconds and then try again.
+                  div(flex='25', layout='row', layout-align='end center')
+                    md-button.md-background(
+                      ng-click='vm.preItEnglish()'
+                    ) Try again
+                
+                p.intro(
+                  layout='column'
+                  layout-padding,
+                  md-colors="{background: 'default-background-hue-2'}"
+                )
+                  | Please rate your computer / IT skills and access:
+                gz-slider-form-input(
+                  question='Access to the Internet',
+                  model='vm.contact.IT_Skill_access_to_the_Internet__c',
+                  name='contactItAccessInternet',
+                  error='vm.itEnglishErrors.IT_Skill_access_to_the_Internet__c'
+                )
+                gz-slider-form-input(
+                  question='Ability to download files',
+                  model='vm.contact.IT_Skills_Ability_to_download_files__c',
+                  name='contactItDownloadFiles',
+                  error='vm.itEnglishErrors.IT_Skills_Ability_to_download_files__c'
+                )
+                gz-slider-form-input(
+                  question='Ability to view vides online',
+                  model='vm.contact.IT_Skills_Ability_to_view_online_videos__c',
+                  name='contactItViewVideos',
+                  error='vm.itEnglishErrors.IT_Skills_Ability_to_view_online_videos__c'
+                )
+                gz-slider-form-input(
+                  question='Ability to use Word documents',
+                  model='vm.contact.IT_Skill_Ability_to_use_Word_documents__c',
+                  name='contactItWord',
+                  error='vm.itEnglishErrors.IT_Skill_Ability_to_use_Word_documents__c'
+                )
+                gz-slider-form-input(
+                  question='Ability to use spreadsheets',
+                  model='vm.contact.IT_Skill_Ability_to_use_spreadsheets__c',
+                  name='contactItSpreadsheets',
+                  error='vm.itEnglishErrors.IT_Skill_Ability_to_use_spreadsheets__c'
+                )
+                p.intro(
+                  layout='column'
+                  layout-padding,
+                  md-colors="{background: 'default-background-hue-2'}"
+                )
+                  | Please rate your English language competency
+                gz-slider-form-input(
+                  question='Ability to read in English',
+                  model='vm.contact.EN_Skills_Ability_to_read_in_English__c',
+                  name='contactEnRead',
+                  error='vm.itEnglishErrors.EN_Skills_Ability_to_read_in_English__c'
+                )
+                gz-slider-form-input(
+                  question='Ability to write in English',
+                  model='vm.contact.EN_Skills_Ability_to_write_in_English__c',
+                  name='contactEnWrite',
+                  error='vm.itEnglishErrors.EN_Skills_Ability_to_write_in_English__c'
+                )
+                gz-slider-form-input(
+                  question='Ability to understand spoken English',
+                  model='vm.contact.EN_Skills_Ability_to_understand_spoken__c',
+                  name='contactEnSpoken',
+                  error='vm.itEnglishErrors.EN_Skills_Ability_to_understand_spoken__c'
+                )
+                gz-slider-form-input(
+                  question='Ability to speak in English',
+                  model='vm.contact.EN_Skills_Ability_to_speak_English__c',
+                  name='contactEnSpeak',
+                  error='vm.itEnglishErrors.EN_Skills_Ability_to_speak_English__c'
+                )
+                p.error(
+                  layout='column'
+                  layout-padding,
+                  md-colors="{background: 'default-warn'}",
+                  ng-show='vm.itEnglishSectionInvalid'
+                )
+                  | Please make sure all required fields have been completed.
+                  
+                p.error(
+                  layout='column'
+                  layout-padding,
+                  md-colors="{background: 'default-warn'}",
+                  ng-show='vm.itEnglishSectionError'
+                )
+                  | There was an error saving your information. Please wait 5 
+                  | seconds and try again.
+                        
+              md-card-actions(layout='row', layout-align='end center', layout-padding)
+                md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
+                md-button(
+                  ng-click="vm.editSection('experience')"
+                ) 
+                  md-icon.md-material-icons navigate_before
+                  | Previous
+                md-button(
+                  ng-click="vm.processItEnglish()",
+                  ng-disabled="vm.itEnglishSectionNextDisabled()"
                 ) 
                   | Next
                   md-icon.md-material-icons navigate_next
@@ -849,7 +920,7 @@ section(ng-show='vm.actionLoaded')
               md-card-actions(layout='row', layout-align='end center', layout-padding)
                 md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
                 md-button(
-                  ng-click="vm.editSection('experience')"
+                  ng-click="vm.editSection('itEnglish')"
                 ) 
                   md-icon.md-material-icons navigate_before
                   | Previous
@@ -895,7 +966,7 @@ section(ng-show='vm.actionLoaded')
                     | seconds and then try again.
                   div(flex='25', layout='row', layout-align='end center')
                     md-button.md-background(
-                      ng-click='vm.preOrganisation()'
+                      ng-click='vm.preSessions()'
                     ) Try again
                 
                 div.sessions(ng-hide='vm.sessions.length === 0')

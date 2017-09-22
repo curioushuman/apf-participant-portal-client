@@ -28,7 +28,8 @@
     'responseService',
     'sessionService',
     'sessionParticipationService',
-    'DEBUG'
+    'DEBUG',
+    'API_URI'
   ];
 
   function RegistrationController(
@@ -49,7 +50,8 @@
     responseService,
     sessionService,
     sessionParticipationService,
-    DEBUG
+    DEBUG,
+    API_URI
   ) {
     var vm = this;
 
@@ -58,6 +60,7 @@
     vm.openAll = false;
     if (vm.debug === true) {
       console.log('DEBUG is ON');
+      console.log('API URI', API_URI);
     }
 
     vm.navigate = layoutService.navigate;
@@ -994,17 +997,6 @@
     vm.experienceRequired = [
       'participantPriorExperienceTopic'
     ];
-    vm.experienceRequiredSliders = [
-      'IT_Skill_access_to_the_Internet__c',
-      'IT_Skills_Ability_to_download_files__c',
-      'IT_Skills_Ability_to_view_online_videos__c',
-      'IT_Skill_Ability_to_use_Word_documents__c',
-      'IT_Skill_Ability_to_use_spreadsheets__c',
-      'EN_Skills_Ability_to_read_in_English__c',
-      'EN_Skills_Ability_to_write_in_English__c',
-      'EN_Skills_Ability_to_understand_spoken__c',
-      'EN_Skills_Ability_to_speak_English__c'
-    ];
     vm.experienceSectionNextDisabled = function() {
       if (vm.working) {
         return true;
@@ -1063,18 +1055,6 @@
       }
 
       // special validation for experience
-      angular.forEach(vm.experienceRequiredSliders, function(slider, index) {
-        if (
-          vm.contact[slider] === undefined ||
-          vm.contact[slider] === null ||
-          vm.contact[slider] === 0
-        ) {
-          vm.experienceErrors[slider] = true;
-          vm.experienceSectionInvalid = true;
-        } else {
-          vm.experienceErrors[slider] = false;
-        }
-      });
       angular.forEach(vm.questions, function(question, index) {
         if (
           question.response.Score__c === undefined ||
@@ -1106,7 +1086,6 @@
         function(participant) {
           // q.all works as it doesn't matter the order of processing
           var promises = processSaveResponses();
-          promises.push(processSaveContact());
           $q.all(promises).then(
             function(data) {
               if (vm.debug) {
@@ -1114,7 +1093,7 @@
               }
 
               vm.experienceSectionStatus = 'complete';
-              vm.preExpectations();
+              vm.preItEnglish();
             },
             function(err) {
               if (vm.debug) {
@@ -1135,17 +1114,6 @@
       );
     }
 
-    function isValidSlider(slider) {
-      if (
-        vm.contact[slider] === null ||
-        vm.contact[slider] === 0
-      ) {
-        vm.experienceErrors[slider] = true;
-        return false;
-      }
-      return true;
-    }
-
     function processSaveResponses() {
       var promises = [];
       angular.forEach(vm.questions, function(question, index) {
@@ -1158,6 +1126,96 @@
       });
 
       return promises;
+    }
+
+    // IT and English section
+    vm.itEnglishSectionStatus = 'disabled';
+    vm.itEnglishSectionInvalid = false;
+    vm.itEnglishSectionError = false;
+    vm.itEnglishErrors = {};
+    vm.itEnglishSectionErrorTop = false;
+    vm.itEnglishSectionTitle = 'IT and English skills';
+    vm.preItEnglish = preItEnglish;
+    vm.processItEnglish = processItEnglish;
+    // vm.itEnglishRequired = [];
+    vm.itEnglishRequiredSliders = [
+      'IT_Skill_access_to_the_Internet__c',
+      'IT_Skills_Ability_to_download_files__c',
+      'IT_Skills_Ability_to_view_online_videos__c',
+      'IT_Skill_Ability_to_use_Word_documents__c',
+      'IT_Skill_Ability_to_use_spreadsheets__c',
+      'EN_Skills_Ability_to_read_in_English__c',
+      'EN_Skills_Ability_to_write_in_English__c',
+      'EN_Skills_Ability_to_understand_spoken__c',
+      'EN_Skills_Ability_to_speak_English__c'
+    ];
+    vm.itEnglishSectionNextDisabled = function() {
+      if (vm.working) {
+        return true;
+      }
+      return false;
+    };
+
+    // pre
+    function preItEnglish() {
+      vm.working = false;
+      vm.editSection('itEnglish');
+    }
+
+    // process
+    function processItEnglish() {
+      vm.itEnglishSectionInvalid = false;
+
+      // NOT required
+      // if (isValid(vm.itEnglishRequired) === false) {
+      //   vm.itEnglishSectionInvalid = true;
+      // }
+
+      // special validation for itEnglish
+      angular.forEach(vm.itEnglishRequiredSliders, function(slider, index) {
+        if (
+          vm.contact[slider] === undefined ||
+          vm.contact[slider] === null ||
+          vm.contact[slider] === 0
+        ) {
+          vm.itEnglishErrors[slider] = true;
+          vm.itEnglishSectionInvalid = true;
+        } else {
+          vm.itEnglishErrors[slider] = false;
+        }
+      });
+
+      if (vm.itEnglishSectionInvalid === true) {
+        return;
+      }
+
+      vm.working = true;
+
+      processSaveContact()
+      .then(
+        function() {
+          vm.itEnglishSectionStatus = 'complete';
+          vm.preExpectations();
+        },
+        function(err) {
+          if (vm.debug) {
+            console.log('Error processingItEnglish', err);
+          }
+          vm.itEnglishSectionError = true;
+          vm.working = false;
+        }
+      );
+    }
+
+    function isValidSlider(slider) {
+      if (
+        vm.contact[slider] === null ||
+        vm.contact[slider] === 0
+      ) {
+        vm.itEnglishErrors[slider] = true;
+        return false;
+      }
+      return true;
     }
 
     // Expectations section
