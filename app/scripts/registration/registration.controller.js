@@ -183,6 +183,29 @@
     }
     $timeout(detectionService.detectConnection(processConnectionResults), 3000);
 
+    // platform
+
+    // country
+    // Note: this doesn't work yet
+    // detectionService.detectGeo(
+    //   function(data) {
+    //     if (vm.debug) {
+    //       console.log('Geo', data);
+    //     }
+    //   },
+    //   function(err) {
+    //     if (vm.debug) {
+    //       console.log('Error detecting Geo', err);
+    //     }
+    //   }
+    // );
+    // detectionService.detectGeo()
+    //   .success(function(data) {
+    //     if (vm.debug) {
+    //       console.log('Geo data', data);
+    //     }
+    //   });
+
     vm.sectionActive = 'email';
 
     vm.editSection = function(section) {

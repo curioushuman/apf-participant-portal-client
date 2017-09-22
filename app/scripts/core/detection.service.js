@@ -10,11 +10,12 @@
     .factory('detectionService', detectionService);
 
   detectionService.$inject = [
+    '$http',
     'DEBUG',
     'API_URI'
   ];
 
-  function detectionService(DEBUG, API_URI) {
+  function detectionService($http, DEBUG, API_URI) {
 
     // connection detection
     var imgUrl = API_URI.replace('salesforce', 'img') + '/test.jpg';
@@ -36,7 +37,6 @@
       browser: platform.name + ' ' + platform.version,
       resolution: window.screen.availWidth + ' x ' + window.screen.availHeight
     };
-    var test = platform.name + ' ' + platform.version;
     if (DEBUG) {
       console.log('platform', platformResults);
     }
@@ -44,7 +44,8 @@
     var service = {
       detectConnection: detectConnection,
       connectionResults: connectionResults,
-      platformResults: platformResults
+      platformResults: platformResults,
+      detectGeo: detectGeo
     };
 
     return service;
@@ -90,5 +91,10 @@
       connectionResults.speedMbps =
         (connectionResults.speedKbps / 1024).toFixed(2);
 	  }
+
+    // Note: geo detection doesn't work
+    function detectGeo(callback) {
+      return $http.jsonp('https://freegeoip.net/json/');
+    }
   }
 })();
