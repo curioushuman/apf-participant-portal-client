@@ -1,5 +1,6 @@
 /* eslint no-unused-vars: 0 */
 /* eslint require-jsdoc: 0 */
+/* eslint camelcase: 0 */
 /* global angular */
 /* global firebase */
 (function() {

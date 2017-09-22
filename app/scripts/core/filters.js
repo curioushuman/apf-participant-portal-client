@@ -8,8 +8,8 @@
   angular
     .module('app.core')
     .filter('trust', ['$sce', function($sce) {
-      return function(htmlCode){
+      return function(htmlCode) {
         return $sce.trustAsHtml(htmlCode);
-      }
+      };
     }]);
 })();

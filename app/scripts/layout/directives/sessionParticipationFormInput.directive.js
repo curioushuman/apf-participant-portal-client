@@ -18,7 +18,8 @@
 
   function gzSessionParticipationFormInput(layoutService) {
     return {
-      templateUrl: 'scripts/layout/directives/sessionParticipationFormInput.template.html',
+      templateUrl:
+        'scripts/layout/directives/sessionParticipationFormInput.template.html',
       restrict: 'E',
       controller: SessionParticipationFormInputController,
       controllerAs: 'vm',

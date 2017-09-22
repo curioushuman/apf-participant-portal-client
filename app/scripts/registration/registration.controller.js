@@ -93,10 +93,15 @@
 
         // work out the correct start and end dates
         vm.action.datesShow = false;
-        if (vm.action.Start_date__c !== null && vm.action.Finish_date__c !== null) {
+        if (
+          vm.action.Start_date__c !== null &&
+          vm.action.Finish_date__c !== null
+        ) {
           vm.action.datesShow = true;
-          vm.action.startDate = layoutService.formatDate(vm.action.Start_date__c);
-          vm.action.finishDate = layoutService.formatDate(vm.action.Finish_date__c);
+          vm.action.startDate =
+            layoutService.formatDate(vm.action.Start_date__c);
+          vm.action.finishDate =
+            layoutService.formatDate(vm.action.Finish_date__c);
         }
 
         // see if there is a due date
@@ -1093,7 +1098,6 @@
       processSaveParticipant()
       .then(
         function(participant) {
-
           // q.all works as it doesn't matter the order of processing
           var promises = processSaveResponses();
           $q.all(promises).then(
@@ -1361,20 +1365,20 @@
     ];
     vm.sessionsDisplayDayHeadings = false;
     function SessionsDay(day) {
-        this.id = day.replace(' ','');
-        this.heading = day;
-        this.periods = {};
-        this.periodsCount = 0;
-        this.displayHeading = false;
-        this.displayPeriodHeadings = false;
+      this.id = day.replace(' ', '');
+      this.heading = day;
+      this.periods = {};
+      this.periodsCount = 0;
+      this.displayHeading = false;
+      this.displayPeriodHeadings = false;
     }
     function SessionsDayPeriod(period) {
-        this.id = period.replace(' ','');
-        this.heading = period;
-        this.displayHeading = false;
-        this.options = vm.sessionsPeriodOptions;
-        this.selectedPreferences = [];
-        this.valid = true;
+      this.id = period.replace(' ', '');
+      this.heading = period;
+      this.displayHeading = false;
+      this.options = vm.sessionsPeriodOptions;
+      this.selectedPreferences = [];
+      this.valid = true;
     }
     vm.sessionDayCurrent = null;
     vm.sessionsSectionStatus = 'disabled';
@@ -1451,7 +1455,7 @@
               sessionsDay.periodsCount++;
               vm.sessionsPeriodsCount++;
               if (vm.debug) {
-                console.log('session.Period__c',session.Period__c);
+                console.log('session.Period__c', session.Period__c);
               }
               sessionsDayPeriod = new SessionsDayPeriod(session.Period__c);
               sessionsDayPeriod.displayHeading = true;
@@ -1494,9 +1498,11 @@
 
       // special validation for sessions
       angular.forEach(vm.sessionsDays, function(sessionsDay, index) {
-        angular.forEach(sessionsDay.periods, function(sessionsDayPeriod, index) {
-          sessionsDayPeriod.selectedPreferences = [];
-        });
+        angular.forEach(sessionsDay.periods,
+          function(sessionsDayPeriod, index) {
+            sessionsDayPeriod.selectedPreferences = [];
+          }
+        );
       });
       angular.forEach(vm.sessions, function(session, index) {
         if (vm.debug === true) {
@@ -1513,26 +1519,29 @@
       }
       var periodsValid = 0;
       angular.forEach(vm.sessionsDays, function(sessionsDay, index) {
-        angular.forEach(sessionsDay.periods, function(sessionsDayPeriod, index) {
-          var periodOptionsSelected = 0;
-          angular.forEach(
-            vm.sessionsPeriodOptions,
-            function(option, index) {
-              if (
-                $filter('filter')
-                  (sessionsDayPeriod.selectedPreferences,option).length === 1
-              ) {
-                periodOptionsSelected++;
+        angular.forEach(sessionsDay.periods,
+          function(sessionsDayPeriod, index) {
+            var periodOptionsSelected = 0;
+            angular.forEach(
+              vm.sessionsPeriodOptions,
+              function(option, index) {
+                if (
+                  $filter('filter')(
+                    sessionsDayPeriod.selectedPreferences, option
+                  ).length === 1
+                ) {
+                  periodOptionsSelected++;
+                }
               }
+            );
+            if (periodOptionsSelected === vm.sessionsPeriodOptions.length) {
+              sessionsDayPeriod.valid = true;
+              periodsValid++;
+            } else {
+              sessionsDayPeriod.valid = false;
             }
-          );
-          if (periodOptionsSelected === vm.sessionsPeriodOptions.length) {
-            sessionsDayPeriod.valid = true;
-            periodsValid++;
-          } else {
-            sessionsDayPeriod.valid = false;
           }
-        });
+        );
       });
       if (vm.debug === true) {
         console.log('periodsValid', periodsValid);
@@ -1601,8 +1610,8 @@
           console.log('Session ' + index, session.sessionParticipation);
         }
         if (
-          session.sessionParticipation.Registration_preference__c
-            !== undefined &&
+          session.sessionParticipation.Registration_preference__c !==
+            undefined &&
           session.sessionParticipation.Registration_preference__c !== null
         ) {
           promises

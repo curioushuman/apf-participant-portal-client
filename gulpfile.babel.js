@@ -46,7 +46,7 @@ gulp.task('config_local', function () {
   gulp.src('app/scripts/core/config.json')
   .pipe($.ngConfig('app.core', {
     environment: 'local',
-    templateFilePath: 'app/scripts/core/config.template.js'
+    templateFilePath: 'app/scripts/core/config.template.txt'
   }))
   .pipe(gulp.dest('app/scripts/core'))
 });
@@ -54,7 +54,7 @@ gulp.task('config_production', function () {
   gulp.src('app/scripts/core/config.json')
   .pipe($.ngConfig('app.core', {
     environment: 'production',
-    templateFilePath: 'app/scripts/core/config.template.js'
+    templateFilePath: 'app/scripts/core/config.template.txt'
   }))
   .pipe(gulp.dest('app/scripts/core'))
 });
