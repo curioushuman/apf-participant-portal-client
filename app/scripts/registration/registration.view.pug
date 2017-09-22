@@ -693,20 +693,20 @@ section(ng-show='vm.actionLoaded')
                   md-icon.md-material-icons navigate_next
                   
           //- IT and English skills section
-          div#pageForm-itEnglish(ng-show='vm.actionIsTraining')
-            a(name='itEnglish')
+          div#pageForm-itSkills(ng-show='vm.actionIsTraining')
+            a(name='itSkills')
             //- Disabled version
             gz-disabled-form-section(
-              title='vm.itEnglishSectionTitle',
-              ng-hide="vm.openAll || vm.sectionActive === 'itEnglish' || vm.itEnglishSectionStatus === 'complete'"
+              title='vm.itSkillsSectionTitle',
+              ng-hide="vm.openAll || vm.sectionActive === 'itSkills' || vm.itSkillsSectionStatus === 'complete'"
             )
             //- Complete version
             gz-complete-form-section(
-              title='vm.itEnglishSectionTitle',
-              ng-click="vm.editSection('itEnglish')",
-              ng-show="vm.itEnglishSectionStatus === 'complete' && vm.sectionActive !== 'itEnglish'"
+              title='vm.itSkillsSectionTitle',
+              ng-click="vm.editSection('itSkills')",
+              ng-show="vm.itSkillsSectionStatus === 'complete' && vm.sectionActive !== 'itSkills'"
             )
-            md-card(ng-show="vm.openAll || vm.sectionActive === 'itEnglish'")
+            md-card(ng-show="vm.openAll || vm.sectionActive === 'itSkills'")
               md-card-header
                 //- md-card-avatar
                 //-   img(
@@ -714,21 +714,21 @@ section(ng-show='vm.actionLoaded')
                 //-     alt='Asia Pacific Forum logo'
                 //-   )
                 md-card-header-text
-                  span.md-headline  {{ vm.itEnglishSectionTitle }}
+                  span.md-headline  {{ vm.itSkillsSectionTitle }}
               md-card-content
                 
                 div.error(
                   layout='row'
                   layout-padding,
                   md-colors="{background: 'default-warn'}",
-                  ng-show='vm.itEnglishSectionErrorTop'
+                  ng-show='vm.itSkillsSectionErrorTop'
                 )
                   div(flex='75', layout='row', layout-align='start center')
                     | There was an error reaching the database. Please wait 5 
                     | seconds and then try again.
                   div(flex='25', layout='row', layout-align='end center')
                     md-button.md-background(
-                      ng-click='vm.preItEnglish()'
+                      ng-click='vm.preItSkills()'
                     ) Try again
                 
                 p.intro(
@@ -741,32 +741,104 @@ section(ng-show='vm.actionLoaded')
                   question='Access to the Internet',
                   model='vm.contact.IT_Skill_access_to_the_Internet__c',
                   name='contactItAccessInternet',
-                  error='vm.itEnglishErrors.IT_Skill_access_to_the_Internet__c'
+                  error='vm.itSkillsErrors.IT_Skill_access_to_the_Internet__c'
                 )
                 gz-slider-form-input(
                   question='Ability to download files',
                   model='vm.contact.IT_Skills_Ability_to_download_files__c',
                   name='contactItDownloadFiles',
-                  error='vm.itEnglishErrors.IT_Skills_Ability_to_download_files__c'
+                  error='vm.itSkillsErrors.IT_Skills_Ability_to_download_files__c'
                 )
                 gz-slider-form-input(
                   question='Ability to view vides online',
                   model='vm.contact.IT_Skills_Ability_to_view_online_videos__c',
                   name='contactItViewVideos',
-                  error='vm.itEnglishErrors.IT_Skills_Ability_to_view_online_videos__c'
+                  error='vm.itSkillsErrors.IT_Skills_Ability_to_view_online_videos__c'
                 )
                 gz-slider-form-input(
                   question='Ability to use Word documents',
                   model='vm.contact.IT_Skill_Ability_to_use_Word_documents__c',
                   name='contactItWord',
-                  error='vm.itEnglishErrors.IT_Skill_Ability_to_use_Word_documents__c'
+                  error='vm.itSkillsErrors.IT_Skill_Ability_to_use_Word_documents__c'
                 )
                 gz-slider-form-input(
                   question='Ability to use spreadsheets',
                   model='vm.contact.IT_Skill_Ability_to_use_spreadsheets__c',
                   name='contactItSpreadsheets',
-                  error='vm.itEnglishErrors.IT_Skill_Ability_to_use_spreadsheets__c'
+                  error='vm.itSkillsErrors.IT_Skill_Ability_to_use_spreadsheets__c'
                 )
+                
+                p.error(
+                  layout='column'
+                  layout-padding,
+                  md-colors="{background: 'default-warn'}",
+                  ng-show='vm.itSkillsSectionInvalid'
+                )
+                  | Please make sure all required fields have been completed.
+                  
+                p.error(
+                  layout='column'
+                  layout-padding,
+                  md-colors="{background: 'default-warn'}",
+                  ng-show='vm.itSkillsSectionError'
+                )
+                  | There was an error saving your information. Please wait 5 
+                  | seconds and try again.
+                        
+              md-card-actions(layout='row', layout-align='end center', layout-padding)
+                md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
+                md-button(
+                  ng-click="vm.editSection('experience')",
+                  ng-disabled="vm.itSkillsSectionNextDisabled()"
+                ) 
+                  md-icon.md-material-icons navigate_before
+                  | Previous
+                md-button(
+                  ng-click="vm.processItSkills()",
+                  ng-disabled="vm.itSkillsSectionNextDisabled()"
+                ) 
+                  | Next
+                  md-icon.md-material-icons navigate_next
+                  
+          //- IT and English skills section
+          div#pageForm-englishSkills(ng-show='vm.actionIsTraining')
+            a(name='englishSkills')
+            //- Disabled version
+            gz-disabled-form-section(
+              title='vm.englishSkillsSectionTitle',
+              ng-hide="vm.openAll || vm.sectionActive === 'englishSkills' || vm.englishSkillsSectionStatus === 'complete'"
+            )
+            //- Complete version
+            gz-complete-form-section(
+              title='vm.englishSkillsSectionTitle',
+              ng-click="vm.editSection('englishSkills')",
+              ng-show="vm.englishSkillsSectionStatus === 'complete' && vm.sectionActive !== 'englishSkills'"
+            )
+            md-card(ng-show="vm.openAll || vm.sectionActive === 'englishSkills'")
+              md-card-header
+                //- md-card-avatar
+                //-   img(
+                //-     ng-src='/images/APF-logo-footer-2x.png',
+                //-     alt='Asia Pacific Forum logo'
+                //-   )
+                md-card-header-text
+                  span.md-headline  {{ vm.englishSkillsSectionTitle }}
+              md-card-content
+                
+                div.error(
+                  layout='row'
+                  layout-padding,
+                  md-colors="{background: 'default-warn'}",
+                  ng-show='vm.englishSkillsSectionErrorTop'
+                )
+                  div(flex='75', layout='row', layout-align='start center')
+                    | There was an error reaching the database. Please wait 5 
+                    | seconds and then try again.
+                  div(flex='25', layout='row', layout-align='end center')
+                    md-button.md-background(
+                      ng-click='vm.preEnglishSkills()'
+                    ) Try again
+
                 p.intro(
                   layout='column'
                   layout-padding,
@@ -777,31 +849,31 @@ section(ng-show='vm.actionLoaded')
                   question='Ability to read in English',
                   model='vm.contact.EN_Skills_Ability_to_read_in_English__c',
                   name='contactEnRead',
-                  error='vm.itEnglishErrors.EN_Skills_Ability_to_read_in_English__c'
+                  error='vm.englishSkillsErrors.EN_Skills_Ability_to_read_in_English__c'
                 )
                 gz-slider-form-input(
                   question='Ability to write in English',
                   model='vm.contact.EN_Skills_Ability_to_write_in_English__c',
                   name='contactEnWrite',
-                  error='vm.itEnglishErrors.EN_Skills_Ability_to_write_in_English__c'
+                  error='vm.englishSkillsErrors.EN_Skills_Ability_to_write_in_English__c'
                 )
                 gz-slider-form-input(
                   question='Ability to understand spoken English',
                   model='vm.contact.EN_Skills_Ability_to_understand_spoken__c',
                   name='contactEnSpoken',
-                  error='vm.itEnglishErrors.EN_Skills_Ability_to_understand_spoken__c'
+                  error='vm.englishSkillsErrors.EN_Skills_Ability_to_understand_spoken__c'
                 )
                 gz-slider-form-input(
                   question='Ability to speak in English',
                   model='vm.contact.EN_Skills_Ability_to_speak_English__c',
                   name='contactEnSpeak',
-                  error='vm.itEnglishErrors.EN_Skills_Ability_to_speak_English__c'
+                  error='vm.englishSkillsErrors.EN_Skills_Ability_to_speak_English__c'
                 )
                 p.error(
                   layout='column'
                   layout-padding,
                   md-colors="{background: 'default-warn'}",
-                  ng-show='vm.itEnglishSectionInvalid'
+                  ng-show='vm.englishSkillsSectionInvalid'
                 )
                   | Please make sure all required fields have been completed.
                   
@@ -809,7 +881,7 @@ section(ng-show='vm.actionLoaded')
                   layout='column'
                   layout-padding,
                   md-colors="{background: 'default-warn'}",
-                  ng-show='vm.itEnglishSectionError'
+                  ng-show='vm.englishSkillsSectionError'
                 )
                   | There was an error saving your information. Please wait 5 
                   | seconds and try again.
@@ -818,13 +890,13 @@ section(ng-show='vm.actionLoaded')
                 md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
                 md-button(
                   ng-click="vm.editSection('experience')",
-                  ng-disabled="vm.itEnglishSectionNextDisabled()"
+                  ng-disabled="vm.englishSkillsSectionNextDisabled()"
                 ) 
                   md-icon.md-material-icons navigate_before
                   | Previous
                 md-button(
-                  ng-click="vm.processItEnglish()",
-                  ng-disabled="vm.itEnglishSectionNextDisabled()"
+                  ng-click="vm.processEnglishSkills()",
+                  ng-disabled="vm.englishSkillsSectionNextDisabled()"
                 ) 
                   | Next
                   md-icon.md-material-icons navigate_next

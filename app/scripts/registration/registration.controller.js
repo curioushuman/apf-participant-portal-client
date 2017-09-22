@@ -1103,7 +1103,7 @@
               }
 
               vm.experienceSectionStatus = 'complete';
-              vm.preItEnglish();
+              vm.preItSkills();
             },
             function(err) {
               if (vm.debug) {
@@ -1138,28 +1138,24 @@
       return promises;
     }
 
-    // IT and English section
-    vm.itEnglishSectionStatus = 'disabled';
-    vm.itEnglishSectionInvalid = false;
-    vm.itEnglishSectionError = false;
-    vm.itEnglishErrors = {};
-    vm.itEnglishSectionErrorTop = false;
-    vm.itEnglishSectionTitle = 'IT and English skills';
-    vm.preItEnglish = preItEnglish;
-    vm.processItEnglish = processItEnglish;
-    // vm.itEnglishRequired = [];
-    vm.itEnglishRequiredSliders = [
+    // IT skills section
+    vm.itSkillsSectionStatus = 'disabled';
+    vm.itSkillsSectionInvalid = false;
+    vm.itSkillsSectionError = false;
+    vm.itSkillsErrors = {};
+    vm.itSkillsSectionErrorTop = false;
+    vm.itSkillsSectionTitle = 'IT skills';
+    vm.preItSkills = preItSkills;
+    vm.processItSkills = processItSkills;
+    // vm.itSkillsRequired = [];
+    vm.itSkillsRequiredSliders = [
       'IT_Skill_access_to_the_Internet__c',
       'IT_Skills_Ability_to_download_files__c',
       'IT_Skills_Ability_to_view_online_videos__c',
       'IT_Skill_Ability_to_use_Word_documents__c',
-      'IT_Skill_Ability_to_use_spreadsheets__c',
-      'EN_Skills_Ability_to_read_in_English__c',
-      'EN_Skills_Ability_to_write_in_English__c',
-      'EN_Skills_Ability_to_understand_spoken__c',
-      'EN_Skills_Ability_to_speak_English__c'
+      'IT_Skill_Ability_to_use_spreadsheets__c'
     ];
-    vm.itEnglishSectionNextDisabled = function() {
+    vm.itSkillsSectionNextDisabled = function() {
       if (vm.working) {
         return true;
       }
@@ -1167,35 +1163,35 @@
     };
 
     // pre
-    function preItEnglish() {
+    function preItSkills() {
       vm.working = false;
-      vm.editSection('itEnglish');
+      vm.editSection('itSkills');
     }
 
     // process
-    function processItEnglish() {
-      vm.itEnglishSectionInvalid = false;
+    function processItSkills() {
+      vm.itSkillsSectionInvalid = false;
 
       // NOT required
-      // if (isValid(vm.itEnglishRequired) === false) {
-      //   vm.itEnglishSectionInvalid = true;
+      // if (isValid(vm.itSkillsRequired) === false) {
+      //   vm.itSkillsSectionInvalid = true;
       // }
 
-      // special validation for itEnglish
-      angular.forEach(vm.itEnglishRequiredSliders, function(slider, index) {
+      // special validation for itSkills
+      angular.forEach(vm.itSkillsRequiredSliders, function(slider, index) {
         if (
           vm.contact[slider] === undefined ||
           vm.contact[slider] === null ||
           vm.contact[slider] === 0
         ) {
-          vm.itEnglishErrors[slider] = true;
-          vm.itEnglishSectionInvalid = true;
+          vm.itSkillsErrors[slider] = true;
+          vm.itSkillsSectionInvalid = true;
         } else {
-          vm.itEnglishErrors[slider] = false;
+          vm.itSkillsErrors[slider] = false;
         }
       });
 
-      if (vm.itEnglishSectionInvalid === true) {
+      if (vm.itSkillsSectionInvalid === true) {
         return;
       }
 
@@ -1204,14 +1200,88 @@
       processSaveContact()
       .then(
         function() {
-          vm.itEnglishSectionStatus = 'complete';
+          vm.itSkillsSectionStatus = 'complete';
+          vm.preEnglishSkills();
+        },
+        function(err) {
+          if (vm.debug) {
+            console.log('Error processingItSkills', err);
+          }
+          vm.itSkillsSectionError = true;
+          vm.working = false;
+        }
+      );
+    }
+
+    // English skills section
+    vm.englishSkillsSectionStatus = 'disabled';
+    vm.englishSkillsSectionInvalid = false;
+    vm.englishSkillsSectionError = false;
+    vm.englishSkillsErrors = {};
+    vm.englishSkillsSectionErrorTop = false;
+    vm.englishSkillsSectionTitle = 'English skills';
+    vm.preEnglishSkills = preEnglishSkills;
+    vm.processEnglishSkills = processEnglishSkills;
+    // vm.englishSkillsRequired = [];
+    vm.englishSkillsRequiredSliders = [
+      'EN_Skills_Ability_to_read_in_English__c',
+      'EN_Skills_Ability_to_write_in_English__c',
+      'EN_Skills_Ability_to_understand_spoken__c',
+      'EN_Skills_Ability_to_speak_English__c'
+    ];
+    vm.englishSkillsSectionNextDisabled = function() {
+      if (vm.working) {
+        return true;
+      }
+      return false;
+    };
+
+    // pre
+    function preEnglishSkills() {
+      vm.working = false;
+      vm.editSection('englishSkills');
+    }
+
+    // process
+    function processEnglishSkills() {
+      vm.englishSkillsSectionInvalid = false;
+
+      // NOT required
+      // if (isValid(vm.englishSkillsRequired) === false) {
+      //   vm.englishSkillsSectionInvalid = true;
+      // }
+
+      // special validation for englishSkills
+      angular.forEach(vm.englishSkillsRequiredSliders, function(slider, index) {
+        if (
+          vm.contact[slider] === undefined ||
+          vm.contact[slider] === null ||
+          vm.contact[slider] === 0
+        ) {
+          vm.englishSkillsErrors[slider] = true;
+          vm.englishSkillsSectionInvalid = true;
+        } else {
+          vm.englishSkillsErrors[slider] = false;
+        }
+      });
+
+      if (vm.englishSkillsSectionInvalid === true) {
+        return;
+      }
+
+      vm.working = true;
+
+      processSaveContact()
+      .then(
+        function() {
+          vm.englishSkillsSectionStatus = 'complete';
           vm.preExpectations();
         },
         function(err) {
           if (vm.debug) {
-            console.log('Error processingItEnglish', err);
+            console.log('Error processingEnglishSkills', err);
           }
-          vm.itEnglishSectionError = true;
+          vm.englishSkillsSectionError = true;
           vm.working = false;
         }
       );
@@ -1222,7 +1292,11 @@
         vm.contact[slider] === null ||
         vm.contact[slider] === 0
       ) {
-        vm.itEnglishErrors[slider] = true;
+        if (slider.indexOf('EN') === 0) {
+          vm.englishSkillsErrors[slider] = true;
+        } else {
+          vm.itSkillsErrors[slider] = true;
+        }
         return false;
       }
       return true;
