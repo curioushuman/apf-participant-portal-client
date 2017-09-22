@@ -171,19 +171,39 @@
       }
     );
 
+    // initiate participant to grab the tech stuff
+    vm.participant = new participantService.Participant();
+    vm.participant.Type__c = 'Participant';
+    vm.participant.Registration_complete__c = false;
+
     // Tech and connection detection
-    // start the image download
-    // set a timeout of 10 seconds perhaps
-    // write the callback and pass it in
+    // the connection results will be known when the file downloads
+    // these results will be saved when the Participant is saved
+    // and this is done several times over the course of the form
+    // otherwise the default low speed will be retained
+    vm.participant.Connection_speed_Mbps__c = 0.1;
     var processConnectionResults = function() {
       if (vm.debug) {
         console.log('Connection results', detectionService.connectionResults);
-        console.log('Platform results', detectionService.platformResults);
       }
-    }
+      vm.participant.Connection_speed_Mbps__c =
+        detectionService.connectionResults.speedMbps;
+    };
     $timeout(detectionService.detectConnection(processConnectionResults), 3000);
 
-    // platform
+    // platform results
+    var processPlatformResults = function() {
+      if (vm.debug) {
+        console.log('Platform results', detectionService.platformResults);
+      }
+      vm.participant.Technology_browser__c =
+        detectionService.platformResults.browser;
+      vm.participant.Technology_operating_system__c =
+        detectionService.platformResults.os;
+      vm.participant.Technology_screen_resolution__c =
+        detectionService.platformResults.resolution;
+    };
+    $timeout(detectionService.detectPlatform(processPlatformResults), 1000);
 
     // country
     // Note: this doesn't work yet
@@ -205,6 +225,33 @@
     //       console.log('Geo data', data);
     //     }
     //   });
+
+    // only save the detection results once we have a contact Id
+    // currently this is called when contact is found
+    // or new contact is first saved
+    var saveDetectionResults = function() {
+      vm.participant.Action__c = vm.action.Id;
+      vm.participant.Contact__c = vm.contact.Id;
+      processSaveParticipant()
+      .then(
+        function(participant) {
+          if (vm.debug) {
+            console.log(
+              'Participant detection results saved',
+              participant
+            );
+          }
+        },
+        function(err) {
+          if (vm.debug) {
+            console.log(
+              'There was an error saving the participant detection results',
+              err
+            );
+          }
+        }
+      );
+    };
 
     vm.sectionActive = 'email';
 
@@ -249,6 +296,10 @@
           if (vm.debug) {
             console.log('Contact found');
           }
+
+          // save detection results
+          saveDetectionResults();
+
           vm.emailSectionStatus = 'complete';
           vm.prePersonal();
         },
@@ -316,6 +367,10 @@
           function(record) {
             if (record.success) {
               vm.personalSectionStatus = 'complete';
+
+              // save detection results
+              saveDetectionResults();
+
               vm.preOrganisation();
             } else {
               vm.personalSectionError = true;
@@ -1028,7 +1083,6 @@
 
     // Experience section
     vm.questions = [];
-    vm.participant = new participantService.Participant();
     vm.experienceSectionStatus = 'disabled';
     vm.experienceSectionInvalid = false;
     vm.experienceSectionError = false;
@@ -1123,10 +1177,10 @@
       vm.working = true;
 
       // participant information
-      vm.participant.Contact__c = vm.contact.Id;
-      vm.participant.Action__c = vm.action.Id;
+      // technically this tidbit should have been done in org section
+      // but we're saving the Participant in this section anyway so...
+      // let's just leave it here
       vm.participant.Organisation__c = vm.affiliation.npe5__Organization__c;
-      vm.participant.Type__c = 'Participant';
 
       // reset processing count
       vm.processExperienceProcessing.processing = 1;
@@ -1375,6 +1429,9 @@
 
       vm.working = true;
 
+      // indicate the participant has completed the form
+      vm.participant.Registration_complete__c = true;
+
       processUpdateParticipant()
       .then(
         function() {
@@ -1598,10 +1655,9 @@
       // participant information
       // THIS IS DUPLICATED FROM EXPERIENCE
       // NEEDS TO BE REMOVED INTO IT'S OWN FUNCTION AT SOME POINT
-      vm.participant.Contact__c = vm.contact.Id;
-      vm.participant.Action__c = vm.action.Id;
       vm.participant.Organisation__c = vm.affiliation.npe5__Organization__c;
-      vm.participant.Type__c = 'Participant';
+      // also indicate that the participant has actually finished the form
+      vm.participant.Registration_complete__c = true;
 
       // chaining the promises as responses rely on participant Id
       processSaveParticipant()

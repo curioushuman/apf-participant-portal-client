@@ -33,17 +33,15 @@
     // platform detection
     // reliant on platform.js
     var platformResults = {
-      os: platform.os.family + ' ' + platform.os.version,
-      browser: platform.name + ' ' + platform.version,
-      resolution: window.screen.availWidth + ' x ' + window.screen.availHeight
+      os: '',
+      browser: '',
+      resolution: ''
     };
-    if (DEBUG) {
-      console.log('platform', platformResults);
-    }
 
     var service = {
       detectConnection: detectConnection,
       connectionResults: connectionResults,
+      detectPlatform: detectPlatform,
       platformResults: platformResults,
       detectGeo: detectGeo
     };
@@ -91,6 +89,17 @@
       connectionResults.speedMbps =
         (connectionResults.speedKbps / 1024).toFixed(2);
 	  }
+
+    function detectPlatform(callback) {
+      platformResults.os =
+        platform.os.family + ' ' + platform.os.version;
+      platformResults.browser =
+        platform.name + ' ' + platform.version;
+      platformResults.resolution =
+        window.screen.availWidth + ' x ' + window.screen.availHeight;
+
+      callback();
+    }
 
     // Note: geo detection doesn't work
     function detectGeo(callback) {
