@@ -177,7 +177,8 @@
     // write the callback and pass it in
     var processConnectionResults = function() {
       if (vm.debug) {
-        console.log('Results', detectionService.connectionResults);
+        console.log('Connection results', detectionService.connectionResults);
+        console.log('Platform results', detectionService.platformResults);
       }
     }
     $timeout(detectionService.detectConnection(processConnectionResults), 3000);

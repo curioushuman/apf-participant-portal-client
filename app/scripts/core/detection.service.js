@@ -16,6 +16,7 @@
 
   function detectionService(DEBUG, API_URI) {
 
+    // connection detection
     var imgUrl = API_URI.replace('salesforce', 'img') + '/test.jpg';
     var imgSize = 4995374;
     var startTime = 0;
@@ -28,9 +29,22 @@
       speedMbps: 0
     };
 
+    // platform detection
+    // reliant on platform.js
+    var platformResults = {
+      os: platform.os.family + ' ' + platform.os.version,
+      browser: platform.name + ' ' + platform.version,
+      resolution: window.screen.availWidth + ' x ' + window.screen.availHeight
+    };
+    var test = platform.name + ' ' + platform.version;
+    if (DEBUG) {
+      console.log('platform', platformResults);
+    }
+
     var service = {
       detectConnection: detectConnection,
-      connectionResults: connectionResults
+      connectionResults: connectionResults,
+      platformResults: platformResults
     };
 
     return service;
