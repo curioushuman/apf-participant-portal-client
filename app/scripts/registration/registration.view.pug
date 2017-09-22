@@ -297,7 +297,8 @@ section(ng-show='vm.actionLoaded')
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
               md-button(
-                ng-click="vm.editSection('email')"
+                ng-click="vm.editSection('email')",
+                ng-disabled="vm.personalSectionNextDisabled()"
               ) 
                 md-icon.md-material-icons navigate_before
                 | Previous
@@ -442,7 +443,8 @@ section(ng-show='vm.actionLoaded')
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
               md-button(
-                ng-click="vm.editSection('personal')"
+                ng-click="vm.editSection('personal')",
+                ng-disabled="vm.organisationSectionNextDisabled()"
               ) 
                 md-icon.md-material-icons navigate_before
                 | Previous
@@ -565,7 +567,8 @@ section(ng-show='vm.actionLoaded')
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
               md-button(
-                ng-click="vm.editSection('organisation')"
+                ng-click="vm.editSection('organisation')",
+                ng-disabled="vm.contactSectionNextDisabled()"
               ) 
                 md-icon.md-material-icons navigate_before
                 | Previous
@@ -671,9 +674,14 @@ section(ng-show='vm.actionLoaded')
                   | seconds and try again.
                         
               md-card-actions(layout='row', layout-align='end center', layout-padding)
+                span(ng-show='vm.working')
+                  | Please be patient, we are saving 
+                  | {{ vm.processExperienceProcessing.processing }} of 
+                  | {{ vm.processExperienceProcessing.processes }} responses
                 md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
                 md-button(
-                  ng-click="vm.editSection('contact')"
+                  ng-click="vm.editSection('contact')",
+                  ng-disabled="vm.experienceSectionNextDisabled()"
                 ) 
                   md-icon.md-material-icons navigate_before
                   | Previous
@@ -809,7 +817,8 @@ section(ng-show='vm.actionLoaded')
               md-card-actions(layout='row', layout-align='end center', layout-padding)
                 md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
                 md-button(
-                  ng-click="vm.editSection('experience')"
+                  ng-click="vm.editSection('experience')",
+                  ng-disabled="vm.itEnglishSectionNextDisabled()"
                 ) 
                   md-icon.md-material-icons navigate_before
                   | Previous
@@ -920,7 +929,8 @@ section(ng-show='vm.actionLoaded')
               md-card-actions(layout='row', layout-align='end center', layout-padding)
                 md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
                 md-button(
-                  ng-click="vm.editSection('itEnglish')"
+                  ng-click="vm.editSection('itEnglish')",
+                  ng-disabled="vm.expectationsSectionNextDisabled()"
                 ) 
                   md-icon.md-material-icons navigate_before
                   | Previous
@@ -1018,7 +1028,8 @@ section(ng-show='vm.actionLoaded')
               md-card-actions(layout='row', layout-align='end center', layout-padding)
                 md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
                 md-button(
-                  ng-click="vm.editSection('contact')"
+                  ng-click="vm.editSection('contact')",
+                  ng-disabled="vm.sessionsSectionNextDisabled()"
                 ) 
                   md-icon.md-material-icons navigate_before
                   | Previous

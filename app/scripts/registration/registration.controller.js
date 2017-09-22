@@ -168,7 +168,8 @@
 
     vm.editSection = function(section) {
       vm.sectionActive = section;
-      layoutService.navigate(null, section);
+      // layoutService.navigate(null, section);
+      layoutService.navigate(null, 'top');
     };
 
     // Email section
@@ -994,6 +995,10 @@
     vm.experienceSectionTitle = 'Experience';
     vm.preExperience = preExperience;
     vm.processExperience = processExperience;
+    vm.processExperienceProcessing = {
+      processes: 1,
+      processing: 1
+    };
     vm.experienceRequired = [
       'participantPriorExperienceTopic'
     ];
@@ -1037,6 +1042,7 @@
           }
           angular.forEach(vm.questions, function(question, index) {
             question.response = new responseService.Response();
+            vm.processExperienceProcessing.processes++;
           });
           return vm.questions;
         },
@@ -1080,10 +1086,14 @@
       vm.participant.Organisation__c = vm.affiliation.npe5__Organization__c;
       vm.participant.Type__c = 'Participant';
 
+      // reset processing count
+      vm.processExperienceProcessing.processing = 1;
+
       // chaining the promises as responses rely on participant Id
       processSaveParticipant()
       .then(
         function(participant) {
+
           // q.all works as it doesn't matter the order of processing
           var promises = processSaveResponses();
           $q.all(promises).then(
@@ -1626,6 +1636,7 @@
         response.$save(
           function(record) {
             if (record.success) {
+              vm.processExperienceProcessing.processing++;
               resolve(response);
             } else {
               if (vm.debug) {
