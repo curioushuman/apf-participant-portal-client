@@ -94,14 +94,16 @@
         }
 
         // work out the correct start and end dates
-        vm.action.datesShow = false;
         if (
-          vm.action.Start_date__c !== null &&
-          vm.action.Finish_date__c !== null
+          vm.action.Start_date__c !== null
         ) {
-          vm.action.datesShow = true;
           vm.action.startDate =
             layoutService.formatDate(vm.action.Start_date__c);
+        }
+        if (
+          vm.action.Finish_date__c !== null &&
+          vm.action.Finish_date__c !== vm.action.Start_date__c
+        ) {
           vm.action.finishDate =
             layoutService.formatDate(vm.action.Finish_date__c);
         }

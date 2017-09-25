@@ -48,10 +48,22 @@ section
         md-content(layout-padding, md-colors="{background: 'default-primary-hue-2'}")
           div(hide, show-gt-sm)
             h1.md-display-2 {{ vm.action.Name }}
-            h2.md-display-1(ng-show='vm.action.datesShow') {{ vm.action.startDate }} to {{ vm.action.finishDate }}
+            h2.md-display-1(
+              ng-show='vm.action.startDate !== undefined || vm.action.finishDate !== undefined'
+            ) 
+              span(ng-show='vm.action.startDate !== undefined') 
+                | {{ vm.action.startDate }} 
+              span(ng-show='vm.action.finishDate !== undefined') 
+                | to {{ vm.action.finishDate }}
           div(hide-gt-sm)
             h1.md-display-1 {{ vm.action.Name }}
-            h2.md-headline(ng-show='vm.action.datesShow') {{ vm.action.startDate }} to {{ vm.action.finishDate }}
+            h2.md-headline(
+              ng-show='vm.action.startDate !== undefined || vm.action.finishDate !== undefined'
+            )
+              span(ng-show='vm.action.startDate !== undefined') 
+                | {{ vm.action.startDate }} 
+              span(ng-show='vm.action.finishDate !== undefined') 
+                | to {{ vm.action.finishDate }}
           p {{ vm.action.Description__c }}
       span(hide, show-gt-xs, flex)
     div(
