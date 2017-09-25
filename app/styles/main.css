@@ -58,7 +58,7 @@ p.intro {
 
 .hint, .question {
   font-size: 0.9em;
-  color: #444444;
+  color: #888888;
 }
 
 .section-complete {
@@ -83,6 +83,11 @@ md-autocomplete {
 
 md-autocomplete md-input-container {
   /*margin-bottom: -18px;*/
+}
+
+md-input-container label.md-required,
+md-select.ng-invalid-required md-select-value span {
+  color: #444444;
 }
 
 /* footer */
