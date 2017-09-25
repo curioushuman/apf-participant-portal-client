@@ -139,6 +139,37 @@
           vm.actionIsTraining = true;
         }
 
+        // start obtaining the questions
+        if (vm.actionIsTraining) {
+          preQueryQuestions()
+          .then(
+            function() {
+              if (vm.debug) {
+                console.log('Hooray we already have questions');
+              }
+            },
+            function(err) {
+              if (vm.debug) {
+                console.log('Error preExperience', err);
+              }
+              vm.experienceSectionErrorTop = true;
+            }
+          );
+        } else {
+          preQuerySessions()
+          .then(
+            function() {
+              console.log('Hooray we already have sessions');
+            },
+            function(err) {
+              if (vm.debug) {
+                console.log('Error preSessions', err);
+              }
+              vm.sessionsSectionErrorTop = true;
+            }
+          );
+        }
+
         // grab the training partner of the action
         // Needs review aftre we've changed how training partners work in SF
         // console.log('Obtain training partner');
@@ -186,10 +217,8 @@
       if (vm.debug) {
         console.log('Connection results', detectionService.connectionResults);
       }
-      // moved to saveDetectionResults function for now
-      // fix later
-      // vm.participant.Connection_speed_Mbps__c =
-      //   detectionService.connectionResults.speedMbps;
+      vm.participant.Connection_speed_Mbps__c =
+        detectionService.connectionResults.speedMbps;
     };
     $timeout(detectionService.detectConnection(processConnectionResults), 3000);
 
@@ -198,13 +227,12 @@
       if (vm.debug) {
         console.log('Platform results', detectionService.platformResults);
       }
-      // moved to saveDetectionResults function for now
-      // vm.participant.Technology_browser__c =
-      //   detectionService.platformResults.browser;
-      // vm.participant.Technology_operating_system__c =
-      //   detectionService.platformResults.os;
-      // vm.participant.Technology_screen_resolution__c =
-      //   detectionService.platformResults.resolution;
+      vm.participant.Technology_browser__c =
+        detectionService.platformResults.browser;
+      vm.participant.Technology_operating_system__c =
+        detectionService.platformResults.os;
+      vm.participant.Technology_screen_resolution__c =
+        detectionService.platformResults.resolution;
     };
     $timeout(detectionService.detectPlatform(processPlatformResults), 1000);
 
@@ -233,14 +261,12 @@
     // currently this is called when contact is found
     // or new contact is first saved
     var saveDetectionResults = function() {
-      vm.participant.Connection_speed_Mbps__c =
-        detectionService.connectionResults.speedMbps;
-      vm.participant.Technology_browser__c =
-        detectionService.platformResults.browser;
-      vm.participant.Technology_operating_system__c =
-        detectionService.platformResults.os;
-      vm.participant.Technology_screen_resolution__c =
-        detectionService.platformResults.resolution;
+      // we put these here again just in case they have finished prior to
+      // the participant.retrieve check which resets to an empty participant
+      processConnectionResults();
+      processPlatformResults();
+
+      // now save the participant with the tech. info
       processSaveParticipant()
       .then(
         function(participant) {
@@ -316,12 +342,27 @@
             function(participant) {
               if (vm.debug) {
                 console.log('Participant found', participant);
-                console.log('vm.participant', vm.participant);
               }
 
               // save detection results
               // this will update the participant we found
               saveDetectionResults();
+
+              // we've found a contact, pull down their affiliations
+              preRetrieveAffiliations()
+              .then(
+                function(affiliations) {
+                  if (vm.debug) {
+                    console.log('found affiliations', affiliations.length);
+                  }
+                },
+                function(err) {
+                  vm.organisationSectionErrorTop = true;
+                  if (vm.debug) {
+                    console.log('There was an error retrieving the affiliations', err);
+                  }
+                }
+              );
             },
             function(err) {
               if (err.status === 404) {
@@ -482,60 +523,46 @@
 
     // pre
     function preOrganisation() {
-      vm.organisationSectionErrorTop = false;
-      if (vm.debug) {
-        console.log('preOrganisation');
+      if (vm.nhris > 0 && vm.organisations > 0) {
+        vm.working = false;
+        vm.editSection('organisation');
+      } else {
+        $timeout(preOrganisation(), 500);
       }
-
-      // chaining the promises as affiliation NRHI check relies on NHRI list
-      preQueryNhris()
-      .then(
-        function(nhris) {
-          if (vm.debug) {
-            console.log('found nhris', nhris.length);
-          }
-          return preQueryNonNhris();
-        },
-        function(err) {
-          vm.organisationSectionErrorTop = true;
-          if (vm.debug) {
-            console.log('There was an error retrieving the NHRIs', err);
-          }
-        }
-      )
-      .then(
-        function(organisations) {
-          if (vm.debug) {
-            console.log('found non-nhris', organisations.length);
-          }
-          return preRetrieveAffiliations();
-        },
-        function(err) {
-          vm.organisationSectionErrorTop = true;
-          if (vm.debug) {
-            console.log(
-              'There was an error retrieving other organisations',
-              err
-            );
-          }
-        }
-      )
-      .then(
-        function(affiliations) {
-          if (vm.debug) {
-            console.log('found affiliations', affiliations.length);
-          }
-          vm.working = false;
-          vm.editSection('organisation');
-        },
-        function(err) {
-          vm.organisationSectionErrorTop = true;
-          if (vm.debug) {
-            console.log('There was an error retrieving the affiliation', err);
-          }
-        }
-      );
     }
+
+    // start grabbing the organisations while they're filling out the form
+    preQueryNhris()
+    .then(
+      function(nhris) {
+        if (vm.debug) {
+          console.log('found nhris', nhris.length);
+        }
+        return preQueryNonNhris();
+      },
+      function(err) {
+        vm.organisationSectionErrorTop = true;
+        if (vm.debug) {
+          console.log('There was an error retrieving the NHRIs', err);
+        }
+      }
+    )
+    .then(
+      function(organisations) {
+        if (vm.debug) {
+          console.log('found non-nhris', organisations.length);
+        }
+      },
+      function(err) {
+        vm.organisationSectionErrorTop = true;
+        if (vm.debug) {
+          console.log(
+            'There was an error retrieving other organisations',
+            err
+          );
+        }
+      }
+    );
 
     function preQueryNhris() {
       if (vm.nhris.length) {
@@ -792,6 +819,21 @@
       ) {
         vm.contact.Department = vm.affiliation.Department__c;
         vm.contact.Title = vm.affiliation.npe5__Role__c;
+        // this can just happen and finish whenever
+        processSaveContact()
+        .then(
+          function(contact) {
+            if (vm.debug) {
+              console.log('processOrganisation: Contact saved');
+            }
+          },
+          function(err) {
+            if (vm.debug) {
+              console.log('processOrganisation: error saving contact', err);
+            }
+            // ideally this will be rectified in subsequent sections
+          }
+        );
       }
 
       // and some affiliation fields
@@ -836,24 +878,16 @@
               );
             }
           }
-          return processSaveContact();
-        },
-        function(err) {
-          if (vm.debug) {
-            console.log('There was an error saving the affiliation', err);
-          }
-          vm.organisationSectionError = true;
-          vm.working = false;
-        }
-      )
-      .then(
-        function(contact) {
+
+          // add this to the participant for saving later
+          vm.participant.Organisation__c = vm.affiliation.npe5__Organization__c;
+
           vm.organisationSectionStatus = 'complete';
           vm.preContact();
         },
         function(err) {
           if (vm.debug) {
-            console.log('There was an error saving the contact', err);
+            console.log('There was an error saving the affiliation', err);
           }
           vm.organisationSectionError = true;
           vm.working = false;
@@ -1051,7 +1085,6 @@
       if (vm.contact.HasOptedOutOfEmail === undefined) {
         vm.contact.HasOptedOutOfEmail = true;
       }
-      console.log(vm.contact);
 
       vm.working = false;
       vm.editSection('contact');
@@ -1149,20 +1182,8 @@
 
     // pre
     function preExperience() {
-      preQueryQuestions()
-      .then(
-        function() {
-          vm.working = false;
-          vm.editSection('experience');
-        },
-        function(err) {
-          if (vm.debug) {
-            console.log('Error preExperience', err);
-          }
-          vm.experienceSectionErrorTop = true;
-          vm.working = false;
-        }
-      );
+      vm.working = false;
+      vm.editSection('experience');
     }
 
     function preQueryQuestions() {
@@ -1176,7 +1197,7 @@
         function(data) {
           vm.questions = data;
           if (vm.debug) {
-            console.log(vm.questions);
+            console.log('Questions', vm.questions);
           }
           angular.forEach(vm.questions, function(question, index) {
             question.response = new responseService.Response();
@@ -1217,12 +1238,6 @@
       }
 
       vm.working = true;
-
-      // participant information
-      // technically this tidbit should have been done in org section
-      // but we're saving the Participant in this section anyway so...
-      // let's just leave it here
-      vm.participant.Organisation__c = vm.affiliation.npe5__Organization__c;
 
       // reset processing count
       vm.processExperienceProcessing.processing = 1;
@@ -1540,20 +1555,8 @@
 
     // pre
     function preSessions() {
-      preQuerySessions()
-      .then(
-        function() {
-          vm.working = false;
-          vm.editSection('sessions');
-        },
-        function(err) {
-          if (vm.debug) {
-            console.log('Error preSessions', err);
-          }
-          vm.sessionsSectionErrorTop = true;
-          vm.working = false;
-        }
-      );
+      vm.working = false;
+      vm.editSection('sessions');
     }
 
     function preQuerySessions() {
