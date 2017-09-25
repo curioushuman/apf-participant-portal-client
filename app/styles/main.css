@@ -86,8 +86,16 @@ md-autocomplete md-input-container {
 }
 
 md-input-container label.md-required,
-md-select.ng-invalid-required md-select-value span {
+md-select.ng-invalid-required md-select-value span,
+p.p-required {
   color: #444444;
+}
+
+p.p-required:after {
+  content: ' *';
+  font-size: 13px;
+  vertical-align: top;
+  color: rgba(0,0,0,0.54);
 }
 
 /* footer */

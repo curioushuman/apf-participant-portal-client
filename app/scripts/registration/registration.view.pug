@@ -411,7 +411,7 @@ section(ng-show='vm.actionLoaded')
                   div(ng-message='required')
                     | This field is required
               div(ng-hide="vm.organisationType === 'individual' || vm.actionIsTraining !== true")
-                p.question(ng-hide="vm.organisationType === 'individual'")
+                p.question.p-required(ng-hide="vm.organisationType === 'individual'")
                   | When did you start working at this organisation?
                 md-input-container.md-block(flex)
                   label Enter date
@@ -508,7 +508,7 @@ section(ng-show='vm.actionLoaded')
               //- section intro
               //- p stuff
               div(ng-show='vm.actionIsTraining')
-                p.question Is the email you've provided your 
+                p.question.p-required Is the email you've provided your 
                   strong work 
                   | email address?
                 md-input-container.md-block(flex)
@@ -535,7 +535,7 @@ section(ng-show='vm.actionLoaded')
                     div(ng-message-exp="['minlength', 'maxlength', 'pattern']")
                       | Your email must be between 10 and 155 characters long and look like an e-mail address.
               div(ng-hide='vm.actionIsTraining')
-                p.question Would you like your email added to the APF mailing list?
+                p.question.p-required Would you like your email added to the APF mailing list?
                 md-input-container.md-block(flex)
                   md-radio-group(ng-model='vm.contact.HasOptedOutOfEmail', name='contactEmailOptOut', required)
                     md-radio-button(value='0') Yes
@@ -645,7 +645,7 @@ section(ng-show='vm.actionLoaded')
                       ng-click='vm.preExperience()'
                     ) Try again
                 
-                p.question Please provide details of any knowledge and experience 
+                p.question.p-required Please provide details of any knowledge and experience 
                   | you have with issues related to this topic
                 md-input-container.md-block(flex)
                   label Knowledge and experience
@@ -954,7 +954,7 @@ section(ng-show='vm.actionLoaded')
               md-card-content
                 //- section intro
                 //- p stuff
-                p.question What knowledge do you hope to gain through 
+                p.question.p-required What knowledge do you hope to gain through 
                   | participation in this course? In other words what would you 
                   | like to learn about? How could this knowledge benefit you 
                   | and the work you are doing?
@@ -973,7 +973,7 @@ section(ng-show='vm.actionLoaded')
                   div(ng-messages='pageForm.participantKnowledgeGain.$error')
                     div(ng-message='required')
                       | This field is required
-                p.question What skills do you hope to gain through 
+                p.question.p-required What skills do you hope to gain through 
                   | participation in this course? In other words what would you 
                   | like to learn how to do? How could these skills benefit you 
                   | and the work you are doing?

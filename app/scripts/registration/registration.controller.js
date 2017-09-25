@@ -376,7 +376,10 @@
             function(err) {
               vm.organisationSectionErrorTop = true;
               if (vm.debug) {
-                console.log('There was an error retrieving the affiliations', err);
+                console.log(
+                  'There was an error retrieving the affiliations',
+                  err
+                );
               }
             }
           );
@@ -526,15 +529,21 @@
 
     // pre
     function preOrganisation() {
+      if (vm.debug) {
+        console.log('preOrganisation');
+        console.log(vm.nhris.length);
+        console.log(vm.organisations.length);
+        console.log(vm.affiliation);
+      }
       if (
-        vm.nhris > 0 &&
-        vm.organisations > 0 &&
+        vm.nhris.length > 0 &&
+        vm.organisations.length > 0 &&
         vm.affiliation !== undefined
       ) {
         vm.working = false;
         vm.editSection('organisation');
       } else {
-        $timeout(preOrganisation(), 500);
+        $timeout(preOrganisation(), 800);
       }
     }
 
