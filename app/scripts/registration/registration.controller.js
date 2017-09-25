@@ -173,8 +173,6 @@
 
     // initiate participant to grab the tech stuff
     vm.participant = new participantService.Participant();
-    vm.participant.Type__c = 'Participant';
-    vm.participant.Registration_complete__c = false;
 
     // Tech and connection detection
     // the connection results will be known when the file downloads
@@ -186,8 +184,10 @@
       if (vm.debug) {
         console.log('Connection results', detectionService.connectionResults);
       }
-      vm.participant.Connection_speed_Mbps__c =
-        detectionService.connectionResults.speedMbps;
+      // moved to saveDetectionResults function for now
+      // fix later
+      // vm.participant.Connection_speed_Mbps__c =
+      //   detectionService.connectionResults.speedMbps;
     };
     $timeout(detectionService.detectConnection(processConnectionResults), 3000);
 
@@ -196,12 +196,13 @@
       if (vm.debug) {
         console.log('Platform results', detectionService.platformResults);
       }
-      vm.participant.Technology_browser__c =
-        detectionService.platformResults.browser;
-      vm.participant.Technology_operating_system__c =
-        detectionService.platformResults.os;
-      vm.participant.Technology_screen_resolution__c =
-        detectionService.platformResults.resolution;
+      // moved to saveDetectionResults function for now
+      // vm.participant.Technology_browser__c =
+      //   detectionService.platformResults.browser;
+      // vm.participant.Technology_operating_system__c =
+      //   detectionService.platformResults.os;
+      // vm.participant.Technology_screen_resolution__c =
+      //   detectionService.platformResults.resolution;
     };
     $timeout(detectionService.detectPlatform(processPlatformResults), 1000);
 
@@ -230,8 +231,14 @@
     // currently this is called when contact is found
     // or new contact is first saved
     var saveDetectionResults = function() {
-      vm.participant.Action__c = vm.action.Id;
-      vm.participant.Contact__c = vm.contact.Id;
+      vm.participant.Connection_speed_Mbps__c =
+        detectionService.connectionResults.speedMbps;
+      vm.participant.Technology_browser__c =
+        detectionService.platformResults.browser;
+      vm.participant.Technology_operating_system__c =
+        detectionService.platformResults.os;
+      vm.participant.Technology_screen_resolution__c =
+        detectionService.platformResults.resolution;
       processSaveParticipant()
       .then(
         function(participant) {
@@ -291,15 +298,47 @@
         {
           email: vm.email
         },
-        function() {
+        function(contact) {
           vm.contactExists = true;
           if (vm.debug) {
             console.log('Contact found');
+            console.log('Looking for Participant');
           }
 
-          // save detection results
-          saveDetectionResults();
+          // See if there is a participant record for this contact
+          vm.participant = participantService.retrieve(
+            {
+              contactid: vm.contact.Id,
+              actionid: vm.action.Id
+            },
+            function(participant) {
+              if (vm.debug) {
+                console.log('Participant found', participant);
+                console.log('vm.participant', vm.participant);
+              }
 
+              // save detection results
+              // this will update the participant we found
+              saveDetectionResults();
+            },
+            function(err) {
+              if (err.status === 404) {
+                // we don't care if it is a 404
+                // it means this person has not registered for this action
+
+                // save detection results
+                // this will create a new participant
+                saveDetectionResults();
+              } else if (vm.debug) {
+                console.log(
+                  'There was a non-404 error retrieving the participant'
+                );
+                console.log(err);
+              }
+            }
+          );
+
+          // this should occur asynchronously while the above request runs
           vm.emailSectionStatus = 'complete';
           vm.prePersonal();
         },
@@ -1764,9 +1803,19 @@
       }
       return $q(function(resolve, reject) {
         if (vm.participant.Id === undefined) {
+          if (vm.debug) {
+            console.log('processSaveParticipant: Create');
+          }
+          vm.participant.Type__c = 'Participant';
+          vm.participant.Registration_complete__c = false;
+          vm.participant.Action__c = vm.action.Id;
+          vm.participant.Contact__c = vm.contact.Id;
           vm.participant.$save(
             function(record) {
               if (record.success) {
+                if (vm.debug) {
+                  console.log('participant Created');
+                }
                 resolve(vm.participant);
               } else {
                 if (vm.debug) {
@@ -1783,12 +1832,18 @@
             }
           );
         } else {
+          if (vm.debug) {
+            console.log('processSaveParticipant: Update');
+          }
           vm.participant.$update(
             {
               participantid: vm.participant.Id
             },
             function(record) {
               if (record.success) {
+                if (vm.debug) {
+                  console.log('participant Updated');
+                }
                 resolve(vm.participant);
               } else {
                 if (vm.debug) {
@@ -1855,6 +1910,9 @@
           )
         ) {
           // don't save it, just send it back
+          if (vm.debug) {
+            console.log('Response skipped!');
+          }
           vm.processExperienceProcessing.processing++;
           resolve(response);
         } else {
