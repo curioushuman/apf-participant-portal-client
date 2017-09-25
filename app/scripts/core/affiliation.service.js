@@ -97,7 +97,8 @@
       if (
         affiliation1.Department__c === affiliation2.Department__c &&
         affiliation1.npe5__Role__c === affiliation2.npe5__Role__c &&
-        affiliation1.npe5__Description__c === affiliation2.npe5__Description__c &&
+        affiliation1.npe5__Description__c ===
+          affiliation2.npe5__Description__c &&
         startdate1 === startdate2
       ) {
         equals = true;

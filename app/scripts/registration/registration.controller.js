@@ -333,7 +333,7 @@
     vm.personalSectionTitle = 'Personal information';
     vm.prePersonal = prePersonal;
     vm.processPersonal = processPersonal;
-    vm.salutations = ['Mr.', 'Ms.', 'Mrs.', 'Dr.', 'Prof.'];
+    vm.salutations = ['Mr.', 'Ms.', 'Mrs.', 'Dr.', 'Prof.', 'Atty.', 'Hon. Just.'];
     vm.genders = ['Male', 'Female', 'Another term', 'Prefer not to disclose'];
     vm.personalRequired = [
       'contactFirstName', 'contactLastName',
@@ -786,7 +786,7 @@
               new Date(vm.affiliation.npe5__StartDate__c);
             // let the form know we now have a found affiliation
             vm.affiliationsFound[vm.organisationType] =
-              affiliationService.saveFoundAffiliation(affiliation);
+              affiliationService.saveFoundAffiliation(vm.affiliation);
             if (vm.debug) {
               console.log(
                 'Affiliation saved, putting it to found',
@@ -942,7 +942,7 @@
             },
             function(record) {
               if (record.success) {
-                resolve('Affiliation updated');
+                resolve(record);
               } else {
                 if (vm.debug) {
                   console.log(

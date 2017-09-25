@@ -427,7 +427,7 @@ section(ng-show='vm.actionLoaded')
                 div(ng-messages='pageForm.affiliationRole.$error')
                   div(ng-message='required')
                     | This field is required and can have a maximum of 80 characters
-              md-input-container.md-block(flex)
+              md-input-container.md-block(flex, ng-show='vm.actionIsTraining')
                 label Description of your role
                 textarea(
                   ng-model='vm.affiliation.npe5__Description__c',
