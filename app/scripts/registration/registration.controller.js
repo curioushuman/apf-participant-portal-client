@@ -1375,9 +1375,6 @@
       angular.forEach(vm.questions, function(question, index) {
         question.response.Participant__c = vm.participant.Id;
         question.response.Self_assessment_question__c = question.Id;
-        if (vm.debug) {
-          console.log('Response ' + index, question.response);
-        }
         promises.push(processSaveResponse(question.response));
       });
 
@@ -2036,7 +2033,7 @@
           }
           vm.processExperienceProcessing.processing++;
           resolve(response);
-        } else {
+        } else if (response.Id === undefined) {
           response.$save(
             function(record) {
               if (record.success) {
@@ -2052,6 +2049,29 @@
             function(err) {
               if (vm.debug) {
                 console.log('There was an error creating the response', err);
+              }
+              reject(err);
+            }
+          );
+        } else {
+          response.$update(
+            {
+              responseid: response.Id
+            },
+            function(record) {
+              if (record.success) {
+                vm.processExperienceProcessing.processing++;
+                resolve(response);
+              } else {
+                if (vm.debug) {
+                  console.log('There was an error updating the response');
+                }
+                reject('There was an error updating the response');
+              }
+            },
+            function(err) {
+              if (vm.debug) {
+                console.log('There was an error updating the response', err);
               }
               reject(err);
             }
@@ -2073,7 +2093,7 @@
           // don't save it, just send it back
           vm.processSessionsProcessing.processing++;
           resolve(sessionParticipation);
-        } else {
+        } else if (sessionParticipation.Id === null) {
           sessionParticipation.$save(
             function(record) {
               if (record.success) {
@@ -2092,6 +2112,34 @@
               if (vm.debug) {
                 console.log(
                   'There was an error creating the sessionParticipation',
+                  err
+                );
+              }
+              reject(err);
+            }
+          );
+        } else {
+          sessionParticipation.$update(
+            {
+              session_participationid: sessionParticipation.Id
+            },
+            function(record) {
+              if (record.success) {
+                vm.processSessionsProcessing.processing++;
+                resolve(sessionParticipation);
+              } else {
+                if (vm.debug) {
+                  console.log(
+                    'There was an error updating the sessionParticipation'
+                  );
+                }
+                reject('There was an error updating the sessionParticipation');
+              }
+            },
+            function(err) {
+              if (vm.debug) {
+                console.log(
+                  'There was an error updating the sessionParticipation',
                   err
                 );
               }
