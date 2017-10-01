@@ -18,6 +18,14 @@
     var Response = $resource(API_URI + '/response',
       {},
       {
+        query: {
+          method: 'GET',
+          url: API_URI + '/response/:participantid',
+          params: {
+            participantid: '@participantid'
+          },
+          isArray: true
+        },
         get: {
           method: 'GET',
           url: API_URI + '/response/:participantid/:questionid',

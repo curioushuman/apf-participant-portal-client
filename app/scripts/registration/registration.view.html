@@ -35,7 +35,7 @@ number of seating available. The APF shall endeavour to
 place you within the first group of your choice, and where 
 this is not possible, you will be provided with your second 
 preference. Preferences will be allocated on a first 
-come, first serve basis.</p><gz-session-participation-form-input ng-repeat="session in vm.sessions" session="session" displayDayHeadings="vm.sessionsDisplayDayHeadings" sessionsDays="vm.sessionsDays"></gz-session-participation-form-input></div><p class="error" layout="column" layout-padding="layout-padding" md-colors="{background: 'default-warn'}" ng-show="vm.sessionsSectionInvalid">Please make sure you have entered a '1' for your first 
+come, first serve basis. {{ vm.sessionsDisplayDayHeadings }}</p><gz-session-participation-form-input ng-repeat="session in vm.sessions" session="session" sessions-days="vm.sessionsDays"></gz-session-participation-form-input></div><p class="error" layout="column" layout-padding="layout-padding" md-colors="{background: 'default-warn'}" ng-show="vm.sessionsSectionInvalid">Please make sure you have entered a '1' for your first 
 preference, and a '2' for your second. You can only include 
 a single '1' and a single '2'.</p><p class="error" layout="column" layout-padding="layout-padding" md-colors="{background: 'default-warn'}" ng-show="vm.sessionsSectionError">There was an error saving your information. Please wait 5 
 seconds and try again.</p></md-card-content><md-card-actions layout="row" layout-align="end center" layout-padding="layout-padding"><span ng-show="vm.working">Please be patient, we are saving 

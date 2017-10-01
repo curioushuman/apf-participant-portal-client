@@ -26,7 +26,6 @@
       bindToController: true,
       scope: {
         session: '=',
-        displayDayHeadings: '=',
         sessionsDays: '='
       }
     };

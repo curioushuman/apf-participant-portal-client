@@ -1095,14 +1095,13 @@ section(ng-show='vm.actionLoaded')
                     | place you within the first group of your choice, and where 
                     | this is not possible, you will be provided with your second 
                     | preference. Preferences will be allocated on a first 
-                    | come, first serve basis.
+                    | come, first serve basis. {{ vm.sessionsDisplayDayHeadings }}
 
                   
                   gz-session-participation-form-input(
                     ng-repeat='session in vm.sessions',
                     session='session',
-                    displayDayHeadings='vm.sessionsDisplayDayHeadings',
-                    sessionsDays='vm.sessionsDays',
+                    sessions-days='vm.sessionsDays'
                   )
                 
                 p.error(

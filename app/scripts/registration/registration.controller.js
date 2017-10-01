@@ -139,37 +139,6 @@
           vm.actionIsTraining = true;
         }
 
-        // start obtaining the questions
-        if (vm.actionIsTraining) {
-          preQueryQuestions()
-          .then(
-            function() {
-              if (vm.debug) {
-                console.log('Hooray we already have questions');
-              }
-            },
-            function(err) {
-              if (vm.debug) {
-                console.log('Error preExperience', err);
-              }
-              vm.experienceSectionErrorTop = true;
-            }
-          );
-        } else {
-          preQuerySessions()
-          .then(
-            function() {
-              console.log('Hooray we already have sessions');
-            },
-            function(err) {
-              if (vm.debug) {
-                console.log('Error preSessions', err);
-              }
-              vm.sessionsSectionErrorTop = true;
-            }
-          );
-        }
-
         // grab the training partner of the action
         // Needs review aftre we've changed how training partners work in SF
         // console.log('Obtain training partner');
@@ -206,6 +175,8 @@
 
     // initiate participant to grab the tech stuff
     vm.participant = new participantService.Participant();
+    var participantResponses = null;
+    var participantSessionsParticipations = null;
 
     // Tech and connection detection
     // the connection results will be known when the file downloads
@@ -347,11 +318,73 @@
               // save detection results
               // this will update the participant we found
               saveDetectionResults();
+
+              // also grab the responses for the participant
+              if (vm.debug) {
+                console.log('Looking for responses / session participations');
+              }
+              if (vm.actionIsTraining) {
+                vm.participant.responses = responseService.list(
+                  {
+                    participantid: vm.participant.Id
+                  },
+                  function(responses) {
+                    if (vm.debug) {
+                      console.log('Found responses', responses);
+                    }
+                    participantResponses = responses;
+                    preQueryPostResponses();
+                    return responses;
+                  },
+                  function(err) {
+                    if (vm.debug) {
+                      console.log('Error looking for responses', err);
+                    }
+                    return err;
+                  }
+                );
+              } else {
+                vm.participant.sessionParticipations =
+                  sessionParticipationService.list(
+                    {
+                      participantid: vm.participant.Id
+                    },
+                    function(sessionParticipations) {
+                      if (vm.debug) {
+                        console.log(
+                          'Found sessionParticipations',
+                          sessionParticipations
+                        );
+                      }
+                      // FIX THE participantSessionsParticipations
+                      participantSessionsParticipations = sessionParticipations;
+                      preQueryPostResponses();
+                      return sessionParticipations;
+                    },
+                    function(err) {
+                      if (vm.debug) {
+                        console.log(
+                          'Error looking for sessionParticipations',
+                          err
+                        );
+                      }
+                      return err;
+                    }
+                  );
+              }
             },
             function(err) {
               if (err.status === 404) {
                 // we don't care if it is a 404
                 // it means this person has not registered for this action
+
+                // setup empty responses and sessionParticipations
+                if (vm.actionIsTraining) {
+                  vm.participant.responses = [];
+                } else {
+                  vm.participant.sessionParticipations = [];
+                }
+                preQueryPostResponses();
 
                 // save detection results
                 // this will create a new participant
@@ -412,6 +445,40 @@
           }
         }
       );
+    }
+
+    function preQueryPostResponses() {
+      // start obtaining the questions / sessions
+      // THIS NEEDS TO MOVE DOWN BELOW TO AFTER OBTAIN RESPONSES
+      if (vm.actionIsTraining) {
+        preQueryQuestions()
+        .then(
+          function() {
+            if (vm.debug) {
+              console.log('Hooray we already have questions');
+            }
+          },
+          function(err) {
+            if (vm.debug) {
+              console.log('Error preExperience', err);
+            }
+            vm.experienceSectionErrorTop = true;
+          }
+        );
+      } else {
+        preQuerySessions()
+        .then(
+          function() {
+            console.log('Hooray we already have sessions');
+          },
+          function(err) {
+            if (vm.debug) {
+              console.log('Error preSessions', err);
+            }
+            vm.sessionsSectionErrorTop = true;
+          }
+        );
+      }
     }
 
     // Personal section
@@ -1205,7 +1272,29 @@
             console.log('Questions', vm.questions);
           }
           angular.forEach(vm.questions, function(question, index) {
-            question.response = new responseService.Response();
+            // do we have a response
+            // need to FIX this
+            // vm.participant.responses
+            // instead of
+            // participantResponses
+            // for some reason it is being overriden
+            var participant_responses = $filter('filter')(
+              participantResponses,
+              {
+                Self_assessment_question__c: question.Id
+              }
+            );
+            if (vm.debug) {
+              console.log('found responses', participant_responses);
+            }
+            if (
+              participant_responses !== undefined &&
+              participant_responses.length > 0
+            ) {
+              question.response = participant_responses[0];
+            } else {
+              question.response = new responseService.Response();
+            }
             vm.processExperienceProcessing.processes++;
           });
           return vm.questions;
@@ -1512,26 +1601,21 @@
 
     // Sessions section
     vm.sessions = [];
-    vm.sessionsDays = {};
-    vm.sessionsDaysCount = 0;
-    vm.sessionsPeriodsCount = 0;
+    vm.sessionsDays = {
+      sessionsDaysCount: 0,
+      sessionsPeriodsCount: 0
+    };
     vm.sessionsPeriodOptions = [
       '1',
       '2'
     ];
-    vm.sessionsDisplayDayHeadings = false;
     function SessionsDay(day) {
-      this.id = day.replace(' ', '');
-      this.heading = day;
+      this.id = day;
       this.periods = {};
       this.periodsCount = 0;
-      this.displayHeading = false;
-      this.displayPeriodHeadings = false;
     }
     function SessionsDayPeriod(period) {
-      this.id = period.replace(' ', '');
-      this.heading = period;
-      this.displayHeading = false;
+      this.id = period;
       this.options = vm.sessionsPeriodOptions;
       this.selectedPreferences = [];
       this.valid = true;
@@ -1577,56 +1661,75 @@
           if (vm.debug) {
             console.log('sessions', vm.sessions);
           }
+
           var sessionsDay = null;
           var sessionsDayPeriod = null;
-          vm.sessionsDaysCount = 0;
-          vm.sessionsPeriodsCount = 0;
+          vm.sessionsDays.sessionsDaysCount = 0;
+          vm.sessionsDays.sessionsPeriodsCount = 0;
           angular.forEach(vm.sessions, function(session, index) {
             vm.processSessionsProcessing.processes++;
             if (
               sessionsDay === null ||
-              sessionsDay.heading !== session.Day__c
+              sessionsDay.id !== session.Day__c
             ) {
               // it's a new day
-              vm.sessionsDaysCount++;
+              vm.sessionsDays.sessionsDaysCount++;
               sessionsDay = new SessionsDay(session.Day__c);
-              sessionsDay.displayHeading = true;
               vm.sessionsDays[sessionsDay.id] = sessionsDay;
-            } else {
-              sessionsDay.displayHeading = false;
+              session.headingDay = session.Day__c;
             }
             session.day = sessionsDay;
+
             if (
               sessionsDayPeriod === null ||
-              sessionsDayPeriod.heading !== session.Period__c
+              sessionsDay.periodsCount === 0 ||
+              sessionsDayPeriod.id !== session.Period__c
             ) {
               // it's a new period
-              sessionsDay.periodsCount++;
-              vm.sessionsPeriodsCount++;
               if (vm.debug) {
-                console.log('session.Period__c', session.Period__c);
+                console.log('New period');
               }
+              sessionsDay.periodsCount++;
+              vm.sessionsDays.sessionsPeriodsCount++;
               sessionsDayPeriod = new SessionsDayPeriod(session.Period__c);
-              sessionsDayPeriod.displayHeading = true;
               vm.sessionsDays[sessionsDay.id]
                 .periods[sessionsDayPeriod.id] = sessionsDayPeriod;
-            } else {
-              sessionsDayPeriod.displayHeading = false;
+              session.headingPeriod = session.Period__c;
             }
             session.period = sessionsDayPeriod;
-            if (sessionsDay.periodsCount > 1) {
-              vm.sessionsDays[sessionsDay.id].displayPeriodHeadings = true;
+
+            // do we have a sessionParticipation response
+            // for some reason vm.participant.sessionParticipations
+            // is being overriden somewhere. The below is a temporary fix
+            // FIX THE participantSessionsParticipations
+            var participant_session_participations = $filter('filter')(
+              participantSessionsParticipations,
+              {
+                Session__c: session.Id
+              }
+            );
+            if (
+              participant_session_participations !== undefined &&
+              participant_session_participations.length > 0
+            ) {
+              session.sessionParticipation =
+                participant_session_participations[0];
+            } else {
+              session.sessionParticipation =
+                new sessionParticipationService.SessionParticipation();
             }
-            session.sessionParticipation =
-              new sessionParticipationService.SessionParticipation();
           });
-          if (vm.sessionsDaysCount > 1) {
-            vm.sessionsDisplayDayHeadings = true;
-          }
           if (vm.debug) {
+            console.log('vm.sessions', vm.sessions);
             console.log('vm.sessionsDays', vm.sessionsDays);
-            console.log('vm.sessionsPeriodsCount', vm.sessionsPeriodsCount);
-            console.log('vm.sessionsDaysCount', vm.sessionsDaysCount);
+            console.log(
+              'vm.sessionsPeriodsCount',
+              vm.sessionsDays.sessionsPeriodsCount
+            );
+            console.log(
+              'vm.sessionsDaysCount',
+              vm.sessionsDays.sessionsDaysCount
+            );
           }
           return vm.sessions;
         },
@@ -1653,9 +1756,14 @@
           }
         );
       });
+      if (vm.debug === true) {
+        console.log('vm.sessionsDays', vm.sessionsDays);
+      }
       angular.forEach(vm.sessions, function(session, index) {
         if (vm.debug === true) {
           console.log('session', session);
+          console.log('session.day.id', session.day.id);
+          console.log('session.period.id', session.period.id);
         }
         vm.sessionsDays[session.day.id]
           .periods[session.period.id]
@@ -1694,10 +1802,13 @@
       });
       if (vm.debug === true) {
         console.log('periodsValid', periodsValid);
-        console.log('sessionsPeriodsCount', vm.sessionsPeriodsCount);
+        console.log(
+          'sessionsPeriodsCount',
+          vm.sessionsDays.sessionsPeriodsCount
+        );
       }
       vm.sessionsSectionInvalid = false;
-      if (periodsValid < vm.sessionsPeriodsCount) {
+      if (periodsValid < vm.sessionsDays.sessionsPeriodsCount) {
         vm.sessionsSectionInvalid = true;
       }
 

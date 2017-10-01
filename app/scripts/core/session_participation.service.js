@@ -19,6 +19,14 @@
     var SessionParticipation = $resource(API_URI + '/session_participation',
       {},
       {
+        query: {
+          method: 'GET',
+          url: API_URI + '/session_participation/:participantid',
+          params: {
+            participantid: '@participantid'
+          },
+          isArray: true
+        },
         get: {
           method: 'GET',
           url: API_URI + '/session_participation/:participantid/:sessionid',
