@@ -1176,7 +1176,7 @@
 
       if (vm.contact.HasOptedOutOfEmail === '1') {
         vm.contact.HasOptedOutOfEmail = true;
-      } else if (vm.contact.HasOptedOutOfEmail === '2') {
+      } else {
         vm.contact.HasOptedOutOfEmail = false;
       }
 
