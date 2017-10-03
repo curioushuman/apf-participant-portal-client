@@ -435,6 +435,8 @@
               }
             );
 
+            preQueryPostResponses();
+
             // also set up an empty affiliation
             vm.affiliation = new affiliationService.Affiliation();
 
@@ -1288,7 +1290,7 @@
               console.log('found responses', participant_responses);
             }
             if (
-              participant_responses !== undefined &&
+              participant_responses !== null &&
               participant_responses.length > 0
             ) {
               question.response = participant_responses[0];
@@ -1706,7 +1708,7 @@
               }
             );
             if (
-              participant_session_participations !== undefined &&
+              participant_session_participations !== null &&
               participant_session_participations.length > 0
             ) {
               session.sessionParticipation =
@@ -2093,7 +2095,7 @@
           // don't save it, just send it back
           vm.processSessionsProcessing.processing++;
           resolve(sessionParticipation);
-        } else if (sessionParticipation.Id === null) {
+        } else if (sessionParticipation.Id === undefined) {
           sessionParticipation.$save(
             function(record) {
               if (record.success) {
