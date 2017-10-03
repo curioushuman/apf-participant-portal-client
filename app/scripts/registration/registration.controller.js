@@ -191,7 +191,9 @@
       vm.participant.Connection_speed_Mbps__c =
         detectionService.connectionResults.speedMbps;
     };
-    $timeout(detectionService.detectConnection(processConnectionResults), 3000);
+    $timeout(function() {
+      detectionService.detectConnection(processConnectionResults);
+    }, 3000);
 
     // platform results
     var processPlatformResults = function() {
@@ -205,7 +207,9 @@
       vm.participant.Technology_screen_resolution__c =
         detectionService.platformResults.resolution;
     };
-    $timeout(detectionService.detectPlatform(processPlatformResults), 1000);
+    $timeout(function() {
+      detectionService.detectPlatform(processPlatformResults);
+    }, 1000);
 
     // country
     // Note: this doesn't work yet
@@ -612,7 +616,7 @@
         vm.working = false;
         vm.editSection('organisation');
       } else {
-        $timeout(preOrganisation(), 800);
+        $timeout(preOrganisation, 1000);
       }
     }
 
