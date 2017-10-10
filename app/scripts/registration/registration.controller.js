@@ -675,7 +675,7 @@
     vm.processOrganisation = processOrganisation;
     vm.organisationRequired = [];
     vm.organisationSectionNextDisabled = function() {
-      if (vm.working) {
+      if (vm.working || vm.organisationSectionErrorTop) {
         return true;
       }
       return false;
@@ -683,13 +683,16 @@
 
     // pre organisation
     var preOrgCount = 0;
-    function preOrganisation() {
+    function preOrganisation(source) {
       vm.working = true;
       if (vm.debug) {
         console.log('preOrganisation');
         console.log(vm.nhris.length);
         console.log(vm.organisations.length);
         console.log('preOrgCount', preOrgCount);
+      }
+      if (typeof source === 'string') {
+        gaService.addEvent('Navigation', 'Section, ' + source, 'organisation');
       }
       if (
         vm.nhris.length > 0 &&
@@ -1106,8 +1109,25 @@
             }
           }
 
-          // add this to the participant for saving later
+          // add this to the participant
           vm.participant.Organisation__c = vm.affiliation.npe5__Organization__c;
+          // save in it's own time
+          processSaveParticipant()
+          .then(
+            function(participant) {
+              if (vm.debug) {
+                console.log('Added organisation to participant');
+              }
+            },
+            function(err) {
+              if (vm.debug) {
+                console.log(
+                  'There was an error adding org to participant',
+                  err
+                );
+              }
+            }
+          );
 
           vm.organisationSectionStatus = 'complete';
           vm.preContact();

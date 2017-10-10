@@ -355,8 +355,8 @@ section(ng-show='vm.actionLoaded')
                   | seconds and then try again.
                 div(flex='30', layout='row', layout-align='end center')
                   md-progress-circular.md-background(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
-                  md-button.md-background(
-                    ng-click='vm.preOrganisation()',
+                  md-button.md-background.md-raised(
+                    ng-click="vm.preOrganisation('try again')",
                     ng-disabled='vm.working'
                   ) Try again
               p.question For this event which organisation do you represent?
@@ -365,7 +365,8 @@ section(ng-show='vm.actionLoaded')
                   ng-model='vm.organisationType',
                   name='organisationType',
                   required,
-                  ng-change='vm.changeOrganisationType()'
+                  ng-change='vm.changeOrganisationType()',
+                  ng-disabled='vm.organisationSectionErrorTop'
                 )
                   md-radio-button(
                     value='nhri'
@@ -385,7 +386,12 @@ section(ng-show='vm.actionLoaded')
                     | This field is required
               md-input-container.md-block(flex, ng-show="vm.organisationType === 'nhri'")
                 label Your National Human Rights Institution
-                md-select(ng-model='vm.affiliation.npe5__Organization__c', name='affiliationOrganisation', required)
+                md-select(
+                  ng-model='vm.affiliation.npe5__Organization__c',
+                  name='affiliationOrganisation',
+                  required,
+                  ng-disabled='vm.organisationSectionErrorTop'
+                )
                   md-option(ng-repeat='nhri in vm.nhris', value='{{ nhri.Id }}')
                     | {{ nhri.Name }}
                   md-option(value='0', ng-hide="vm.organisationType === 'no'")
@@ -405,7 +411,8 @@ section(ng-show='vm.actionLoaded')
                 md-min-length='0',
                 md-floating-label='Your organisation',
                 ng-show="vm.organisationType === 'organisation'",
-                md-select-on-match='true'
+                md-select-on-match='true',
+                ng-disabled='vm.organisationSectionErrorTop'
               )
                 md-item-template
                     span(md-highlight-text='vm.organisationName') {{organisation.Name}}
@@ -422,7 +429,8 @@ section(ng-show='vm.actionLoaded')
                     name='affiliationStartDate',
                     required,
                     md-open-on-focus,
-                    md-placeholder='Enter date'
+                    md-placeholder='Enter date',
+                    ng-disabled='vm.organisationSectionErrorTop'
                   )
                   div(ng-messages='pageForm.affiliationStartDate.$error')
                     div(ng-message='required')
@@ -433,7 +441,8 @@ section(ng-show='vm.actionLoaded')
                   ng-model='vm.affiliation.npe5__Role__c',
                   name='affiliationRole',
                   required,
-                  md-maxlength='80'
+                  md-maxlength='80',
+                  ng-disabled='vm.organisationSectionErrorTop'
                 )
                 //- div.hint
                 //-   | What is your official job title?
@@ -447,11 +456,16 @@ section(ng-show='vm.actionLoaded')
                   name='affiliationDescription',
                   md-maxlength='500',
                   rows='5',
-                  md-select-on-focus
+                  md-select-on-focus,
+                  ng-disabled='vm.organisationSectionErrorTop'
                 )
               md-input-container.md-block(flex, ng-hide="vm.organisationType === 'individual'")
                 label Department
-                input(ng-model='vm.affiliation.Department__c', name='affiliationDepartment')
+                input(
+                  ng-model='vm.affiliation.Department__c',
+                  name='affiliationDepartment',
+                  ng-disabled='vm.organisationSectionErrorTop'
+                )
               p.error(
                 layout='column'
                 layout-padding,
@@ -643,7 +657,7 @@ section(ng-show='vm.actionLoaded')
                     | There was an error reaching the database. Please wait 5 
                     | seconds and then try again.
                   div(flex='25', layout='row', layout-align='end center')
-                    md-button.md-background(
+                    md-button.md-background.md-raised(
                       ng-click='vm.preExperience()'
                     ) Try again
                 
@@ -756,7 +770,7 @@ section(ng-show='vm.actionLoaded')
                     | There was an error reaching the database. Please wait 5 
                     | seconds and then try again.
                   div(flex='25', layout='row', layout-align='end center')
-                    md-button.md-background(
+                    md-button.md-background.md-raised(
                       ng-click='vm.preItSkills()'
                     ) Try again
                 
@@ -864,7 +878,7 @@ section(ng-show='vm.actionLoaded')
                     | There was an error reaching the database. Please wait 5 
                     | seconds and then try again.
                   div(flex='25', layout='row', layout-align='end center')
-                    md-button.md-background(
+                    md-button.md-background.md-raised(
                       ng-click='vm.preEnglishSkills()'
                     ) Try again
 
@@ -1076,7 +1090,7 @@ section(ng-show='vm.actionLoaded')
                     | There was an error reaching the database. Please wait 5 
                     | seconds and then try again.
                   div(flex='25', layout='row', layout-align='end center')
-                    md-button.md-background(
+                    md-button.md-background.md-raised(
                       ng-click='vm.preSessions()'
                     ) Try again
                 
