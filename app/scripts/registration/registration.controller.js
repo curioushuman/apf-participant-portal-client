@@ -23,6 +23,7 @@
     'contactService',
     'accountService',
     'affiliationService',
+    'gaService',
     'participantService',
     'questionService',
     'responseService',
@@ -46,6 +47,7 @@
     contactService,
     accountService,
     affiliationService,
+    gaService,
     participantService,
     questionService,
     responseService,
@@ -271,6 +273,9 @@
       vm.sectionActive = section;
       // layoutService.navigate(null, section);
       layoutService.navigate(null, 'top');
+
+      // adding event
+      gaService.addEvent('Navigation', 'Section', section);
     };
 
     // Email section
@@ -299,11 +304,18 @@
     function processEmail() {
       vm.working = true;
 
+      gaService.setUserId(vm.email);
+
+      gaService.addSalesforceRequest('Retrieve', 'Contact');
       vm.contact = contactService.retrieve(
         {
           email: vm.email
         },
         function(contact) {
+          gaService.addSalesforceResponse(
+            'Retrieve',
+            'Contact'
+          );
           vm.contactExists = true;
           if (vm.debug) {
             console.log('Contact found');
@@ -311,12 +323,17 @@
           }
 
           // See if there is a participant record for this contact
+          gaService.addSalesforceRequest('Retrieve', 'Participant');
           vm.participant = participantService.retrieve(
             {
               contactid: vm.contact.Id,
               actionid: vm.action.Id
             },
             function(participant) {
+              gaService.addSalesforceResponse(
+                'Retrieve',
+                'Participant'
+              );
               if (vm.debug) {
                 console.log('Participant found', participant);
               }
@@ -330,11 +347,16 @@
                 console.log('Looking for responses / session participations');
               }
               if (vm.actionIsTraining) {
+                gaService.addSalesforceRequest('List', 'Response');
                 vm.participant.responses = responseService.list(
                   {
                     participantid: vm.participant.Id
                   },
                   function(responses) {
+                    gaService.addSalesforceResponse(
+                      'List',
+                      'Response'
+                    );
                     if (vm.debug) {
                       console.log('Found responses', responses);
                     }
@@ -343,6 +365,11 @@
                     return responses;
                   },
                   function(err) {
+                    gaService.addSalesforceError(
+                      'List',
+                      'Response',
+                      err.status
+                    );
                     if (vm.debug) {
                       console.log('Error looking for responses', err);
                     }
@@ -350,12 +377,20 @@
                   }
                 );
               } else {
+                gaService.addSalesforceRequest(
+                  'List',
+                  'SessionParticipation'
+                );
                 vm.participant.sessionParticipations =
                   sessionParticipationService.list(
                     {
                       participantid: vm.participant.Id
                     },
                     function(sessionParticipations) {
+                      gaService.addSalesforceResponse(
+                        'List',
+                        'SessionParticipation'
+                      );
                       if (vm.debug) {
                         console.log(
                           'Found sessionParticipations',
@@ -368,6 +403,11 @@
                       return sessionParticipations;
                     },
                     function(err) {
+                      gaService.addSalesforceError(
+                        'List',
+                        'Response',
+                        err.status
+                      );
                       if (vm.debug) {
                         console.log(
                           'Error looking for sessionParticipations',
@@ -395,11 +435,18 @@
                 // save detection results
                 // this will create a new participant
                 saveDetectionResults();
-              } else if (vm.debug) {
-                console.log(
-                  'There was a non-404 error retrieving the participant'
+              } else {
+                gaService.addSalesforceError(
+                  'Retrieve',
+                  'Participant',
+                  err.status
                 );
-                console.log(err);
+                if (vm.debug) {
+                  console.log(
+                    'There was a non-404 error retrieving the participant'
+                  );
+                  console.log(err);
+                }
               }
             }
           );
@@ -428,6 +475,11 @@
             vm.prePersonal();
           } else {
             vm.emailSectionError = true;
+            gaService.addSalesforceError(
+              'Retrieve',
+              'Contact',
+              err.status
+            );
           }
         }
       );
@@ -437,14 +489,24 @@
       // start obtaining the questions / sessions
       // THIS NEEDS TO MOVE DOWN BELOW TO AFTER OBTAIN RESPONSES
       if (vm.actionIsTraining) {
+        gaService.addSalesforceRequest('List', 'Question');
         preQueryQuestions()
         .then(
           function() {
+            gaService.addSalesforceResponse(
+              'List',
+              'Question'
+            );
             if (vm.debug) {
               console.log('Hooray we already have questions');
             }
           },
           function(err) {
+            gaService.addSalesforceError(
+              'List',
+              'Question',
+              err.status
+            );
             if (vm.debug) {
               console.log('Error preExperience', err);
             }
@@ -452,12 +514,22 @@
           }
         );
       } else {
+        gaService.addSalesforceRequest('List', 'Session');
         preQuerySessions()
         .then(
           function() {
+            gaService.addSalesforceResponse(
+              'List',
+              'Session'
+            );
             console.log('Hooray we already have sessions');
           },
           function(err) {
+            gaService.addSalesforceError(
+              'List',
+              'Session',
+              err.status
+            );
             if (vm.debug) {
               console.log('Error preSessions', err);
             }
@@ -505,8 +577,13 @@
 
       // save the contact in here
       if (vm.contact.Id === undefined) {
+        gaService.addSalesforceRequest('Create', 'Contact');
         vm.contact.$save(
           function(record) {
+            gaService.addSalesforceResponse(
+              'Create',
+              'Contact'
+            );
             if (record.success) {
               vm.personalSectionStatus = 'complete';
 
@@ -523,17 +600,27 @@
             }
           },
           function(err) {
+            gaService.addSalesforceError(
+              'Create',
+              'Contact',
+              err.status
+            );
             if (vm.debug) {
               console.log('There was an error creating the contact', err);
             }
           }
         );
       } else {
+        gaService.addSalesforceRequest('Update', 'Contact');
         vm.contact.$update(
           {
             contactid: vm.contact.Id
           },
           function(record) {
+            gaService.addSalesforceResponse(
+              'Update',
+              'Contact'
+            );
             if (record.success) {
               vm.personalSectionStatus = 'complete';
             } else {
@@ -542,6 +629,13 @@
                 console.log('There was an error updating the contact');
               }
             }
+          },
+          function(err) {
+            gaService.addSalesforceError(
+              'Update',
+              'Contact',
+              err.status
+            );
           }
         );
 
@@ -598,9 +692,14 @@
         vm.organisations.length > 0
       ) {
         if (vm.contactExists) {
+          gaService.addSalesforceRequest('List', 'Affiliation');
           preRetrieveAffiliations()
           .then(
             function(affiliations) {
+              gaService.addSalesforceResponse(
+                'List',
+                'Affiliation'
+              );
               if (vm.debug) {
                 console.log('found affiliations', affiliations.length);
               }
@@ -611,6 +710,11 @@
               if (err.status === 404) {
                 vm.affiliation = new affiliationService.Affiliation();
               } else {
+                gaService.addSalesforceError(
+                  'List',
+                  'Affiliation',
+                  err.status
+                );
                 vm.organisationSectionErrorTop = true;
               }
               vm.working = false;
@@ -626,6 +730,7 @@
         preOrgCount++;
         $timeout(preOrganisation, 1000);
       } else {
+        gaService.addEvent('Issue', 'Delay', 'Organisation');
         preOrgCount = 0;
         vm.organisationSectionErrorTop = true;
         vm.working = false;
@@ -634,15 +739,31 @@
     }
 
     // start grabbing the organisations while they're filling out the form
+    var rootRequestTimes = {};
+    rootRequestTimes.ListNhris =
+      gaService.addSalesforceRequest('List', 'NHRI');
     preQueryNhris()
     .then(
       function(nhris) {
+        gaService.addSalesforceResponse(
+          'List',
+          'NHRI',
+          rootRequestTimes.ListNhris
+        );
         if (vm.debug) {
           console.log('found nhris', nhris.length);
         }
+        rootRequestTimes.ListNonNhris =
+          gaService.addSalesforceRequest('List', 'Non NHRI');
         return preQueryNonNhris();
       },
       function(err) {
+        gaService.addSalesforceError(
+          'List',
+          'NHRI',
+          rootRequestTimes.ListNhris,
+          err.status
+        );
         vm.organisationSectionErrorTop = true;
         if (vm.debug) {
           console.log('There was an error retrieving the NHRIs', err);
@@ -651,11 +772,22 @@
     )
     .then(
       function(organisations) {
+        gaService.addSalesforceResponse(
+          'List',
+          'Non NHRI',
+          rootRequestTimes.ListNonNhris
+        );
         if (vm.debug) {
           console.log('found non-nhris', organisations.length);
         }
       },
       function(err) {
+        gaService.addSalesforceError(
+          'List',
+          'Non NHRI',
+          rootRequestTimes.ListNonNhris,
+          err.status
+        );
         vm.organisationSectionErrorTop = true;
         if (vm.debug) {
           console.log(
@@ -1004,8 +1136,13 @@
           }
           resolve(null);
         } else {
+          gaService.addSalesforceRequest('Create', 'Organisation');
           organisation.$save(
             function(record) {
+              gaService.addSalesforceResponse(
+                'Create',
+                'Organisation'
+              );
               if (record.success) {
                 resolve(organisation);
               } else {
@@ -1016,6 +1153,11 @@
               }
             },
             function(err) {
+              gaService.addSalesforceError(
+                'Create',
+                'Organisation',
+                err.status
+              );
               if (vm.debug) {
                 console.log(
                   'There was an error creating the organisation',
@@ -1041,8 +1183,13 @@
           }
           vm.affiliation.npe5__Primary__c = true;
           vm.affiliation.npe5__Status__c = 'Current';
+          gaService.addSalesforceRequest('Create', 'Affiliation');
           vm.affiliation.$save(
             function(record) {
+              gaService.addSalesforceResponse(
+                'Create',
+                'Affiliation'
+              );
               if (record.success) {
                 resolve(vm.affiliation);
               } else {
@@ -1053,6 +1200,11 @@
               }
             },
             function(err) {
+              gaService.addSalesforceError(
+                'Create',
+                'Affiliation',
+                err.status
+              );
               if (vm.debug) {
                 console.log('There was an error creating the affiliation', err);
               }
@@ -1071,8 +1223,13 @@
           vm.affiliation.Id = null;
           vm.affiliation.npe5__Primary__c = true;
           vm.affiliation.npe5__Status__c = 'Current';
+          gaService.addSalesforceRequest('Create', 'Affiliation');
           vm.affiliation.$save(
             function(record) {
+              gaService.addSalesforceResponse(
+                'Create',
+                'Affiliation'
+              );
               if (record.success) {
                 resolve(vm.affiliation);
               } else {
@@ -1085,6 +1242,11 @@
               }
             },
             function(err) {
+              gaService.addSalesforceError(
+                'Create',
+                'Affiliation',
+                err.status
+              );
               if (vm.debug) {
                 console.log(
                   'There was an error creating the NEW affiliation',
@@ -1103,11 +1265,16 @@
           }
           // other info has changed
           // update the current affiliation
+          gaService.addSalesforceRequest('Update', 'Affiliation');
           vm.affiliation.$update(
             {
               affiliationid: vm.affiliation.Id
             },
             function(record) {
+              gaService.addSalesforceResponse(
+                'Update',
+                'Affiliation'
+              );
               if (record.success) {
                 resolve(record);
               } else {
@@ -1120,6 +1287,11 @@
               }
             },
             function(err) {
+              gaService.addSalesforceError(
+                'Update',
+                'Affiliation',
+                err.status
+              );
               if (vm.debug) {
                 console.log(
                   'There was an error updating the affiliation',
@@ -1916,11 +2088,16 @@
         console.log('Saving contact', vm.contact);
       }
       return $q(function(resolve, reject) {
+        gaService.addSalesforceRequest('Update', 'Contact');
         vm.contact.$update(
           {
             contactid: vm.contact.Id
           },
           function(record) {
+            gaService.addSalesforceResponse(
+              'Update',
+              'Contact'
+            );
             if (record.success) {
               resolve(vm.contact);
             } else {
@@ -1929,6 +2106,13 @@
               }
               reject('There was an error updating the contact');
             }
+          },
+          function(err) {
+            gaService.addSalesforceError(
+              'Update',
+              'Contact',
+              err.status
+            );
           }
         );
       });
@@ -1947,8 +2131,13 @@
           vm.participant.Registration_complete__c = false;
           vm.participant.Action__c = vm.action.Id;
           vm.participant.Contact__c = vm.contact.Id;
+          gaService.addSalesforceRequest('Create', 'Participant');
           vm.participant.$save(
             function(record) {
+              gaService.addSalesforceResponse(
+                'Create',
+                'Participant'
+              );
               if (record.success) {
                 if (vm.debug) {
                   console.log('participant Created');
@@ -1962,6 +2151,11 @@
               }
             },
             function(err) {
+              gaService.addSalesforceError(
+                'Create',
+                'Participant',
+                err.status
+              );
               if (vm.debug) {
                 console.log('There was an error creating the participant', err);
               }
@@ -1972,11 +2166,16 @@
           if (vm.debug) {
             console.log('processSaveParticipant: Update');
           }
+          gaService.addSalesforceRequest('Update', 'Participant');
           vm.participant.$update(
             {
               participantid: vm.participant.Id
             },
             function(record) {
+              gaService.addSalesforceResponse(
+                'Update',
+                'Participant'
+              );
               if (record.success) {
                 if (vm.debug) {
                   console.log('participant Updated');
@@ -1990,6 +2189,11 @@
               }
             },
             function(err) {
+              gaService.addSalesforceError(
+                'Update',
+                'Participant',
+                err.status
+              );
               if (vm.debug) {
                 console.log('There was an error updating the participant', err);
               }
@@ -2005,11 +2209,16 @@
         console.log('Updating participant', vm.participant);
       }
       return $q(function(resolve, reject) {
+        gaService.addSalesforceRequest('Update', 'Participant');
         vm.participant.$update(
           {
             participantid: vm.participant.Id
           },
           function(record) {
+            gaService.addSalesforceResponse(
+              'Update',
+              'Participant'
+            );
             if (record.success) {
               resolve(vm.participant);
             } else {
@@ -2020,6 +2229,11 @@
             }
           },
           function(err) {
+            gaService.addSalesforceError(
+              'Update',
+              'Participant',
+              err.status
+            );
             if (vm.debug) {
               console.log('There was an error updating the participant', err);
             }
@@ -2053,8 +2267,13 @@
           vm.processExperienceProcessing.processing++;
           resolve(response);
         } else if (response.Id === undefined) {
+          gaService.addSalesforceRequest('Create', 'Response');
           response.$save(
             function(record) {
+              gaService.addSalesforceResponse(
+                'Create',
+                'Response'
+              );
               if (record.success) {
                 vm.processExperienceProcessing.processing++;
                 resolve(response);
@@ -2066,6 +2285,11 @@
               }
             },
             function(err) {
+              gaService.addSalesforceError(
+                'Create',
+                'Response',
+                err.status
+              );
               if (vm.debug) {
                 console.log('There was an error creating the response', err);
               }
@@ -2073,11 +2297,16 @@
             }
           );
         } else {
+          gaService.addSalesforceRequest('Update', 'Response');
           response.$update(
             {
               responseid: response.Id
             },
             function(record) {
+              gaService.addSalesforceResponse(
+                'Update',
+                'Response'
+              );
               if (record.success) {
                 vm.processExperienceProcessing.processing++;
                 resolve(response);
@@ -2089,6 +2318,11 @@
               }
             },
             function(err) {
+              gaService.addSalesforceError(
+                'Update',
+                'Response',
+                err.status
+              );
               if (vm.debug) {
                 console.log('There was an error updating the response', err);
               }
@@ -2113,9 +2347,14 @@
           vm.processSessionsProcessing.processing++;
           resolve(sessionParticipation);
         } else if (sessionParticipation.Id === undefined) {
+          gaService.addSalesforceRequest('Create', 'SessionParticipation');
           sessionParticipation.$save(
             function(record) {
               if (record.success) {
+                gaService.addSalesforceResponse(
+                  'Create',
+                  'SessionParticipation'
+                );
                 vm.processSessionsProcessing.processing++;
                 resolve(sessionParticipation);
               } else {
@@ -2128,6 +2367,11 @@
               }
             },
             function(err) {
+              gaService.addSalesforceError(
+                'Create',
+                'SessionParticipation',
+                err.status
+              );
               if (vm.debug) {
                 console.log(
                   'There was an error creating the sessionParticipation',
@@ -2138,12 +2382,17 @@
             }
           );
         } else {
+          gaService.addSalesforceRequest('Update', 'SessionParticipation');
           sessionParticipation.$update(
             {
               session_participationid: sessionParticipation.Id
             },
             function(record) {
               if (record.success) {
+                gaService.addSalesforceResponse(
+                  'Update',
+                  'SessionParticipation'
+                );
                 vm.processSessionsProcessing.processing++;
                 resolve(sessionParticipation);
               } else {
@@ -2156,6 +2405,11 @@
               }
             },
             function(err) {
+              gaService.addSalesforceError(
+                'Update',
+                'SessionParticipation',
+                err.status
+              );
               if (vm.debug) {
                 console.log(
                   'There was an error updating the sessionParticipation',
