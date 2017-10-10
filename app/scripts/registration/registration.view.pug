@@ -350,12 +350,14 @@ section(ng-show='vm.actionLoaded')
                 md-colors="{background: 'default-warn'}",
                 ng-show='vm.organisationSectionErrorTop'
               )
-                div(flex='75', layout='row', layout-align='start center')
+                div(flex='70', layout='row', layout-align='start center')
                   | There was an error reaching the database. Please wait 5 
                   | seconds and then try again.
-                div(flex='25', layout='row', layout-align='end center')
+                div(flex='30', layout='row', layout-align='end center')
+                  md-progress-circular.md-background(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
                   md-button.md-background(
-                    ng-click='vm.preOrganisation()'
+                    ng-click='vm.preOrganisation()',
+                    ng-disabled='vm.working'
                   ) Try again
               p.question For this event which organisation do you represent?
               md-input-container.md-block(flex)

@@ -175,6 +175,8 @@
 
     // initiate participant to grab the tech stuff
     vm.participant = new participantService.Participant();
+
+    // And responses / session participations
     var participantResponses = null;
     var participantSessionsParticipations = null;
 
@@ -402,25 +404,6 @@
             }
           );
 
-          // we've found a contact, pull down their affiliations
-          preRetrieveAffiliations()
-          .then(
-            function(affiliations) {
-              if (vm.debug) {
-                console.log('found affiliations', affiliations.length);
-              }
-            },
-            function(err) {
-              vm.organisationSectionErrorTop = true;
-              if (vm.debug) {
-                console.log(
-                  'There was an error retrieving the affiliations',
-                  err
-                );
-              }
-            }
-          );
-
           vm.emailSectionStatus = 'complete';
           vm.prePersonal();
         },
@@ -440,9 +423,6 @@
             );
 
             preQueryPostResponses();
-
-            // also set up an empty affiliation
-            vm.affiliation = new affiliationService.Affiliation();
 
             vm.emailSectionStatus = 'complete';
             vm.prePersonal();
@@ -533,6 +513,7 @@
               // save detection results
               saveDetectionResults();
 
+              // move on to org ONLY once contact has been saved
               vm.preOrganisation();
             } else {
               vm.personalSectionError = true;
@@ -555,7 +536,6 @@
           function(record) {
             if (record.success) {
               vm.personalSectionStatus = 'complete';
-              vm.preOrganisation();
             } else {
               vm.personalSectionError = true;
               if (vm.debug) {
@@ -564,6 +544,9 @@
             }
           }
         );
+
+        // don't wait for contact to be updated
+        vm.preOrganisation();
       }
     }
 
@@ -600,23 +583,53 @@
       return false;
     };
 
-    // pre
+    // pre organisation
+    var preOrgCount = 0;
     function preOrganisation() {
+      vm.working = true;
       if (vm.debug) {
         console.log('preOrganisation');
         console.log(vm.nhris.length);
         console.log(vm.organisations.length);
-        console.log(vm.affiliation);
+        console.log('preOrgCount', preOrgCount);
       }
       if (
         vm.nhris.length > 0 &&
-        vm.organisations.length > 0 &&
-        vm.affiliation !== undefined
+        vm.organisations.length > 0
       ) {
+        if (vm.contactExists) {
+          preRetrieveAffiliations()
+          .then(
+            function(affiliations) {
+              if (vm.debug) {
+                console.log('found affiliations', affiliations.length);
+              }
+              vm.working = false;
+              vm.editSection('organisation');
+            },
+            function(err) {
+              if (err.status === 404) {
+                vm.affiliation = new affiliationService.Affiliation();
+              } else {
+                vm.organisationSectionErrorTop = true;
+              }
+              vm.working = false;
+              vm.editSection('organisation');
+            }
+          );
+        } else {
+          vm.affiliation = new affiliationService.Affiliation();
+          vm.working = false;
+          vm.editSection('organisation');
+        }
+      } else if (preOrgCount < 5) {
+        preOrgCount++;
+        $timeout(preOrganisation, 1000);
+      } else {
+        preOrgCount = 0;
+        vm.organisationSectionErrorTop = true;
         vm.working = false;
         vm.editSection('organisation');
-      } else {
-        $timeout(preOrganisation, 1000);
       }
     }
 
