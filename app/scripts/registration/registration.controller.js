@@ -269,13 +269,17 @@
 
     vm.sectionActive = 'email';
 
-    vm.editSection = function(section) {
+    vm.editSection = function(section, source) {
       vm.sectionActive = section;
       // layoutService.navigate(null, section);
       layoutService.navigate(null, 'top');
 
       // adding event
-      gaService.addEvent('Navigation', 'Section', section);
+      if (source === undefined) {
+        gaService.addEvent('Navigation', 'Section, next', section);
+      } else {
+        gaService.addEvent('Navigation', 'Section, ' + source, section);
+      }
     };
 
     // Email section

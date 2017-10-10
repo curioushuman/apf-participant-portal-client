@@ -133,7 +133,7 @@ section(ng-show='vm.actionLoaded')
           //- Complete version
           gz-complete-form-section(
             title='vm.emailSectionTitle',
-            ng-click="vm.editSection('email')",
+            ng-click="vm.editSection('email', 'banner')",
             ng-show="vm.emailSectionStatus === 'complete' && vm.sectionActive !== 'email'"
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'email'")
@@ -198,7 +198,7 @@ section(ng-show='vm.actionLoaded')
           //- Complete version
           gz-complete-form-section(
             title='vm.personalSectionTitle',
-            ng-click="vm.editSection('personal')",
+            ng-click="vm.editSection('personal', 'banner')",
             ng-show="vm.personalSectionStatus === 'complete' && vm.sectionActive !== 'personal'"
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'personal'")
@@ -308,7 +308,7 @@ section(ng-show='vm.actionLoaded')
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
               md-button(
-                ng-click="vm.editSection('email')",
+                ng-click="vm.editSection('email', 'previous')",
                 ng-disabled="vm.personalSectionNextDisabled()"
               ) 
                 md-icon.md-material-icons navigate_before
@@ -330,7 +330,7 @@ section(ng-show='vm.actionLoaded')
           //- Complete version
           gz-complete-form-section(
             title='vm.organisationSectionTitle',
-            ng-click="vm.editSection('organisation')",
+            ng-click="vm.editSection('organisation', 'banner')",
             ng-show="vm.organisationSectionStatus === 'complete' && vm.sectionActive !== 'organisation'"
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'organisation'")
@@ -472,7 +472,7 @@ section(ng-show='vm.actionLoaded')
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
               md-button(
-                ng-click="vm.editSection('personal')",
+                ng-click="vm.editSection('personal', 'previous')",
                 ng-disabled="vm.organisationSectionNextDisabled()"
               ) 
                 md-icon.md-material-icons navigate_before
@@ -494,7 +494,7 @@ section(ng-show='vm.actionLoaded')
           //- Complete version
           gz-complete-form-section(
             title='vm.contactSectionTitle',
-            ng-click="vm.editSection('contact')",
+            ng-click="vm.editSection('contact', 'banner')",
             ng-show="vm.contactSectionStatus === 'complete' && vm.sectionActive !== 'contact'"
           )
           md-card(ng-show="vm.openAll || vm.sectionActive === 'contact'")
@@ -596,7 +596,7 @@ section(ng-show='vm.actionLoaded')
             md-card-actions(layout='row', layout-align='end center', layout-padding)
               md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
               md-button(
-                ng-click="vm.editSection('organisation')",
+                ng-click="vm.editSection('organisation', 'previous')",
                 ng-disabled="vm.contactSectionNextDisabled()"
               ) 
                 md-icon.md-material-icons navigate_before
@@ -619,7 +619,7 @@ section(ng-show='vm.actionLoaded')
             //- Complete version
             gz-complete-form-section(
               title='vm.experienceSectionTitle',
-              ng-click="vm.editSection('experience')",
+              ng-click="vm.editSection('experience', 'banner')",
               ng-show="vm.experienceSectionStatus === 'complete' && vm.sectionActive !== 'experience'"
             )
             md-card(ng-show="vm.openAll || vm.sectionActive === 'experience'")
@@ -709,7 +709,7 @@ section(ng-show='vm.actionLoaded')
                   | {{ vm.processExperienceProcessing.processes }} responses
                 md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
                 md-button(
-                  ng-click="vm.editSection('contact')",
+                  ng-click="vm.editSection('contact', 'previous')",
                   ng-disabled="vm.experienceSectionNextDisabled()"
                 ) 
                   md-icon.md-material-icons navigate_before
@@ -732,7 +732,7 @@ section(ng-show='vm.actionLoaded')
             //- Complete version
             gz-complete-form-section(
               title='vm.itSkillsSectionTitle',
-              ng-click="vm.editSection('itSkills')",
+              ng-click="vm.editSection('itSkills', 'banner')",
               ng-show="vm.itSkillsSectionStatus === 'complete' && vm.sectionActive !== 'itSkills'"
             )
             md-card(ng-show="vm.openAll || vm.sectionActive === 'itSkills'")
@@ -817,7 +817,7 @@ section(ng-show='vm.actionLoaded')
               md-card-actions(layout='row', layout-align='end center', layout-padding)
                 md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
                 md-button(
-                  ng-click="vm.editSection('experience')",
+                  ng-click="vm.editSection('experience', 'previous')",
                   ng-disabled="vm.itSkillsSectionNextDisabled()"
                 ) 
                   md-icon.md-material-icons navigate_before
@@ -840,7 +840,7 @@ section(ng-show='vm.actionLoaded')
             //- Complete version
             gz-complete-form-section(
               title='vm.englishSkillsSectionTitle',
-              ng-click="vm.editSection('englishSkills')",
+              ng-click="vm.editSection('englishSkills', 'banner')",
               ng-show="vm.englishSkillsSectionStatus === 'complete' && vm.sectionActive !== 'englishSkills'"
             )
             md-card(ng-show="vm.openAll || vm.sectionActive === 'englishSkills'")
@@ -918,7 +918,7 @@ section(ng-show='vm.actionLoaded')
               md-card-actions(layout='row', layout-align='end center', layout-padding)
                 md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
                 md-button(
-                  ng-click="vm.editSection('experience')",
+                  ng-click="vm.editSection('experience', 'previous')",
                   ng-disabled="vm.englishSkillsSectionNextDisabled()"
                 ) 
                   md-icon.md-material-icons navigate_before
@@ -941,7 +941,7 @@ section(ng-show='vm.actionLoaded')
             //- Complete version
             gz-complete-form-section(
               title='vm.expectationsSectionTitle',
-              ng-click="vm.editSection('expectations')",
+              ng-click="vm.editSection('expectations', 'banner')",
               ng-show="vm.expectationsSectionStatus === 'complete' && vm.sectionActive !== 'expectations'"
             )
             md-card(ng-show="vm.openAll || vm.sectionActive === 'expectations'")
@@ -1030,7 +1030,7 @@ section(ng-show='vm.actionLoaded')
               md-card-actions(layout='row', layout-align='end center', layout-padding)
                 md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
                 md-button(
-                  ng-click="vm.editSection('itEnglish')",
+                  ng-click="vm.editSection('itEnglish', 'previous')",
                   ng-disabled="vm.expectationsSectionNextDisabled()"
                 ) 
                   md-icon.md-material-icons navigate_before
@@ -1052,7 +1052,7 @@ section(ng-show='vm.actionLoaded')
             //- Complete version
             gz-complete-form-section(
               title='vm.sessionsSectionTitle',
-              ng-click="vm.editSection('sessions')",
+              ng-click="vm.editSection('sessions', 'banner')",
               ng-show="vm.sessionsSectionStatus === 'complete' && vm.sectionActive !== 'sessions'"
             )
             md-card(ng-show="vm.openAll || vm.sectionActive === 'sessions'")
@@ -1132,7 +1132,7 @@ section(ng-show='vm.actionLoaded')
                   | {{ vm.processSessionsProcessing.processes }} preferences
                 md-progress-circular.md-primary(ng-show='vm.working', md-mode='indeterminate', md-diameter='20px')
                 md-button(
-                  ng-click="vm.editSection('contact')",
+                  ng-click="vm.editSection('contact', 'previous')",
                   ng-disabled="vm.sessionsSectionNextDisabled()"
                 ) 
                   md-icon.md-material-icons navigate_before
