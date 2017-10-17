@@ -17,7 +17,7 @@
   ];
 
   function affiliationService($resource, $filter, API_URI) {
-    var Affiliation = $resource(API_URI + '/affiliation',
+    var Affiliation = $resource(API_URI + '/aff',
       {},
       {
         get: {
