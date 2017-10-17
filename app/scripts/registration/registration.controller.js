@@ -2155,6 +2155,7 @@
           vm.participant.Registration_complete__c = false;
           vm.participant.Action__c = vm.action.Id;
           vm.participant.Contact__c = vm.contact.Id;
+          vm.participant.Status__c = 'Registered';
           gaService.addSalesforceRequest('Create', 'Participant');
           vm.participant.$save(
             function(record) {
@@ -2191,6 +2192,7 @@
             console.log('processSaveParticipant: Update');
           }
           gaService.addSalesforceRequest('Update', 'Participant');
+          vm.participant.Status__c = 'Registered';
           vm.participant.$update(
             {
               participantid: vm.participant.Id
@@ -2234,6 +2236,7 @@
       }
       return $q(function(resolve, reject) {
         gaService.addSalesforceRequest('Update', 'Participant');
+        vm.participant.Status__c = 'Registered';
         vm.participant.$update(
           {
             participantid: vm.participant.Id

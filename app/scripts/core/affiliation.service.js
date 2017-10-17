@@ -22,7 +22,7 @@
       {
         get: {
           method: 'GET',
-          url: API_URI + '/affiliation/:contactid/:accountid',
+          url: API_URI + '/aff/:contactid/:accountid',
           params: {
             contactid: '@contactid',
             accountid: '@accountid'
@@ -30,7 +30,7 @@
         },
         queryByContact: {
           method: 'GET',
-          url: API_URI + '/affiliation/contact/:contactid?current=true',
+          url: API_URI + '/aff/contact/:contactid?current=true',
           params: {
             contactid: '@contactid'
           },
@@ -38,14 +38,14 @@
         },
         primary: {
           method: 'GET',
-          url: API_URI + '/affiliation/primary/:contactid',
+          url: API_URI + '/aff/primary/:contactid',
           params: {
             contactid: '@contactid'
           }
         },
         update: {
           method: 'PUT',
-          url: API_URI + '/affiliation/:affiliationid',
+          url: API_URI + '/aff/:affiliationid',
           params: {
             affiliationid: '@affiliationid'
           }
