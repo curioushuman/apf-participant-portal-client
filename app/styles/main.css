@@ -98,6 +98,16 @@ p.p-required:after {
   color: rgba(0,0,0,0.54);
 }
 
+/* content */
+
+a {
+  color: #1E88E5;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
 /* footer */
 div.footer p {
   padding: 0;

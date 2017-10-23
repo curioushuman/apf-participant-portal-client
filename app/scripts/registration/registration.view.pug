@@ -1184,7 +1184,20 @@ section(ng-show='vm.actionLoaded')
             md-card-header-text
               span.md-headline Registrations closed
           md-card-content
-            p Please contact the Asia Pacific Forum Training Department for more information.
+            p Please contact 
+              span(ng-show='vm.actionOwner.Email')
+                a(
+                  href='mailto:{{ vm.actionOwner.Email }}',
+                  title='Contact {{ vm.actionOwner.FirstName }} {{ vm.actionOwner.LastName }} of the APF for more information'
+                ) {{ vm.actionOwner.FirstName }} {{ vm.actionOwner.LastName }} 
+                | of 
+              | the 
+              a(
+                href='mailto:apf@asiapacificforum.net',
+                title='Contact the APF for more information'
+              ) Asia Pacific Forum 
+              | for more information.
+              
                 
   div.footer(layout='row', layout-padding, md-colors="{background: 'default-background-hue-3'}")
     img.logo-icon(

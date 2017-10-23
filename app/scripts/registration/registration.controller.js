@@ -28,6 +28,7 @@
     'questionService',
     'responseService',
     'sessionService',
+    'userService',
     'detectionService',
     'sessionParticipationService',
     'DEBUG',
@@ -52,6 +53,7 @@
     questionService,
     responseService,
     sessionService,
+    userService,
     detectionService,
     sessionParticipationService,
     DEBUG,
@@ -77,6 +79,7 @@
     vm.actionError = false;
     vm.actionIsTraining = false;
     vm.actionErrorMessage = {};
+    vm.actionOwner = null;
 
     // date stuff
     $mdDateLocale.formatDate = function(date) {
@@ -125,6 +128,28 @@
           vm.formStatus = 'closed';
         }
 
+        // if the form is closed obtain the owners contact details
+        if (vm.formStatus === 'closed') {
+          vm.actionOwner = userService.retrieve(
+            {
+              uid: vm.action.OwnerId
+            },
+            function() {
+              console.log('vm.actionOwner', vm.actionOwner);
+            },
+            function(err) {
+              if (vm.debug) {
+                console.log('Error obtaining owner', err);
+              }
+              gaService.addSalesforceError(
+                'retrieve',
+                'User',
+                err.status
+              );
+            }
+          );
+        }
+
         // sort out the selection criteria
         if (vm.action.Selection_criteria__c) {
           vm.action.selectionCriteria =
@@ -160,6 +185,11 @@
         if (vm.debug) {
           console.log(err);
         }
+        gaService.addSalesforceError(
+          'retrieve',
+          'Action',
+          err.status
+        );
         if (err.status === 404) {
           vm.actionErrorMessage = {
             title: 'No action found',
