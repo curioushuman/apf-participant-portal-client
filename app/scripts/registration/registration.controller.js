@@ -114,7 +114,11 @@
         }
 
         // see if there is a due date
-        if (vm.action.Registrations_due_date__c) {
+        // first check for closed override
+        if ($location.search().closed === 'override') {
+          // do nothing, allow the form to open
+          vm.formStatus = 'open';
+        } else if (vm.action.Registrations_due_date__c) {
           // format accordingly
           vm.action.registrationDate =
             layoutService.formatDate(vm.action.Registrations_due_date__c);
