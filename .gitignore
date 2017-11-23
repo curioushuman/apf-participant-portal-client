@@ -9,3 +9,4 @@ firebase.json
 functions/
 app/scripts/core/config.js
 app/scripts/core/config.json
+.DS_Store

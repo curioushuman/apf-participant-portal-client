@@ -139,7 +139,9 @@
               uid: vm.action.OwnerId
             },
             function() {
-              console.log('vm.actionOwner', vm.actionOwner);
+              if (vm.debug) {
+                console.log('vm.actionOwner', vm.actionOwner);
+              }
             },
             function(err) {
               if (vm.debug) {
