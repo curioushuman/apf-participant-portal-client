@@ -623,7 +623,7 @@ section(ng-show='vm.actionLoaded')
                 md-icon.md-material-icons navigate_next
               
           //- Experience and knowledge section
-          div#pageForm-experience(ng-show='vm.actionIsTraining')
+          div#pageForm-experience(ng-show='vm.action.Show_Experience_section__c')
             a(name='experience')
             //- Disabled version
             gz-disabled-form-section(
@@ -736,7 +736,7 @@ section(ng-show='vm.actionLoaded')
                   md-icon.md-material-icons navigate_next
                   
           //- IT and English skills section
-          div#pageForm-itSkills(ng-show='vm.actionIsTraining')
+          div#pageForm-itSkills(ng-show='vm.action.Show_IT_Skills_section__c')
             a(name='itSkills')
             //- Disabled version
             gz-disabled-form-section(
@@ -844,7 +844,7 @@ section(ng-show='vm.actionLoaded')
                   md-icon.md-material-icons navigate_next
                   
           //- IT and English skills section
-          div#pageForm-englishSkills(ng-show='vm.actionIsTraining')
+          div#pageForm-englishSkills(ng-show='vm.action.Show_English_Skills_section__c')
             a(name='englishSkills')
             //- Disabled version
             gz-disabled-form-section(
@@ -945,7 +945,7 @@ section(ng-show='vm.actionLoaded')
                   md-icon.md-material-icons navigate_next
               
           //- Expectations and learning needs section
-          div#pageForm-expectations(ng-show='vm.actionIsTraining')
+          div#pageForm-expectations(ng-show='vm.action.Show_Expectations_section__c')
             a(name='expectations')
             //- Disabled version
             gz-disabled-form-section(
@@ -1049,14 +1049,15 @@ section(ng-show='vm.actionLoaded')
                 ) 
                   md-icon.md-material-icons navigate_before
                   | Previous
-                md-button.md-raised.md-accent(
+                md-button(
                   ng-click="vm.processExpectations()",
                   ng-disabled="vm.expectationsSectionNextDisabled()"
                 ) 
-                  | Register
+                  | Next
+                  md-icon.md-material-icons navigate_next
                   
           //- Sessions section
-          div#pageForm-sessions(ng-hide='vm.actionIsTraining')
+          div#pageForm-sessions(ng-show='vm.action.Show_Sessions_section__c')
             a(name='sessions')
             //- Disabled version
             gz-disabled-form-section(
@@ -1151,11 +1152,12 @@ section(ng-show='vm.actionLoaded')
                 ) 
                   md-icon.md-material-icons navigate_before
                   | Previous
-                md-button.md-raised.md-accent(
+                md-button(
                   ng-click="vm.processSessions()",
                   ng-disabled="vm.sessionsSectionNextDisabled()"
                 ) 
-                  | Register
+                  | Next
+                  md-icon.md-material-icons navigate_next
         
         //- Thank you section
         md-card(

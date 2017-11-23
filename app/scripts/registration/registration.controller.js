@@ -386,7 +386,7 @@
               if (vm.debug) {
                 console.log('Looking for responses / session participations');
               }
-              if (vm.actionIsTraining) {
+              if (vm.action.Show_Experience_section__c === true) {
                 gaService.addSalesforceRequest('List', 'Response');
                 vm.participant.responses = responseService.list(
                   {
@@ -416,7 +416,8 @@
                     return err;
                   }
                 );
-              } else {
+              }
+              if (vm.action.Show_Sessions_section__c === true) {
                 gaService.addSalesforceRequest(
                   'List',
                   'SessionParticipation'
@@ -465,9 +466,10 @@
                 // it means this person has not registered for this action
 
                 // setup empty responses and sessionParticipations
-                if (vm.actionIsTraining) {
+                if (vm.action.Show_Experience_section__c === true) {
                   vm.participant.responses = [];
-                } else {
+                }
+                if (vm.action.Show_Sessions_section__c === true) {
                   vm.participant.sessionParticipations = [];
                 }
                 preQueryPostResponses();
@@ -528,7 +530,7 @@
     function preQueryPostResponses() {
       // start obtaining the questions / sessions
       // THIS NEEDS TO MOVE DOWN BELOW TO AFTER OBTAIN RESPONSES
-      if (vm.actionIsTraining) {
+      if (vm.action.Show_Experience_section__c === true) {
         gaService.addSalesforceRequest('List', 'Question');
         preQueryQuestions()
         .then(
@@ -553,7 +555,8 @@
             vm.experienceSectionErrorTop = true;
           }
         );
-      } else {
+      }
+      if (vm.action.Show_Sessions_section__c === true) {
         gaService.addSalesforceRequest('List', 'Session');
         preQuerySessions()
         .then(
@@ -1455,11 +1458,7 @@
       .then(
         function() {
           vm.contactSectionStatus = 'complete';
-          if (vm.actionIsTraining) {
-            vm.preExperience();
-          } else {
-            vm.preSessions();
-          }
+          vm.preExperience();
         },
         function(err) {
           if (vm.debug) {
@@ -1506,7 +1505,11 @@
     // pre
     function preExperience() {
       vm.working = false;
-      vm.editSection('experience');
+      if (vm.action.Show_Experience_section__c === true) {
+        vm.editSection('experience');
+      } else {
+        vm.preItSkills();
+      }
     }
 
     function preQueryQuestions() {
@@ -1659,7 +1662,11 @@
     // pre
     function preItSkills() {
       vm.working = false;
-      vm.editSection('itSkills');
+      if (vm.action.Show_IT_Skills_section__c === true) {
+        vm.editSection('itSkills');
+      } else {
+        vm.preEnglishSkills();
+      }
     }
 
     // process
@@ -1733,7 +1740,11 @@
     // pre
     function preEnglishSkills() {
       vm.working = false;
-      vm.editSection('englishSkills');
+      if (vm.action.Show_English_Skills_section__c === true) {
+        vm.editSection('englishSkills');
+      } else {
+        vm.preExpectations();
+      }
     }
 
     // process
@@ -1816,7 +1827,11 @@
     // pre
     function preExpectations() {
       vm.working = false;
-      vm.editSection('expectations');
+      if (vm.action.Show_Expectations_section__c === true) {
+        vm.editSection('expectations');
+      } else {
+        vm.preSessions();
+      }
     }
 
     // process
@@ -1828,14 +1843,11 @@
 
       vm.working = true;
 
-      // indicate the participant has completed the form
-      vm.participant.Registration_complete__c = true;
-
       processUpdateParticipant()
       .then(
         function() {
           vm.expectationsSectionStatus = 'complete';
-          vm.completeForm();
+          vm.preSessions();
         },
         function(err) {
           if (vm.debug) {
@@ -1893,7 +1905,11 @@
     // pre
     function preSessions() {
       vm.working = false;
-      vm.editSection('sessions');
+      if (vm.action.Show_Sessions_section__c === true) {
+        vm.editSection('sessions');
+      } else {
+        vm.completeForm();
+      }
     }
 
     function preQuerySessions() {
@@ -2070,8 +2086,6 @@
       // THIS IS DUPLICATED FROM EXPERIENCE
       // NEEDS TO BE REMOVED INTO IT'S OWN FUNCTION AT SOME POINT
       vm.participant.Organisation__c = vm.affiliation.npe5__Organization__c;
-      // also indicate that the participant has actually finished the form
-      vm.participant.Registration_complete__c = true;
 
       // reset processing count
       vm.processSessionsProcessing.processing = 1;
@@ -2136,6 +2150,20 @@
 
     function completeForm() {
       // just submit, don't show a summary of all fields
+      // indicate the participant has completed the form
+      vm.participant.Registration_complete__c = true;
+      processUpdateParticipant()
+      .then(
+        function() {
+          // good stuff
+        },
+        function(err) {
+          if (vm.debug) {
+            console.log('Error completeForm', err);
+          }
+          // ahhh shit
+        }
+      );
       vm.working = false;
       vm.sectionActive = '';
       vm.expectationsSectionStatus = 'complete';
