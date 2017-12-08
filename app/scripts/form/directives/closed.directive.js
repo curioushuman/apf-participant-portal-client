@@ -5,19 +5,19 @@
   'use strict';
 
   angular
-    .module('app.layout')
-    .directive('gzFormClosed', gzFormClosed);
+    .module('app.form')
+    .directive('gzClosed', gzClosed);
 
-  gzFormClosed.$inject = [
+  gzClosed.$inject = [
     'layoutService'
   ];
 
-  function gzFormClosed(layoutService) {
+  function gzClosed(layoutService) {
     return {
       templateUrl:
-        'scripts/layout/directives/formClosed.template.html',
+        'scripts/form/directives/closed.template.html',
       restrict: 'E',
-      controller: FormClosedController,
+      controller: ClosedController,
       controllerAs: 'vm',
       bindToController: true,
       scope: {
@@ -27,14 +27,14 @@
     };
   }
 
-  FormClosedController.$inject = [
+  ClosedController.$inject = [
     '$scope',
     'layoutService',
     'userService',
     'DEBUG'
   ];
 
-  function FormClosedController(
+  function ClosedController(
     $scope,
     layoutService,
     userService,
@@ -44,7 +44,6 @@
     vm.show = false;
 
     $scope.$watch('vm.status', function(value) {
-      console.log('value', value);
       if (value === 'closed') {
         vm.show = true;
         vm.owner = userService.retrieve(

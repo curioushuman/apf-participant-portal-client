@@ -5,19 +5,19 @@
   'use strict';
 
   angular
-    .module('app.layout')
-    .directive('gzDisabledFormSection', gzDisabledFormSection);
+    .module('app.form')
+    .directive('gzDisabledSection', gzDisabledSection);
 
-  gzDisabledFormSection.$inject = [
+  gzDisabledSection.$inject = [
     'layoutService'
   ];
 
-  function gzDisabledFormSection(layoutService) {
+  function gzDisabledSection(layoutService) {
     return {
       templateUrl:
-        'scripts/layout/directives/disabledFormSection.template.html',
+        'scripts/form/directives/disabledSection.template.html',
       restrict: 'E',
-      controller: DisabledFormSectionController,
+      controller: DisabledSectionController,
       controllerAs: 'vm',
       bindToController: true,
       scope: {
@@ -26,11 +26,11 @@
     };
   }
 
-  DisabledFormSectionController.$inject = [
+  DisabledSectionController.$inject = [
     'layoutService'
   ];
 
-  function DisabledFormSectionController(
+  function DisabledSectionController(
     layoutService
   ) {
     var vm = this;

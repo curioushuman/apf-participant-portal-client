@@ -98,20 +98,24 @@ body(ng-app='app', ng-cloak)
   script(src='/scripts/core/session.service.js')
   script(src='/scripts/core/session_participation.service.js')
   script(src='/scripts/core/user.service.js')
+  
+  //- form module
+  script(src='/scripts/form/form.module.js')
+  script(src='/scripts/form/form.service.js')
+  script(src='/scripts/form/directives/closed.directive.js')
+  script(src='/scripts/form/directives/completeSection.directive.js')
+  script(src='/scripts/form/directives/disabledSection.directive.js')
+  script(src='/scripts/form/directives/responseInput.directive.js')
+  script(src='/scripts/form/directives/sessionParticipationInput.directive.js')
+  script(src='/scripts/form/directives/sliderInput.directive.js')
 
   //- layout module
   script(src='/scripts/layout/layout.module.js')
   script(src='/scripts/layout/layout.service.js')
   script(src='/scripts/layout/directives/actionHero.directive.js')
-  script(src='/scripts/layout/directives/completeFormSection.directive.js')
-  script(src='/scripts/layout/directives/disabledFormSection.directive.js')
   script(src='/scripts/layout/directives/footer.directive.js')
-  script(src='/scripts/layout/directives/formClosed.directive.js')
   //- script(src='/scripts/layout/directives/hero.directive.js')
   script(src='/scripts/layout/directives/navbar.directive.js')
-  script(src='/scripts/layout/directives/responseFormInput.directive.js')
-  script(src='/scripts/layout/directives/sessionParticipationFormInput.directive.js')
-  script(src='/scripts/layout/directives/sliderFormInput.directive.js')
   script(src='/scripts/layout/directives/supportingText.directive.js')
 
   //- use this in production

@@ -6,22 +6,22 @@
   'use strict';
 
   angular
-    .module('app.layout')
+    .module('app.form')
     .directive(
-      'gzSessionParticipationFormInput',
-      gzSessionParticipationFormInput
+      'gzSessionParticipationInput',
+      gzSessionParticipationInput
     );
 
-  gzSessionParticipationFormInput.$inject = [
+  gzSessionParticipationInput.$inject = [
     'layoutService'
   ];
 
-  function gzSessionParticipationFormInput(layoutService) {
+  function gzSessionParticipationInput(layoutService) {
     return {
       templateUrl:
-        'scripts/layout/directives/sessionParticipationFormInput.template.html',
+        'scripts/form/directives/sessionParticipationInput.template.html',
       restrict: 'E',
-      controller: SessionParticipationFormInputController,
+      controller: SessionParticipationInputController,
       controllerAs: 'vm',
       bindToController: true,
       scope: {
@@ -31,11 +31,11 @@
     };
   }
 
-  SessionParticipationFormInputController.$inject = [
+  SessionParticipationInputController.$inject = [
     'layoutService'
   ];
 
-  function SessionParticipationFormInputController(
+  function SessionParticipationInputController(
     layoutService
   ) {
     var vm = this;

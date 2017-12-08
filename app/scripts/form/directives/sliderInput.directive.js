@@ -5,18 +5,18 @@
   'use strict';
 
   angular
-    .module('app.layout')
-    .directive('gzSliderFormInput', gzSliderFormInput);
+    .module('app.form')
+    .directive('gzSliderInput', gzSliderInput);
 
-  gzSliderFormInput.$inject = [
+  gzSliderInput.$inject = [
     'layoutService'
   ];
 
-  function gzSliderFormInput(layoutService) {
+  function gzSliderInput(layoutService) {
     return {
-      templateUrl: 'scripts/layout/directives/sliderFormInput.template.html',
+      templateUrl: 'scripts/form/directives/sliderInput.template.html',
       restrict: 'E',
-      controller: SliderFormInputController,
+      controller: SliderInputController,
       controllerAs: 'vm',
       bindToController: true,
       scope: {
@@ -28,11 +28,11 @@
     };
   }
 
-  SliderFormInputController.$inject = [
+  SliderInputController.$inject = [
     'layoutService'
   ];
 
-  function SliderFormInputController(
+  function SliderInputController(
     layoutService
   ) {
     var vm = this;

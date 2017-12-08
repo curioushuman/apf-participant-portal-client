@@ -5,19 +5,19 @@
   'use strict';
 
   angular
-    .module('app.layout')
-    .directive('gzCompleteFormSection', gzCompleteFormSection);
+    .module('app.form')
+    .directive('gzCompleteSection', gzCompleteSection);
 
-  gzCompleteFormSection.$inject = [
+  gzCompleteSection.$inject = [
     'layoutService'
   ];
 
-  function gzCompleteFormSection(layoutService) {
+  function gzCompleteSection(layoutService) {
     return {
       templateUrl:
-        'scripts/layout/directives/completeFormSection.template.html',
+        'scripts/form/directives/completeSection.template.html',
       restrict: 'E',
-      controller: CompleteFormSectionController,
+      controller: CompleteSectionController,
       controllerAs: 'vm',
       bindToController: true,
       scope: {
@@ -26,11 +26,11 @@
     };
   }
 
-  CompleteFormSectionController.$inject = [
+  CompleteSectionController.$inject = [
     'layoutService'
   ];
 
-  function CompleteFormSectionController(
+  function CompleteSectionController(
     layoutService
   ) {
     var vm = this;

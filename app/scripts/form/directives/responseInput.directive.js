@@ -6,18 +6,18 @@
   'use strict';
 
   angular
-    .module('app.layout')
-    .directive('gzResponseFormInput', gzResponseFormInput);
+    .module('app.form')
+    .directive('gzResponseInput', gzResponseInput);
 
-  gzResponseFormInput.$inject = [
+  gzResponseInput.$inject = [
     'layoutService'
   ];
 
-  function gzResponseFormInput(layoutService) {
+  function gzResponseInput(layoutService) {
     return {
-      templateUrl: 'scripts/layout/directives/responseFormInput.template.html',
+      templateUrl: 'scripts/form/directives/responseInput.template.html',
       restrict: 'E',
-      controller: ResponseFormInputController,
+      controller: ResponseInputController,
       controllerAs: 'vm',
       bindToController: true,
       scope: {
@@ -26,11 +26,11 @@
     };
   }
 
-  ResponseFormInputController.$inject = [
+  ResponseInputController.$inject = [
     'layoutService'
   ];
 
-  function ResponseFormInputController(
+  function ResponseInputController(
     layoutService
   ) {
     var vm = this;

@@ -14,6 +14,7 @@
 
       // Custom modules.
       'app.core',
+      'app.form',
       'app.landing',
       'app.registration',
       'app.layout'
