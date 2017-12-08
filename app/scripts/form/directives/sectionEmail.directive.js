@@ -22,7 +22,12 @@
 
       },
       link: function(scope, elem, attrs, sectionCtrl) {
-        sectionCtrl.section = 'email';
+        var section = {
+          id: 'email',
+          title: 'Balls woot',
+          complete: false
+        };
+        sectionCtrl.section = section;
       }
     };
   }

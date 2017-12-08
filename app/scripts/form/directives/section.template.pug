@@ -1,2 +1,19 @@
-h1 I am the section
+a(name='vm.section.id')
+//- Disabled version
+gz-disabled-section(
+  title='vm.section.title',
+  ng-show="vm.section.status === 'disabled'"
+)
+//- Complete version
+gz-complete-section(
+  title='vm.section.title',
+  ng-click="vm.editSection('banner')",
+  ng-show="vm.section.status === 'complete'"
+)
+//- Active version
+md-card(ng-show="vm.section.status === 'active'")
+  md-card-header
+    md-card-header-text
+      span.md-headline {{ vm.section.title }}
+      
 div(ng-transclude)

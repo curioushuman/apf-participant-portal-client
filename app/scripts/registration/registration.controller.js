@@ -63,7 +63,6 @@
 
     // debugging / developing
     vm.debug = DEBUG;
-    vm.openAll = false;
     if (vm.debug === true) {
       console.log('DEBUG is ON');
       console.log('API URI', API_URI);
@@ -71,8 +70,11 @@
 
     vm.navigate = layoutService.navigate;
 
-    vm.working = false;
-    vm.formStatus = 'open';
+    vm.form = {
+      working: false,
+      currentSection: 'email',
+      uponComplete: null
+    };
     // vm.completeForm = completeForm; // TMP REMOVED
 
     // date stuff
