@@ -1,0 +1,23 @@
+md-card(ng-show='vm.show')
+  md-card-header(md-colors="{background: 'default-primary-hue-2'}")
+    md-card-avatar
+      img(
+        ng-src='/images/APF-logo-circle.png',
+        alt='Asia Pacific Forum logo'
+      )
+    md-card-header-text
+      span.md-headline Registrations closed
+  md-card-content
+    p Please contact 
+      span(ng-show='vm.owner.Email')
+        a(
+          href='mailto:{{ vm.owner.Email }}',
+          title='Contact {{ vm.owner.FirstName }} {{ vm.owner.LastName }} of the APF for more information'
+        ) {{ vm.owner.FirstName }} {{ vm.owner.LastName }} 
+        | of 
+      | the 
+      a(
+        href='mailto:apf@asiapacificforum.net',
+        title='Contact the APF for more information'
+      ) Asia Pacific Forum 
+      | for more information.

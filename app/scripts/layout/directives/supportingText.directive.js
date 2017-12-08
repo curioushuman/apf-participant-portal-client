@@ -17,7 +17,6 @@
       templateUrl:
         'scripts/layout/directives/supportingText.template.html',
       restrict: 'E',
-      // transclude: true,
       controller: SupportingTextController,
       controllerAs: 'vm',
       bindToController: true,

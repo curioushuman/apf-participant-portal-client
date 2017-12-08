@@ -111,30 +111,5 @@
         vm.action.error = err;
       }
     );
-
-    // if the form is closed obtain the owners contact details
-    // DO THIS ELSEWHERE, OUTSIDE OF THE ACTIONSERVICE
-    // if (action.formStatus === 'closed') {
-    //   action.actionOwner = userService.retrieve(
-    //     {
-    //       uid: action.OwnerId
-    //     },
-    //     function() {
-    //       if (DEBUG) {
-    //         console.log('success action.actionOwner', action.actionOwner);
-    //       }
-    //     },
-    //     function(err) {
-    //       if (DEBUG) {
-    //         console.log('Error obtaining owner', err);
-    //       }
-    //       gaService.addSalesforceError(
-    //         'retrieve',
-    //         'User',
-    //         err.status
-    //       );
-    //     }
-    //   );
-    // }
   }
 })();

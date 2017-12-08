@@ -49,3 +49,15 @@ section(ng-show='vm.action.loaded')
           content='vm.action.Supporting_text__c',
           display='html'
         )
+
+      //- Form
+      div(flex, layout='column')
+        gz-form-closed(
+          status='vm.action.formStatus',
+          owner-id='vm.action.OwnerId',
+        )
+        form(
+          name='pageForm',
+          ng-submit='pageForm.$valid',
+          ng-show="vm.action.formStatus === 'open'"
+        )
