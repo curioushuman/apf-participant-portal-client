@@ -13,3 +13,39 @@ section
   gz-action-hero(
     action='vm.action'
   )
+
+section(ng-show='vm.action.loaded')
+  
+  //- Content
+  div.content
+
+    md-content(layout-padding, layout='row', layout-xs='column')
+      
+      //- Help text
+      div(flex-xs, flex-gt-sm='50', layout='column')
+        md-card
+          md-card-title
+            md-card-title-text.md-headline
+              | Registration information
+          md-card-content
+            md-list
+              md-list-item
+                md-icon.material-icons.md-avatar event
+                p Registrations close 
+                  strong {{ vm.action.registrationDate }}
+            p {{ vm.action.Help_text__c }}
+
+        gz-supporting-text(
+          content='vm.action.Selection_criteria__c',
+          title='Participants must',
+          display='list'
+        )
+        gz-supporting-text(
+          content='vm.action.Ideal_candidate__c',
+          title='Ideal candidates will have one or more of',
+          display='list'
+        )
+        gz-supporting-text(
+          content='vm.action.Supporting_text__c',
+          display='html'
+        )

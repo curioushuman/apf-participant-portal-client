@@ -17,28 +17,38 @@
       templateUrl:
         'scripts/layout/directives/supportingText.template.html',
       restrict: 'E',
+      // transclude: true,
       controller: SupportingTextController,
       controllerAs: 'vm',
       bindToController: true,
       scope: {
         content: '=',
         title: '@',
-        list: '='
+        display: '@',
+        list: '@'
       }
     };
   }
 
   SupportingTextController.$inject = [
+    '$scope',
     'layoutService',
     'DEBUG'
   ];
 
   function SupportingTextController(
+    $scope,
     layoutService,
     DEBUG
   ) {
     var vm = this;
 
     vm.navigate = layoutService.navigate;
+
+    $scope.$watch('vm.content', function(value) {
+      if (value !== undefined && vm.display === 'list') {
+        vm.list = layoutService.listFromString(value);
+      }
+    });
   }
 })();

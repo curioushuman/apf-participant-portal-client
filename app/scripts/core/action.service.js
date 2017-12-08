@@ -92,17 +92,6 @@
               action.formStatus = 'closed';
             }
 
-            // sort out the selection criteria
-            if (action.Selection_criteria__c) {
-              action.selectionCriteria =
-                layoutService.listFromString(action.Selection_criteria__c);
-            }
-
-            if (action.Ideal_candidate__c) {
-              action.idealCandidate =
-                layoutService.listFromString(action.Ideal_candidate__c);
-            }
-
             // is training an action?
             action.isTraining = false;
             if (action.RecordTypeId === '0126F000000iyY7QAI') {

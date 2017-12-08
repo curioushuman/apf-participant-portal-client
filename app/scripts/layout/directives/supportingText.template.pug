@@ -7,4 +7,4 @@ md-card(ng-show='vm.content || vm.list')
       md-list-item(ng-repeat='item in vm.list')
         .md-list-item-text
           p {{ item }}
-    div(ng-show='vm.content', ng-bind-html='vm.content | trust')
+    div(ng-hide='vm.list', ng-bind-html='vm.content | trust')
