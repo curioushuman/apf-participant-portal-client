@@ -10,3 +10,4 @@ functions/
 app/scripts/core/config.js
 app/scripts/core/config.json
 .DS_Store
+*.bak.*

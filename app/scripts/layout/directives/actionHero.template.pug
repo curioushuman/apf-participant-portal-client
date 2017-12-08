@@ -1,0 +1,65 @@
+//- Hero
+div.hero(layout='row', layout-xs='column', md-colors="{background: 'default-primary-hue-2'}")
+  
+  div(
+    flex,
+    layout='row',
+    layout-align='center center',
+    layout-padding,
+    ng-hide='vm.action.loaded || vm.action.error'
+  )
+  
+    md-progress-circular.md-background(
+      md-mode='indeterminate',
+      md-diameter='100px'
+    )
+    
+  div(
+    flex,
+    layout='column',
+    layout-padding,
+    ng-show='vm.action.err'
+  )
+    md-content(layout-padding, md-colors="{background: 'default-primary-hue-2'}")
+      div(hide, show-gt-sm)
+        h2.md-display-1 {{ vm.action.error.messageVerbose.title }}
+        h3.md-headline {{ vm.action.error.messageVerbose.message }}
+      div(hide-gt-sm)
+        h2.md-headline {{ vm.action.error.messageVerbose.title }}
+        h3.md-title {{ vm.action.error.messageVerbose.message }}
+  
+  div(flex-gt-xs='100', flex-xs, layout='row', ng-show='vm.action.loaded')
+    div(flex-gt-xs='75', layout='column')
+      md-content(layout-padding, md-colors="{background: 'default-primary-hue-2'}")
+        div(hide, show-gt-sm)
+          h1.md-display-2 {{ vm.action.Name }}
+          h2.md-display-1(
+            ng-show='vm.action.startDate !== undefined || vm.action.finishDate !== undefined'
+          ) 
+            span(ng-show='vm.action.startDate !== undefined') 
+              | {{ vm.action.startDate }} 
+            span(ng-show='vm.action.finishDate !== undefined') 
+              | to {{ vm.action.finishDate }}
+        div(hide-gt-sm)
+          h1.md-display-1 {{ vm.action.Name }}
+          h2.md-headline(
+            ng-show='vm.action.startDate !== undefined || vm.action.finishDate !== undefined'
+          )
+            span(ng-show='vm.action.startDate !== undefined') 
+              | {{ vm.action.startDate }} 
+            span(ng-show='vm.action.finishDate !== undefined') 
+              | to {{ vm.action.finishDate }}
+        p {{ vm.action.Description__c }}
+    span(hide, show-gt-xs, flex)
+  div(
+    hide,
+    flex-gt-xs='50',
+    flex-xs,
+    layout='row',
+    layout-align='center center',
+    ng-show='vm.action.loaded'
+  )
+    img(
+      ng-src='/images/APF-logo-main-2x.png',
+      alt='Asia Pacific Forum logo'
+    )
