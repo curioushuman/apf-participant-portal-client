@@ -6,67 +6,24 @@
 
   angular
     .module('app.form')
-    .directive('gzClosed', gzClosed);
+    .directive('gzSectionEmail', gzSectionEmail);
 
-  gzClosed.$inject = [
+  gzSectionEmail.$inject = [
     'layoutService'
   ];
 
-  function gzClosed(layoutService) {
+  function gzSectionEmail(layoutService) {
     return {
+      require: '^^gzSection',
       templateUrl:
-        'scripts/form/directives/closed.template.html',
+        'scripts/form/directives/sectionEmail.template.html',
       restrict: 'E',
-      controller: ClosedController,
-      controllerAs: 'vm',
-      bindToController: true,
       scope: {
-        status: '=',
-        ownerId: '='
+
+      },
+      link: function(scope, elem, attrs, sectionCtrl) {
+        sectionCtrl.section = 'email';
       }
     };
-  }
-
-  ClosedController.$inject = [
-    '$scope',
-    'layoutService',
-    'userService',
-    'DEBUG'
-  ];
-
-  function ClosedController(
-    $scope,
-    layoutService,
-    userService,
-    DEBUG
-  ) {
-    var vm = this;
-    vm.show = false;
-
-    $scope.$watch('vm.status', function(value) {
-      if (value === 'closed') {
-        vm.show = true;
-        vm.owner = userService.retrieve(
-          {
-            uid: vm.ownerId
-          },
-          function() {
-            if (DEBUG) {
-              console.log('success vm.owner', vm.owner);
-            }
-          },
-          function(err) {
-            if (DEBUG) {
-              console.log('Error obtaining owner', err);
-            }
-            gaService.addSalesforceError(
-              'Retrieve',
-              'User',
-              err.status
-            );
-          }
-        );
-      }
-    });
   }
 })();
