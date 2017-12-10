@@ -45,10 +45,16 @@
       connectionResults: connectionResults,
       detectPlatform: detectPlatform,
       platformResults: platformResults,
+      detect: detect,
       detectGeo: detectGeo
     };
 
     return service;
+
+    function detect() {
+      detectConnection();
+      detectPlatform();
+    }
 
     function detectConnection(callback) {
       var download = new Image();
@@ -60,7 +66,9 @@
         calculateConnection();
         // this is a bit old school but...
         // I don't know if onload (and IE10) will support promises
-        callback();
+        if (callback !== undefined) {
+          callback();
+        }
       };
 
       download.onerror = function(err, msg) {
@@ -100,7 +108,9 @@
       platformResults.resolution =
       window.screen.availWidth + ' x ' + window.screen.availHeight;
 
-      callback();
+      if (callback !== undefined) {
+        callback();
+      }
     }
 
     // Note: geo detection doesn't work

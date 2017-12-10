@@ -11,10 +11,10 @@ section
     p.body-2 Registration for
     
   gz-action-hero(
-    action='vm.action'
+    action='vm.page.action'
   )
 
-section(ng-show='vm.action.loaded')
+section(ng-show='vm.page.action.loaded')
   
   //- Content
   div.content
@@ -32,46 +32,44 @@ section(ng-show='vm.action.loaded')
               md-list-item
                 md-icon.material-icons.md-avatar event
                 p Registrations close 
-                  strong {{ vm.action.registrationDate }}
-            p {{ vm.action.Help_text__c }}
+                  strong {{ vm.page.action.registrationDate }}
+            p {{ vm.page.action.Help_text__c }}
 
         gz-supporting-text(
-          content='vm.action.Selection_criteria__c',
+          content='vm.page.action.Selection_criteria__c',
           title='Participants must',
           display='list'
         )
         gz-supporting-text(
-          content='vm.action.Ideal_candidate__c',
+          content='vm.page.action.Ideal_candidate__c',
           title='Ideal candidates will have one or more of',
           display='list'
         )
         gz-supporting-text(
-          content='vm.action.Supporting_text__c',
+          content='vm.page.action.Supporting_text__c',
           display='html'
         )
 
       //- Form
       div(flex, layout='column')
         gz-closed(
-          status='vm.action.formStatus',
-          owner-id='vm.action.OwnerId'
+          status='vm.page.action.formStatus',
+          owner-id='vm.page.action.OwnerId'
         )
         form(
           name='form',
           ng-submit='form.$valid',
-          ng-show="vm.action.formStatus === 'open'"
+          ng-show="vm.page.action.formStatus === 'open'"
         )
 
           gz-section(page='vm.page')
             gz-section-email(
               page='vm.page',
-              action='vm.action',
               form='form'
             )
 
           gz-section(page='vm.page')
             gz-section-personal(
               page='vm.page',
-              action='vm.action',
               form='form'
             )

@@ -16,7 +16,7 @@ md-input-container.md-block(flex)
     maxlength='155',
     ng-pattern="/^.+@.+\..+$/"
   )
-  div.hint(ng-show='vm.action.IsTraining')
+  div.hint(ng-show='vm.page.action.IsTraining')
     | Please enter a valid email address that 
     | you check often.
   div(ng-messages='vm.form.contactEmail.$error')
