@@ -22,9 +22,7 @@
         'scripts/form/directives/sectionEmail.template.html',
       restrict: 'E',
       scope: {
-        page: '=',
-        action: '=',
-        form: '='
+        page: '='
       },
       link: function(scope, elem, attrs, sectionCtrl) {
         sectionCtrl.section = sectionCtrl.page.sections.email;
@@ -52,7 +50,6 @@
   ) {
     var vm = this;
     vm.section = vm.page.sections.email;
-    vm.sectionNext = vm.page.sections[vm.section.next];
 
     if (DEBUG) {
       vm.email = 'mike@curioushuman.com.au';
@@ -66,7 +63,6 @@
     };
 
     vm.section.process = function() {
-      vm.page.working = true;
       gaService.setUserId(vm.email);
       gaService.addSalesforceRequest('Retrieve', 'Contact');
       return $q(function(resolve, reject) {
@@ -84,7 +80,7 @@
             }
             vm.page.contact = contact;
             vm.page.contact.exists = true;
-            resolve(contact);
+            resolve(vm.page.contact);
           },
           function(err) {
             if (err.status === 404) {
@@ -96,7 +92,7 @@
                 }
               );
               vm.page.contact.exists = false;
-              resolve(contact);
+              resolve(vm.page.contact);
             } else {
               gaService.addSalesforceError(
                 'Retrieve',

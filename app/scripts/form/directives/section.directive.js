@@ -22,7 +22,8 @@
       controllerAs: 'vm',
       bindToController: true,
       scope: {
-        page: '='
+        page: '=',
+        form: '='
       }
     };
   }
@@ -51,7 +52,10 @@
         vm.section.complete = false;
         vm.section.error = false;
         vm.section.invalid = false;
-        vm.sectionNext = vm.page.sections[vm.section.next];
+        vm.sectionNext = false;
+        if (vm.page.sections[vm.section.next] !== undefined) {
+          vm.sectionNext = vm.page.sections[vm.section.next];
+        }
         vm.sectionPrevious = false;
         angular.forEach(vm.page.sections, function(section, index) {
           if (section.next === vm.section.id) {
@@ -78,11 +82,25 @@
     };
 
     vm.process = function() {
+      if (
+        vm.section.required !== undefined &&
+        isValid(vm.section.required) === false
+      ) {
+        vm.section.invalid = true;
+        return;
+      }
+
+      vm.page.working = true;
+
       vm.section.process()
       .then(
         function(result) {
           vm.section.complete = true;
-          vm.sectionNext.sectionCtrl.pre();
+          if (vm.sectionNext !== false) {
+            vm.sectionNext.sectionCtrl.pre();
+          } else {
+            vm.page.complete();
+          }
         },
         function(err) {
           vm.page.working = false;
@@ -112,5 +130,18 @@
       }
     }
     vm.editSection = editSection;
+
+    function isValid(requiredFields) {
+      var valid = true;
+      console.log(vm.form);
+      angular.forEach(requiredFields, function(field, index) {
+        if (vm.form[field].$invalid) {
+          valid = false;
+          vm.form[field].$setTouched();
+        }
+      });
+
+      return valid;
+    }
   }
 })();

@@ -10,13 +10,22 @@
     .factory('participantService', participantService);
 
   participantService.$inject = [
+    '$q',
     '$resource',
     'detectionService',
+    'gaService',
     'API_URI',
     'DEBUG'
   ];
 
-  function participantService($resource, detectionService, API_URI, DEBUG) {
+  function participantService(
+    $q,
+    $resource,
+    detectionService,
+    gaService,
+    API_URI,
+    DEBUG
+  ) {
     var Participant = $resource(API_URI + '/participant',
       {},
       {

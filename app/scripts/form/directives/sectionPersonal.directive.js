@@ -22,9 +22,7 @@
         'scripts/form/directives/sectionPersonal.template.html',
       restrict: 'E',
       scope: {
-        page: '=',
-        action: '=',
-        form: '='
+        page: '='
       },
       link: function(scope, elem, attrs, sectionCtrl) {
         sectionCtrl.section = sectionCtrl.page.sections.personal;
@@ -36,6 +34,7 @@
   SectionPersonalController.$inject = [
     '$q',
     '$scope',
+    'contactService',
     'gaService',
     'layoutService',
     'DEBUG'
@@ -44,13 +43,13 @@
   function SectionPersonalController(
     $q,
     $scope,
+    contactService,
     gaService,
     layoutService,
     DEBUG
   ) {
     var vm = this;
     vm.section = vm.page.sections.personal;
-    vm.sectionNext = vm.page.sections[vm.section.next];
 
     vm.section.required = [
       'contactFirstName', 'contactLastName',
@@ -70,9 +69,18 @@
     };
 
     vm.section.process = function() {
-      vm.page.working = true;
-
-
+      return $q(function(resolve, reject) {
+        vm.page.working = true;
+        contactService.save(vm.page.contact)
+        .then(
+          function(contact) {
+            resolve(vm.page.contact);
+          },
+          function(err) {
+            reject(err);
+          }
+        );
+      });
     };
 
   }

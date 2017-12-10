@@ -10,11 +10,20 @@
     .factory('contactService', contactService);
 
   contactService.$inject = [
+    '$q',
     '$resource',
-    'API_URI'
+    'gaService',
+    'API_URI',
+    'DEBUG'
   ];
 
-  function contactService($resource, API_URI) {
+  function contactService(
+    $q,
+    $resource,
+    gaService,
+    API_URI,
+    DEBUG
+  ) {
     var Contact = $resource(API_URI + '/contact',
       {},
       {

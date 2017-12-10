@@ -118,9 +118,6 @@
       return $filter('date')(date, 'dd/MM/yyyy');
     };
 
-    // connection and platform
-    detectionService.detect();
-
     // grab the action
     vm.page.action = {
       loaded: false,
@@ -133,6 +130,10 @@
         if (DEBUG) {
           console.log('retrieveAndInit: Action retrieved', vm.page.action);
         }
+
+        // Now that the action has loaded
+        // start detection process
+        detectionService.detect();
       },
       function(err) {
         if (DEBUG) {
@@ -202,14 +203,6 @@
           }
         );
       }
-
-      // this prevents the contact being saved just after it's loaded
-      if (vm.page.contact.loaded === undefined) {
-        vm.page.contact.loaded = true;
-      } else {
-        // otherwise, if contact is changed save it
-        contactService.save(vm.page.contact);
-      }
     });
 
     // make space for the participant
@@ -231,15 +224,10 @@
 
       // have the connection results been added to the Participant?
       participantService.setDetectionResults(vm.page.participant);
-
-      // this prevents the participant being saved just after it's loaded
-      if (vm.page.participant.loaded === undefined) {
-        vm.page.participant.loaded = true;
-      } else {
-        // otherwise, if participant is changed save it
-        participantService.save(vm.page.participant);
-      }
     });
+
+    // WHEN do we save the participant?
+    // AT select moments I imagine
 
     // ADD a WATCHer to participant in both the responses and sessions
     // obtain the data as soon as the participant exists
