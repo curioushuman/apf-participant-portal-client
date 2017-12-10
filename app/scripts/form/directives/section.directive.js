@@ -22,7 +22,7 @@
       controllerAs: 'vm',
       bindToController: true,
       scope: {
-        form: '='
+        page: '='
       }
     };
   }
@@ -41,25 +41,32 @@
     DEBUG
   ) {
     var vm = this;
-    vm.show = false;
     vm.section = null;
 
     $scope.$watch('vm.section', function(value) {
-      if (vm.section === null) {
-        return;
+      // initiate if empty
+      if (vm.section !== null) {
+        if (vm.section.complete === undefined) {
+          vm.section.complete = false;
+          vm.section.error = false;
+        }
+        if (vm.page.currentSection === vm.section.id) {
+          vm.section.status = 'active';
+        } else if (vm.section.complete === true) {
+          vm.section.status = 'complete';
+        } else {
+          vm.section.status = 'disabled';
+        }
+        console.log('section', vm.section);
       }
-      if (vm.form.currentSection === vm.section.id) {
-        vm.section.status = 'active';
-      } else if (vm.section.complete === true) {
-        vm.section.status = 'complete';
-      } else {
-        vm.section.status = 'disabled';
-      }
-      console.log('section', vm.section);
     });
 
+    vm.process = function() {
+      return vm.section.process();
+    };
+
     vm.editSection = function(source) {
-      vm.form.currentSection = vm.section.id;
+      vm.page.currentSection = vm.section.id;
       // layoutService.navigate(null, section);
       layoutService.navigate(null, 'top');
 
@@ -69,7 +76,7 @@
       } else {
         gaService.addEvent('Navigation', 'Section, ' + source, section);
       }
-    }
+    };
 
   }
 })();

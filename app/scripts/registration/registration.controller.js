@@ -70,10 +70,27 @@
 
     vm.navigate = layoutService.navigate;
 
-    vm.form = {
+    // UP TO THE POINT OF DEFINING THE SECTIONS
+    // CONNECTING THE PROCESS FUNCTION FROM SECTION TO SECTION EMAIL
+    // UPDATING THE SECTION VARIABLE AND HAVING SECTION DIRECIVE KNOW ABOUT IT
+    vm.page = {
       working: false,
       currentSection: 'email',
-      uponComplete: null
+      uponComplete: null,
+      sections: {
+        email: {
+          id: 'email',
+          title: 'Email',
+          visible: true,
+          next: 'personal'
+        },
+        personal: {
+          id: 'personal',
+          title: 'Personal',
+          visible: true,
+          next: false
+        }
+      }
     };
     // vm.completeForm = completeForm; // TMP REMOVED
 
@@ -113,5 +130,10 @@
         vm.action.error = err;
       }
     );
+
+    // make space for the contact
+    vm.page.contact = {
+      exists: false
+    };
   }
 })();

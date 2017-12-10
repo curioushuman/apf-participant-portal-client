@@ -57,10 +57,14 @@ section(ng-show='vm.action.loaded')
           owner-id='vm.action.OwnerId'
         )
         form(
-          name='pageForm',
-          ng-submit='pageForm.$valid',
+          name='form',
+          ng-submit='form.$valid',
           ng-show="vm.action.formStatus === 'open'"
         )
 
-          gz-section(form='vm.form')
-            gz-section-email
+          gz-section(page='vm.page')
+            gz-section-email(
+              page='vm.page',
+              action='vm.action',
+              form='form'
+            )
