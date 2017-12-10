@@ -42,41 +42,62 @@
   ) {
     var vm = this;
     vm.section = null;
+    vm.sectionNext = null;
 
     $scope.$watch('vm.section', function(value) {
-      // initiate if empty
       if (vm.section !== null) {
-        if (vm.section.complete === undefined) {
-          vm.section.complete = false;
-          vm.section.error = false;
-        }
-        if (vm.page.currentSection === vm.section.id) {
-          vm.section.status = 'active';
-        } else if (vm.section.complete === true) {
-          vm.section.status = 'complete';
-        } else {
-          vm.section.status = 'disabled';
-        }
-        console.log('section', vm.section);
+        vm.section.complete = false;
+        vm.section.error = false;
+        vm.section.invalid = false;
+        vm.sectionNext = vm.page.sections[vm.section.next];
+        console.log('Init section', vm.section);
       }
     });
 
-    vm.process = function() {
-      return vm.section.process();
+    vm.pre = function() {
+      vm.section.pre()
+      .then(
+        function(result) {
+          if (DEBUG) {
+            console.log('Doing pre things');
+          }
+          editSection();
+        },
+        function(err) {
+          // do nothing (FOR NOW)
+        }
+      );
     };
 
-    vm.editSection = function(source) {
+    vm.process = function() {
+      vm.section.process()
+      .then(
+        function(result) {
+          vm.section.complete = true;
+          vm.sectionNext.sectionCtrl.pre();
+        },
+        function(err) {
+          vm.page.working = false;
+          vm.section.error = true;
+          if (DEBUG) {
+            console.log('Error: ' + vm.section.id, err);
+          }
+        }
+      );
+    };
+
+    function editSection(source) {
       vm.page.currentSection = vm.section.id;
-      // layoutService.navigate(null, section);
+      // layoutService.navigate(null, vm.section.id);
       layoutService.navigate(null, 'top');
 
       // adding event
       if (source === undefined) {
-        gaService.addEvent('Navigation', 'Section, next', section);
+        gaService.addEvent('Navigation', 'Section, next', vm.section.id);
       } else {
-        gaService.addEvent('Navigation', 'Section, ' + source, section);
+        gaService.addEvent('Navigation', 'Section, ' + source, vm.section.id);
       }
-    };
-
+    }
+    vm.editSection = editSection;
   }
 })();

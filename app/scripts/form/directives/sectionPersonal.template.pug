@@ -1,0 +1,77 @@
+p.intro(
+  layout-padding,
+  md-colors="{background: 'default-background-hue-2'}",
+  ng-show='vm.page.contact.exists'
+) Hi
+  strong 
+    | {{ vm.page.contact.FirstName }},
+  | we found you in our 
+  | database. Please check your information is up to date.
+md-input-container.md-block(flex)
+  label Salutation
+  md-select(ng-model='vm.page.contact.Salutation', name='contactSalutation')
+    md-option(ng-repeat='salutation in vm.page.salutations', value='{{ salutation }}')
+      | {{ salutation }}
+md-input-container.md-block(flex)
+  label First name
+  input(ng-model='vm.page.contact.FirstName', name='contactFirstName', required)
+  div(ng-messages='vm.form.contactFirstName.$error')
+    div(ng-message='required')
+      | Please enter a first name
+md-input-container.md-block(flex)
+  label Last name
+  input(ng-model='vm.page.contact.LastName', name='contactLastName', required)
+  div(ng-messages='vm.form.contactLastName.$error')
+    div(ng-message='required')
+      | Please enter a last name
+md-input-container.md-block(flex)
+  label Your preferred name
+  input(
+    ng-model='vm.page.contact.Preferred_name__c',
+    name='contactPreferredName'
+  )
+  div.hint
+    | Do you have another name 
+    | you would prefer to be addressed by?
+md-input-container.md-block(flex)
+  label Gender
+  md-select(ng-model='vm.page.contact.Gender__c', name='contactGender', required)
+    md-option(ng-repeat='gender in vm.page.genders', value='{{ gender }}')
+      | {{ gender }}
+  div(ng-messages='vm.form.contactGender.$error')
+    div(ng-message='required')
+      | This field is required
+md-input-container.md-block(flex, ng-show='vm.page.contact.Gender__c === "Another term"')
+  label Please specify your preferred term for Gender
+  input(ng-model='vm.page.contact.Gender_another_term__c', name='contactGenderAnotherTerm')
+  //- div(ng-messages='vm.form.contactGenderAnotherTerm.$error')
+    //- div(ng-message='required')
+    //-   | Please enter a last name
+md-input-container.md-block(flex)
+  label If you have dietary requirements please list them here
+  textarea(
+    ng-model='vm.page.contact.Dietary_requirements__c',
+    name='contactDietaryRequirements',
+    md-maxlength='150',
+    rows='3',
+    md-select-on-focus
+  )
+  //- div.hint
+  //-   | Should we add some help text?
+  //- div(ng-messages='vm.form.contactDietaryRequirements.$error')
+  //-   div(ng-message='required')
+  //-     | This field is required
+md-input-container.md-block(flex)
+  label If you have accessibility requirements please list them here
+  textarea(
+    ng-model='vm.page.contact.Accessibility_requirements__c',
+    name='contactAccessibilityRequirements',
+    md-maxlength='150',
+    rows='3',
+    md-select-on-focus
+  )
+  //- div.hint
+  //-   | Should we add some help text?
+  //- div(ng-messages='vm.form.contactAccessibilityRequirements.$error')
+  //-   div(ng-message='required')
+  //-     | This field is required

@@ -70,9 +70,6 @@
 
     vm.navigate = layoutService.navigate;
 
-    // UP TO THE POINT OF DEFINING THE SECTIONS
-    // CONNECTING THE PROCESS FUNCTION FROM SECTION TO SECTION EMAIL
-    // UPDATING THE SECTION VARIABLE AND HAVING SECTION DIRECIVE KNOW ABOUT IT
     vm.page = {
       working: false,
       currentSection: 'email',
@@ -86,7 +83,7 @@
         },
         personal: {
           id: 'personal',
-          title: 'Personal',
+          title: 'Personal Information',
           visible: true,
           next: false
         }
@@ -135,5 +132,8 @@
     vm.page.contact = {
       exists: false
     };
+    // NEED TO perform the actions that need to be performed
+    // once a contact exists
+    // e.g. check for participant etc
   }
 })();

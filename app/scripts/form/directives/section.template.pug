@@ -2,16 +2,16 @@ a(name='vm.section.id')
 //- Disabled version
 gz-disabled-section(
   title='vm.section.title',
-  ng-show="vm.section.status === 'disabled'"
+  ng-show='vm.page.currentSection !== vm.section.id && vm.section.complete === false'
 )
 //- Complete version
 gz-complete-section(
   title='vm.section.title',
-  ng-click="vm.editSection('banner')",
-  ng-show="vm.section.status === 'complete'"
+  ng-click="vm.editSection(vm.section, 'banner')",
+  ng-show='vm.page.currentSection !== vm.section.id && vm.section.complete === true'
 )
 //- Active version
-md-card(ng-show="vm.section.status === 'active'")
+md-card(ng-show='vm.page.currentSection === vm.section.id')
   md-card-header
     md-card-header-text
       span.md-headline {{ vm.section.title }}

@@ -28,19 +28,24 @@
       },
       link: function(scope, elem, attrs, sectionCtrl) {
         sectionCtrl.section = sectionCtrl.page.sections.email;
+        sectionCtrl.section.sectionCtrl = sectionCtrl;
       }
     };
   }
 
   SectionEmailController.$inject = [
+    '$q',
     '$scope',
+    'contactService',
     'gaService',
     'layoutService',
     'DEBUG'
   ];
 
   function SectionEmailController(
+    $q,
     $scope,
+    contactService,
     gaService,
     layoutService,
     DEBUG
@@ -53,53 +58,49 @@
       vm.email = 'mike@curioushuman.com.au';
     }
 
-    vm.page.sections.email.process = function() {
+    vm.section.process = function() {
       vm.page.working = true;
-
       gaService.setUserId(vm.email);
       gaService.addSalesforceRequest('Retrieve', 'Contact');
-      contactService.retrieve(
-        {
-          email: vm.email
-        },
-        function(contact) {
-          gaService.addSalesforceResponse(
-            'Retrieve',
-            'Contact'
-          );
-          vm.page.contact = contact;
-          vm.page.contact.exists = true;
-          if (vm.debug) {
-            console.log('Contact found');
-          }
-        },
-        function(err) {
-          if (err.status === 404) {
-            // carry on through, we just didn't find a record
-            // create a new Contact object
-            vm.page.contact = new contactService.Contact(
-              {
-                email: vm.email
-              }
-            );
-            vm.page.contact.exists = false;
-            vm.section.complete = true;
-            vm.sectionNext.pre();
-          } else {
-            if (vm.debug) {
-              console.log('There was an error retrieving the contact');
-              console.log(err);
-            }
-            vm.section.error = true;
-            gaService.addSalesforceError(
+      return $q(function(resolve, reject) {
+        contactService.retrieve(
+          {
+            email: vm.email
+          },
+          function(contact) {
+            gaService.addSalesforceResponse(
               'Retrieve',
-              'Contact',
-              err.status
+              'Contact'
             );
+            if (DEBUG) {
+              console.log('Contact found');
+            }
+            vm.page.contact = contact;
+            vm.page.contact.exists = true;
+            resolve(contact);
+          },
+          function(err) {
+            if (err.status === 404) {
+              // this is ok, we just didn't find a record
+              // create a new Contact object
+              vm.page.contact = new contactService.Contact(
+                {
+                  email: vm.email
+                }
+              );
+              vm.page.contact.exists = false;
+              resolve(contact);
+            } else {
+              gaService.addSalesforceError(
+                'Retrieve',
+                'Contact',
+                err.status
+              );
+              reject(err);
+            }
           }
-        }
-      );
+        );
+      });
     };
-
   }
 })();
