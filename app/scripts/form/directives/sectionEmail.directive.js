@@ -58,6 +58,13 @@
       vm.email = 'mike@curioushuman.com.au';
     }
 
+    vm.section.pre = function() {
+      return $q(function(resolve, reject) {
+        vm.page.working = false;
+        resolve(true);
+      });
+    };
+
     vm.section.process = function() {
       vm.page.working = true;
       gaService.setUserId(vm.email);

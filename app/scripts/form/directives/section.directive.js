@@ -28,6 +28,7 @@
   }
 
   SectionController.$inject = [
+    '$filter',
     '$scope',
     'gaService',
     'layoutService',
@@ -35,6 +36,7 @@
   ];
 
   function SectionController(
+    $filter,
     $scope,
     gaService,
     layoutService,
@@ -50,6 +52,12 @@
         vm.section.error = false;
         vm.section.invalid = false;
         vm.sectionNext = vm.page.sections[vm.section.next];
+        vm.sectionPrevious = false;
+        angular.forEach(vm.page.sections, function(section, index) {
+          if (section.next === vm.section.id) {
+            vm.sectionPrevious = vm.page.sections[section.id];
+          }
+        });
         console.log('Init section', vm.section);
       }
     });
@@ -84,6 +92,11 @@
           }
         }
       );
+    };
+
+    vm.previous = function() {
+      vm.page.working = true;
+      vm.sectionPrevious.sectionCtrl.pre();
     };
 
     function editSection(source) {

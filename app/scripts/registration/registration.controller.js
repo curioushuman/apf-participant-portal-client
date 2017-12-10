@@ -74,6 +74,20 @@
       working: false,
       currentSection: 'email',
       uponComplete: null,
+      test: [
+        {
+          id: 'email',
+          title: 'Email',
+          visible: true,
+          next: 'personal'
+        },
+        {
+          id: 'personal',
+          title: 'Personal Information',
+          visible: true,
+          next: false
+        }
+      ],
       sections: {
         email: {
           id: 'email',
