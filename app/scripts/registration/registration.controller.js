@@ -73,37 +73,44 @@
     vm.page = {
       working: false,
       currentSection: 'email',
-      uponComplete: null,
-      test: [
-        {
-          id: 'email',
-          title: 'Email',
-          visible: true,
-          next: 'personal'
-        },
-        {
-          id: 'personal',
-          title: 'Personal Information',
-          visible: true,
-          next: false
-        }
-      ],
       sections: {
         email: {
           id: 'email',
           title: 'Email',
-          visible: true,
           next: 'personal'
         },
         personal: {
           id: 'personal',
           title: 'Personal Information',
-          visible: true,
           next: false
         }
       }
     };
-    // vm.completeForm = completeForm; // TMP REMOVED
+
+    // FIX THIS WHEN YOU GET TO IT
+    vm.page.complete = function() {
+      console.log('Completing form');
+      // just submit, don't show a summary of all fields
+      // indicate the participant has completed the form
+      // vm.participant.Registration_complete__c = true;
+      // processUpdateParticipant()
+      // .then(
+      //   function() {
+      //     // good stuff
+      //   },
+      //   function(err) {
+      //     if (vm.debug) {
+      //       console.log('Error completeForm', err);
+      //     }
+      //     // ahhh shit
+      //   }
+      // );
+      // vm.working = false;
+      // vm.sectionActive = '';
+      // vm.expectationsSectionStatus = 'complete';
+      // vm.formStatus = 'complete';
+      // layoutService.navigate(null, 'top');
+    }
 
     // date stuff
     $mdDateLocale.formatDate = function(date) {
