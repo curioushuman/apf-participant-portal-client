@@ -76,16 +76,64 @@
         email: {
           id: 'email',
           title: 'Email',
-          enabled: true,
-          next: 'personal'
+          next: 'personal',
+          enabled: true
         },
         personal: {
           id: 'personal',
           title: 'Personal Information',
-          enabled: true,
-          next: false
+          next: false,
+          enabled: true
+        },
+        organisation: {
+          id: 'personal',
+          title: 'Personal Information',
+          next: false,
+          enabled: true
+        },
+        contact: {
+          id: 'personal',
+          title: 'Personal Information',
+          next: false,
+          enabled: true
+        },
+        experience: {
+          id: 'personal',
+          title: 'Personal Information',
+          next: false,
+          enabled: false,
+          enabler: 'Show_Experience_section__c'
+        },
+        it_skills: {
+          id: 'personal',
+          title: 'Personal Information',
+          next: false,
+          enabled: false,
+          enabler: 'Show_IT_Skills_section__c'
+        },
+        english_skills: {
+          id: 'personal',
+          title: 'Personal Information',
+          next: false,
+          enabled: false,
+          enabler: 'Show_English_Skills_section__c'
+        },
+        expectations: {
+          id: 'personal',
+          title: 'Personal Information',
+          next: false,
+          enabled: false,
+          enabler: 'Show_Expectations_section__c'
+        },
+        sessions: {
+          id: 'personal',
+          title: 'Personal Information',
+          next: false,
+          enabled: false,
+          enabler: 'Show_Sessions_section__c'
         }
-      }
+      },
+      sectionsEnabled: false
     };
 
     // FIX THIS WHEN YOU GET TO IT
@@ -130,6 +178,14 @@
         if (DEBUG) {
           console.log('retrieveAndInit: Action retrieved', vm.page.action);
         }
+
+        // enable the relevant sections
+        angular.forEach(vm.page.sections, function(section, index) {
+          if (vm.page.action[section.enabler] === true) {
+            section.enabled = true;
+          }
+        });
+        vm.page.sectionsEnabled = true;
 
         // Now that the action has loaded
         // start detection process

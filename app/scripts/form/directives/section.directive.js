@@ -47,22 +47,58 @@
     vm.section = null;
     vm.sectionNext = null;
 
-    $scope.$watch('vm.section', function(value) {
-      if (vm.section !== null) {
+    $scope.$watch('vm.page.sectionsEnabled', function(value) {
+      if (vm.page.sectionsEnabled === true) {
+        if (DEBUG) {
+          console.log('sectionsEnabled');
+        }
         vm.section.complete = false;
         vm.section.error = false;
         vm.section.invalid = false;
         vm.sectionNext = false;
-        if (vm.page.sections[vm.section.next] !== undefined) {
-          vm.sectionNext = vm.page.sections[vm.section.next];
-        }
         vm.sectionPrevious = false;
+        var nextSectionDisabled = false;
+        var lastEnabledSection = null;
         angular.forEach(vm.page.sections, function(section, index) {
-          if (section.next === vm.section.id) {
-            vm.sectionPrevious = vm.page.sections[section.id];
+          if (vm.sectionNext === false) {
+            if (
+              nextSectionDisabled === true &&
+              section.enabled === true
+            ) {
+              // grab the first enabled section after what would have been next
+              vm.sectionNext = vm.page.sections[section.id];
+            } else if (
+              section.id === vm.section.next
+            ) {
+              if (section.enabled === true) {
+                // next is enabled, all good
+                vm.sectionNext = vm.page.sections[section.id];
+              } else {
+                // next not enabled, refer to above step in the logic
+                nextSectionDisabled = true;
+              }
+            }
+          }
+          if (vm.sectionPrevious === false) {
+            if (
+              section.next === vm.section.id &&
+              section.enabled === true
+            ) {
+              vm.sectionPrevious = vm.page.sections[section.id];
+            } else if (
+              section.next === vm.section.id &&
+              section.enabled === false
+            ) {
+              vm.sectionPrevious = vm.page.sections[lastEnabledSection.id];
+            }
+          }
+          if (section.enabled === true) {
+            lastEnabledSection = section;
           }
         });
-        console.log('Init section', vm.section);
+        if (DEBUG) {
+          console.log('Init section', vm.section);
+        }
       }
     });
 
