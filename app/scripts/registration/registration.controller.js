@@ -159,6 +159,7 @@
       if (DEBUG) {
         console.log('vm.page.contact changed');
       }
+
       if (vm.page.contact.exists === true) {
         gaService.addSalesforceRequest('Retrieve', 'Participant');
         participantService.retrieve(
@@ -191,7 +192,7 @@
                 'Participant',
                 err.status
               );
-              //UP TO THIS. WHAT DO WE DO UPON ERROR?
+              // WHAT DO WE DO UPON ERROR?
               // we weren't doing anything before
               // this can be an open todo for now
               // an idea might be to have a page.error = true
@@ -200,6 +201,14 @@
             }
           }
         );
+      }
+
+      // this prevents the contact being saved just after it's loaded
+      if (vm.page.contact.loaded === undefined) {
+        vm.page.contact.loaded = true;
+      } else {
+        // otherwise, if contact is changed save it
+        contactService.save(vm.page.contact);
       }
     });
 
@@ -210,7 +219,6 @@
         console.log('vm.page.participant changed');
       }
 
-      // WHAT IF A PARTICIPANT DOESN'T EXIST
       if (vm.page.participant.exists === true) {
         // DO WE NEED TO DO STUFF HERE?
         // OR IS THIS MORE FOR SESSIONS AND RESPONSES
