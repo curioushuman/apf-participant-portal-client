@@ -52,7 +52,7 @@
     vm.section = vm.page.sections.email;
 
     if (DEBUG) {
-      vm.email = 'mike@curioushuman.com.au';
+      vm.page.email = 'mike@curioushuman.com.au';
     }
 
     vm.section.pre = function() {
@@ -62,12 +62,12 @@
     };
 
     vm.section.process = function() {
-      gaService.setUserId(vm.email);
+      gaService.setUserId(vm.page.email);
       gaService.addSalesforceRequest('Retrieve', 'Contact');
       return $q(function(resolve, reject) {
         contactService.retrieve(
           {
-            email: vm.email
+            email: vm.page.email
           },
           function(contact) {
             gaService.addSalesforceResponse(
@@ -87,7 +87,7 @@
               // create a new Contact object
               vm.page.contact = new contactService.Contact(
                 {
-                  email: vm.email
+                  email: vm.page.email
                 }
               );
               vm.page.contact.exists = false;

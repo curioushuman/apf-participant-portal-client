@@ -70,6 +70,7 @@
     vm.navigate = layoutService.navigate;
 
     vm.page = {
+      email: null,
       working: false,
       currentSection: 'email',
       sections: {
