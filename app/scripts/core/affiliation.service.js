@@ -114,5 +114,88 @@
         npe5__StartDate__c: affiliation.npe5__StartDate__c
       };
     }
+
+    function save(affiliation) {
+      if (DEBUG) {
+        console.log('Saving affiliation', affiliation);
+      }
+      return $q(function(resolve, reject) {
+        if (affiliation.Id === undefined) {
+          if (DEBUG) {
+            console.log('CREATING affiliation record', affiliation);
+          }
+          gaService.addSalesforceRequest('Create', 'Affiliation');
+          affiliation.$save(
+            function(record) {
+              gaService.addSalesforceResponse(
+                'Create',
+                'Affiliation'
+              );
+              if (record.success) {
+                affiliation.Id = record.Id;
+                if (DEBUG) {
+                  console.log('affiliation Created', affiliation);
+                }
+                resolve(affiliation);
+              } else {
+                if (DEBUG) {
+                  console.log('There was an error creating the affiliation');
+                }
+                reject('There was an error creating the affiliation');
+              }
+            },
+            function(err) {
+              gaService.addSalesforceError(
+                'Create',
+                'Affiliation',
+                err.status
+              );
+              if (DEBUG) {
+                console.log('There was an error creating the affiliation', err);
+              }
+              reject(err);
+            }
+          );
+        } else {
+          if (DEBUG) {
+            console.log('UPDATING affiliation record', affiliation);
+          }
+          gaService.addSalesforceRequest('Update', 'Affiliation');
+          affiliation.$update(
+            {
+              affiliationid: affiliation.Id
+            },
+            function(record) {
+              gaService.addSalesforceResponse(
+                'Update',
+                'Affiliation'
+              );
+              if (record.success) {
+                if (DEBUG) {
+                  console.log('affiliation Updated', affiliation);
+                }
+                resolve(affiliation);
+              } else {
+                if (DEBUG) {
+                  console.log('There was an error updating the affiliation');
+                }
+                reject('There was an error updating the affiliation');
+              }
+            },
+            function(err) {
+              gaService.addSalesforceError(
+                'Update',
+                'Affiliation',
+                err.status
+              );
+              if (DEBUG) {
+                console.log('There was an error updating the affiliation', err);
+              }
+              reject(err);
+            }
+          );
+        }
+      });
+    }
   }
 })();

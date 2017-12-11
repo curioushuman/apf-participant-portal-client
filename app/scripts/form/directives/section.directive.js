@@ -53,6 +53,7 @@
           console.log('sectionsEnabled');
         }
         vm.section.complete = false;
+        vm.section.errorInitial = false;
         vm.section.error = false;
         vm.section.invalid = false;
         vm.sectionNext = false;
@@ -102,17 +103,30 @@
       }
     });
 
-    vm.pre = function() {
+    vm.pre = function(source) {
+      if (
+        source !== undefined &&
+        typeof source === 'string'
+      ) {
+        gaService.addEvent('Navigation', 'Section, ' + source, vm.section.id);
+      }
+
       vm.section.pre()
       .then(
         function(result) {
           if (DEBUG) {
-            console.log('Doing pre things');
+            console.log('Done section pre things');
           }
+          vm.page.working = false;
           editSection();
         },
         function(err) {
-          // do nothing (FOR NOW)
+          // if there is an error, show the section anyway
+          // so the error can be seen
+          if (vm.section.errorInitial) {
+            vm.page.working = false;
+            editSection();
+          }
         }
       );
     };
@@ -120,6 +134,7 @@
     vm.process = function() {
       if (
         vm.section.required !== undefined &&
+        vm.section.required.length > 0 &&
         isValid(vm.section.required) === false
       ) {
         vm.section.invalid = true;
@@ -154,6 +169,9 @@
     };
 
     function editSection(source) {
+      if (DEBUG) {
+        console.log('editSection', vm.section.id);
+      }
       vm.page.currentSection = vm.section.id;
       // layoutService.navigate(null, vm.section.id);
       layoutService.navigate(null, 'top');

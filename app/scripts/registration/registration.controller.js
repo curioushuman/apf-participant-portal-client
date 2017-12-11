@@ -82,52 +82,52 @@
         personal: {
           id: 'personal',
           title: 'Personal Information',
-          next: false,
+          next: 'organisation',
           enabled: true
         },
         organisation: {
-          id: 'personal',
-          title: 'Personal Information',
-          next: false,
+          id: 'organisation',
+          title: 'Organisation',
+          next: 'contact',
           enabled: true
         },
         contact: {
-          id: 'personal',
-          title: 'Personal Information',
-          next: false,
+          id: 'contact',
+          title: 'Contact details',
+          next: 'experience',
           enabled: true
         },
         experience: {
-          id: 'personal',
-          title: 'Personal Information',
-          next: false,
+          id: 'experience',
+          title: 'Experience',
+          next: 'it_skills',
           enabled: false,
           enabler: 'Show_Experience_section__c'
         },
         it_skills: {
-          id: 'personal',
-          title: 'Personal Information',
-          next: false,
+          id: 'it_skills',
+          title: 'IT Skills',
+          next: 'english_skills',
           enabled: false,
           enabler: 'Show_IT_Skills_section__c'
         },
         english_skills: {
-          id: 'personal',
-          title: 'Personal Information',
-          next: false,
+          id: 'english_skills',
+          title: 'Ensligh Skills',
+          next: 'expectations',
           enabled: false,
           enabler: 'Show_English_Skills_section__c'
         },
         expectations: {
-          id: 'personal',
-          title: 'Personal Information',
-          next: false,
+          id: 'expectations',
+          title: 'Expectations',
+          next: 'sessions',
           enabled: false,
           enabler: 'Show_Expectations_section__c'
         },
         sessions: {
-          id: 'personal',
-          title: 'Personal Information',
+          id: 'sessions',
+          title: 'Sessions',
           next: false,
           enabled: false,
           enabler: 'Show_Sessions_section__c'
@@ -138,6 +138,7 @@
 
     // FIX THIS WHEN YOU GET TO IT
     vm.page.complete = function() {
+      vm.page.working = false;
       console.log('Completing form');
       // just submit, don't show a summary of all fields
       // indicate the participant has completed the form
@@ -214,7 +215,7 @@
     vm.page.contact = {};
     $scope.$watch('vm.page.contact', function(value) {
       if (DEBUG) {
-        console.log('vm.page.contact changed');
+        console.log('vm.page.contact changed', vm.page.contact);
       }
 
       if (vm.page.contact.exists === true) {
@@ -265,7 +266,7 @@
     vm.page.participant = {};
     $scope.$watch('vm.page.participant', function(value) {
       if (DEBUG) {
-        console.log('vm.page.participant changed');
+        console.log('vm.page.participant changed', vm.page.participant);
       }
 
       if (vm.page.participant.exists === true) {

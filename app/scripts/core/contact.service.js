@@ -59,7 +59,7 @@
       return $q(function(resolve, reject) {
         if (contact.Id === undefined) {
           if (DEBUG) {
-            console.log('CREATING contact record');
+            console.log('CREATING contact record', contact);
           }
           gaService.addSalesforceRequest('Create', 'Contact');
           contact.$save(
@@ -69,10 +69,10 @@
                 'Contact'
               );
               if (record.success) {
-                if (DEBUG) {
-                  console.log('contact Created');
-                }
                 contact.Id = record.Id;
+                if (DEBUG) {
+                  console.log('contact Created', contact);
+                }
                 resolve(contact);
               } else {
                 if (DEBUG) {
@@ -95,7 +95,7 @@
           );
         } else {
           if (DEBUG) {
-            console.log('UPDATING contact record');
+            console.log('UPDATING contact record', contact);
           }
           gaService.addSalesforceRequest('Update', 'Contact');
           contact.$update(
@@ -109,7 +109,7 @@
               );
               if (record.success) {
                 if (DEBUG) {
-                  console.log('contact Updated');
+                  console.log('contact Updated', contact);
                 }
                 resolve(contact);
               } else {

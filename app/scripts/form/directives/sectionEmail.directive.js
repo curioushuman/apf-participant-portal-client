@@ -57,7 +57,6 @@
 
     vm.section.pre = function() {
       return $q(function(resolve, reject) {
-        vm.page.working = false;
         resolve(true);
       });
     };
@@ -75,11 +74,11 @@
               'Retrieve',
               'Contact'
             );
-            if (DEBUG) {
-              console.log('Contact found');
-            }
             vm.page.contact = contact;
             vm.page.contact.exists = true;
+            if (DEBUG) {
+              console.log('Contact found', vm.page.contact);
+            }
             resolve(vm.page.contact);
           },
           function(err) {

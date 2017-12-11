@@ -63,14 +63,15 @@
 
     vm.section.pre = function() {
       return $q(function(resolve, reject) {
-        vm.page.working = false;
         resolve(true);
       });
     };
 
     vm.section.process = function() {
       return $q(function(resolve, reject) {
-        vm.page.working = true;
+        if (DEBUG) {
+          console.log('Section.Personal saving contact', vm.page.contact);
+        }
         contactService.save(vm.page.contact)
         .then(
           function(contact) {

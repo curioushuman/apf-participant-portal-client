@@ -17,6 +17,23 @@ div(ng-show='vm.section.enabled === true')
       md-card-header-text
         span.md-headline {{ vm.section.title }}
     md-card-content
+      
+      div.error(
+        layout='row'
+        layout-padding,
+        md-colors="{background: 'default-warn'}",
+        ng-show='vm.section.errorInitial'
+      )
+        div(flex='70', layout='row', layout-align='start center')
+          | There was an error reaching the database. Please wait 5 
+          | seconds and then try again.
+        div(flex='30', layout='row', layout-align='end center')
+          md-progress-circular.md-background(ng-show='vm.page.working', md-mode='indeterminate', md-diameter='20px')
+          md-button.md-background.md-raised(
+            ng-click="vm.pre('try again')",
+            ng-disabled='vm.page.working'
+          ) Try again
+      
       div(ng-transclude)
         
       p.error(
