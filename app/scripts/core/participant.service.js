@@ -69,7 +69,9 @@
           detectionService.platformResults.os;
         participant.Technology_screen_resolution__c =
           detectionService.platformResults.resolution;
+        return true;
       }
+      return false;
     }
 
     function save(participant) {

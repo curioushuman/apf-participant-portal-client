@@ -191,7 +191,8 @@
 
         // Now that the action has loaded
         // start detection process
-        detectionService.detect();
+        // UP TO — pass this a callback, or use $q
+        detectionService.detect(setDetectionResults);
       },
       function(err) {
         if (DEBUG) {
@@ -212,8 +213,22 @@
       }
     );
 
-    // make space for the contact
+    function setDetectionResults() {
+      if (
+        participantService.setDetectionResults(vm.page.participant) === true
+      ) {
+        // you could do a participant save here if you wanted to save the
+        // detection results independently
+        // OR
+        // wait until they're saved during one of the many other participant
+        // saves
+      }
+    }
+
+    // make space for the contact and participant
     vm.page.contact = {};
+    vm.page.participant = {};
+    // some initial contact and participant stuff
     $scope.$watch('vm.page.contact', function(value) {
       if (DEBUG) {
         console.log('vm.page.contact changed', vm.page.contact);
@@ -243,14 +258,39 @@
             if (err.status === 404) {
               // this is ok, we just didn't find a record
               // create a new Participant object
-              vm.page.participant = new participantService.Participant();
+              vm.page.participant = new participantService.Participant(
+                {
+                  Contact__c: vm.page.contact.Id,
+                  Type__c: 'Participant',
+                  Registration_complete__c: false,
+                  Action__c: vm.page.action.Id,
+                  Status__c: 'Registered'
+                }
+              );
               vm.page.participant.exists = false;
+              // do a quick participant save to kick things off
+              participantService.save(vm.page.participant)
+              .then(
+                function(participant) {
+                  if (DEBUG) {
+                    console.log('Initial: Participant saved');
+                  }
+                },
+                function(err) {
+                  if (DEBUG) {
+                    console.log('Initial: Error saving participant', err);
+                  }
+                }
+              );
             } else {
               gaService.addSalesforceError(
                 'Retrieve',
                 'Participant',
                 err.status
               );
+              if (DEBUG) {
+                console.log('Error retrieving participant', err);
+              }
               // WHAT DO WE DO UPON ERROR?
               // we weren't doing anything before
               // this can be an open todo for now
@@ -262,39 +302,5 @@
         );
       }
     });
-
-    // make space for the participant
-    vm.page.participant = {};
-    $scope.$watch('vm.page.participant', function(value) {
-      if (DEBUG) {
-        console.log('vm.page.participant changed', vm.page.participant);
-      }
-
-      if (vm.page.participant.exists === true) {
-        // DO WE NEED TO DO STUFF HERE?
-        // OR IS THIS MORE FOR SESSIONS AND RESPONSES
-      } else {
-        vm.page.participant.Type__c = 'Participant';
-        vm.page.participant.Registration_complete__c = false;
-        vm.page.participant.Action__c = vm.page.action.Id;
-        vm.page.participant.Contact__c = vm.page.contact.Id;
-      }
-
-      // have the connection results been added to the Participant?
-      participantService.setDetectionResults(vm.page.participant);
-    });
-
-    // WHEN do we save the participant?
-    // AT select moments I imagine
-
-    // ADD a WATCHer to participant in both the responses and sessions
-    // obtain the data as soon as the participant exists
-    // only if enabled = true
-
-    // in the experience section pre-grab the questions
-    // only if enabled = true
-
-    // in the sessions section pre-grab the sessions
-    // only if enabled = true
   }
 })();

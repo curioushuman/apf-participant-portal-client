@@ -51,9 +51,9 @@
 
     return service;
 
-    function detect() {
-      detectConnection();
-      detectPlatform();
+    function detect(callback) {
+      detectConnection(callback);
+      detectPlatform(callback);
     }
 
     function detectConnection(callback) {

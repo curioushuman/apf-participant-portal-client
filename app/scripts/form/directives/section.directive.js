@@ -55,6 +55,11 @@
         vm.section.complete = false;
         vm.section.errorInitial = false;
         vm.section.error = false;
+        vm.section.errors = {};
+        vm.section.processing = {
+          processes: 0,
+          processing: 0
+        };
         vm.section.invalid = false;
         vm.sectionNext = false;
         vm.sectionPrevious = false;

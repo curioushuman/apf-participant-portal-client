@@ -51,5 +51,88 @@
     };
 
     return service;
+
+    function save(response) {
+      if (DEBUG) {
+        console.log('Saving response', response);
+      }
+      return $q(function(resolve, reject) {
+        if (response.Id === undefined) {
+          if (DEBUG) {
+            console.log('CREATING response record', response);
+          }
+          gaService.addSalesforceRequest('Create', 'Response');
+          response.$save(
+            function(record) {
+              gaService.addSalesforceResponse(
+                'Create',
+                'Response'
+              );
+              if (record.success) {
+                response.Id = record.Id;
+                if (DEBUG) {
+                  console.log('response Created', response);
+                }
+                resolve(response);
+              } else {
+                if (DEBUG) {
+                  console.log('There was an error creating the response');
+                }
+                reject('There was an error creating the response');
+              }
+            },
+            function(err) {
+              gaService.addSalesforceError(
+                'Create',
+                'Response',
+                err.status
+              );
+              if (DEBUG) {
+                console.log('There was an error creating the response', err);
+              }
+              reject(err);
+            }
+          );
+        } else {
+          if (DEBUG) {
+            console.log('UPDATING response record', response);
+          }
+          gaService.addSalesforceRequest('Update', 'Response');
+          response.$update(
+            {
+              responseid: response.Id
+            },
+            function(record) {
+              gaService.addSalesforceResponse(
+                'Update',
+                'Response'
+              );
+              if (record.success) {
+                if (DEBUG) {
+                  console.log('response Updated', response);
+                }
+                resolve(response);
+              } else {
+                if (DEBUG) {
+                  console.log('There was an error updating the response');
+                }
+                reject('There was an error updating the response');
+              }
+            },
+            function(err) {
+              gaService.addSalesforceError(
+                'Update',
+                'Response',
+                err.status
+              );
+              if (DEBUG) {
+                console.log('There was an error updating the response', err);
+              }
+              reject(err);
+            }
+          );
+        }
+      });
+    }
   }
 })();
