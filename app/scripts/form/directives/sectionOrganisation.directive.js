@@ -76,7 +76,7 @@
 
     vm.page.nhris = [];
     vm.page.organisations = [];
-    vm.page.affiliation = {};
+    vm.page.affiliation = null;
     vm.page.affiliations = [];
 
     // do some things once we know this section is enabled
@@ -229,7 +229,7 @@
                 // but a non-primary org affiliation was found
                 // set affiliation to that
                 if (
-                  vm.page.affiliation === undefined &&
+                  vm.page.affiliation === null &&
                   vm.section.affiliationsFound.organisation
                 ) {
                   if (DEBUG) {
