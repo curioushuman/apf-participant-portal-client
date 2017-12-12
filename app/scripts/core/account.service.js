@@ -58,7 +58,8 @@
       listByType: Account.queryType,
       listByOtherTypes: Account.queryTypeExclude,
       retrieve: Account.get,
-      findAccountInAccounts: findAccountInAccounts
+      findAccountInAccounts: findAccountInAccounts,
+      save: save
     };
 
     return service;

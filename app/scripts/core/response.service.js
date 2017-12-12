@@ -47,7 +47,8 @@
     var service = {
       Response: Response,
       list: Response.query,
-      retrieve: Response.get
+      retrieve: Response.get,
+      save: save
     };
 
     return service;

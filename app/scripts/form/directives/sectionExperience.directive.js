@@ -6,60 +6,52 @@
 
   angular
     .module('app.form')
-    .directive('gzSectionContact', gzSectionContact);
+    .directive('gzSectionExperience', gzSectionExperience);
 
-  gzSectionContact.$inject = [
-    'layoutService'
+  gzSectionExperience.$inject = [
+
   ];
 
-  function gzSectionContact(layoutService) {
+  function gzSectionExperience() {
     return {
       require: '^^gzSection',
-      controller: SectionContactController,
+      controller: SectionExperienceController,
       controllerAs: 'vm',
       bindToController: true,
       templateUrl:
-        'scripts/form/directives/sectionContact.template.html',
+        'scripts/form/directives/sectionExperience.template.html',
       restrict: 'E',
       scope: {
         page: '='
       },
       link: function(scope, elem, attrs, sectionCtrl) {
-        sectionCtrl.section = sectionCtrl.page.sections.contact;
+        sectionCtrl.section = sectionCtrl.page.sections.experience;
         sectionCtrl.section.sectionCtrl = sectionCtrl;
       }
     };
   }
 
-  SectionContactController.$inject = [
+  SectionExperienceController.$inject = [
     '$q',
     '$scope',
-    '$timeout',
-    'accountService',
-    'affiliationService',
-    'contactService',
     'gaService',
-    'layoutService',
     'participantService',
     'questionService',
+    'responseService',
     'DEBUG'
   ];
 
-  function SectionContactController(
+  function SectionExperienceController(
     $q,
     $scope,
-    $timeout,
-    accountService,
-    affiliationService,
-    contactService,
     gaService,
-    layoutService,
     participantService,
     questionService,
+    responseService,
     DEBUG
   ) {
     var vm = this;
-    vm.section = vm.page.sections.contact;
+    vm.section = vm.page.sections.experience;
     vm.section.requestTime = {};
     vm.section.required = [
       'participantPriorExperienceTopic'
@@ -128,12 +120,6 @@
           vm.page.participant.responses.length > 0
         ) {
           angular.forEach(vm.page.questions, function(question, index) {
-            // do we have a response
-            // need to FIX this
-            // vm.participant.responses
-            // instead of
-            // participantResponses
-            // for some reason it is being overriden
             var findQuestionResponse = $filter('filter')(
               vm.page.participant.responses,
               {
@@ -188,6 +174,9 @@
           });
         }
 
+        // reset the processing count
+        vm.section.processing.processing = 1;
+
         // save the participant
         participantService.save(vm.page.participant)
         .then(
@@ -195,7 +184,7 @@
             if (DEBUG) {
               console.log('Section.Experience: participant saved');
             }
-            var promises = prepareReponsesForSave();
+            var promises = prepareResponsesForSave();
             $q.all(promises).then(
               function(data) {
                 if (vm.debug) {
@@ -293,18 +282,18 @@
       );
     }
 
-    function prepareReponsesForSave() {
+    function prepareResponsesForSave() {
       var promises = [];
       angular.forEach(vm.page.questions, function(question, index) {
         question.response.Participant__c = vm.participant.Id;
         question.response.Self_assessment_question__c = question.Id;
-        promises.push(prepareReponseForSave(question.response));
+        promises.push(prepareResponseForSave(question.response));
       });
 
       return promises;
     }
 
-    function prepareReponseForSave() {
+    function prepareResponseForSave() {
       return $q(function(resolve, reject) {
         if (vm.debug) {
           console.log('Saving response', response);

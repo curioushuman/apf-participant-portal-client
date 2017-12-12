@@ -57,8 +57,8 @@
         vm.section.error = false;
         vm.section.errors = {};
         vm.section.processing = {
-          processes: 0,
-          processing: 0
+          processes: 1,
+          processing: 1
         };
         vm.section.invalid = false;
         vm.sectionNext = false;
@@ -144,6 +144,30 @@
       ) {
         vm.section.invalid = true;
         return;
+      }
+
+      // this could be handled better
+      // i.e. to not be so necessarily tied to contact
+      if (
+        vm.section.requiredSliders !== undefined &&
+        vm.section.requiredSliders.length > 0
+      ) {
+        angular.forEach(vm.section.requiredSliders, function(slider, index) {
+          if (
+            vm.page.contact[slider] === undefined ||
+            vm.page.contact[slider] === null ||
+            vm.page.contact[slider] === 0
+          ) {
+            vm.section.errors[slider] = true;
+            vm.section.invalid = true;
+          } else {
+            vm.section.errors[slider] = false;
+          }
+        });
+
+        if (vm.section.invalid === true) {
+          return;
+        }
       }
 
       vm.page.working = true;

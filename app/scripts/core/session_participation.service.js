@@ -48,9 +48,93 @@
     var service = {
       SessionParticipation: SessionParticipation,
       list: SessionParticipation.query,
-      retrieve: SessionParticipation.get
+      retrieve: SessionParticipation.get,
+      save: save
     };
 
     return service;
+
+    function save(sessionParticipation) {
+      if (DEBUG) {
+        console.log('Saving sessionParticipation', sessionParticipation);
+      }
+      return $q(function(resolve, reject) {
+        if (sessionParticipation.Id === undefined) {
+          if (DEBUG) {
+            console.log('CREATING sessionParticipation record', sessionParticipation);
+          }
+          gaService.addSalesforceRequest('Create', 'SessionParticipation');
+          sessionParticipation.$save(
+            function(record) {
+              gaService.addSalesforceResponse(
+                'Create',
+                'SessionParticipation'
+              );
+              if (record.success) {
+                sessionParticipation.Id = record.Id;
+                if (DEBUG) {
+                  console.log('sessionParticipation Created', sessionParticipation);
+                }
+                resolve(sessionParticipation);
+              } else {
+                if (DEBUG) {
+                  console.log('There was an error creating the sessionParticipation');
+                }
+                reject('There was an error creating the sessionParticipation');
+              }
+            },
+            function(err) {
+              gaService.addSalesforceError(
+                'Create',
+                'SessionParticipation',
+                err.status
+              );
+              if (DEBUG) {
+                console.log('There was an error creating the sessionParticipation', err);
+              }
+              reject(err);
+            }
+          );
+        } else {
+          if (DEBUG) {
+            console.log('UPDATING sessionParticipation record', sessionParticipation);
+          }
+          gaService.addSalesforceRequest('Update', 'SessionParticipation');
+          sessionParticipation.$update(
+            {
+              sessionParticipationid: sessionParticipation.Id
+            },
+            function(record) {
+              gaService.addSalesforceResponse(
+                'Update',
+                'SessionParticipation'
+              );
+              if (record.success) {
+                if (DEBUG) {
+                  console.log('sessionParticipation Updated', sessionParticipation);
+                }
+                resolve(sessionParticipation);
+              } else {
+                if (DEBUG) {
+                  console.log('There was an error updating the sessionParticipation');
+                }
+                reject('There was an error updating the sessionParticipation');
+              }
+            },
+            function(err) {
+              gaService.addSalesforceError(
+                'Update',
+                'SessionParticipation',
+                err.status
+              );
+              if (DEBUG) {
+                console.log('There was an error updating the sessionParticipation', err);
+              }
+              reject(err);
+            }
+          );
+        }
+      });
+    }
   }
 })();

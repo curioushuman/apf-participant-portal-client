@@ -60,7 +60,8 @@
       listByContact: Affiliation.queryByContact,
       equalsOrganisation: equalsOrganisation,
       equalsOther: equalsOther,
-      saveFoundAffiliation: saveFoundAffiliation
+      saveFoundAffiliation: saveFoundAffiliation,
+      save: save
     };
 
     return service;

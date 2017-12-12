@@ -6,75 +6,85 @@
 
   angular
     .module('app.form')
-    .directive('gzSectionContact', gzSectionContact);
+    .directive('gzSectionEnglishSkills', gzSectionEnglishSkills);
 
-  gzSectionContact.$inject = [
+  gzSectionEnglishSkills.$inject = [
     'layoutService'
   ];
 
-  function gzSectionContact(layoutService) {
+  function gzSectionEnglishSkills(layoutService) {
     return {
       require: '^^gzSection',
-      controller: SectionContactController,
+      controller: SectionEnglishSkillsController,
       controllerAs: 'vm',
       bindToController: true,
       templateUrl:
-        'scripts/form/directives/sectionContact.template.html',
+        'scripts/form/directives/sectionEnglishSkills.template.html',
       restrict: 'E',
       scope: {
         page: '='
       },
       link: function(scope, elem, attrs, sectionCtrl) {
-        sectionCtrl.section = sectionCtrl.page.sections.contact;
+        sectionCtrl.section = sectionCtrl.page.sections.english_skills;
         sectionCtrl.section.sectionCtrl = sectionCtrl;
       }
     };
   }
 
-  SectionContactController.$inject = [
+  SectionEnglishSkillsController.$inject = [
     '$q',
     '$scope',
-    '$timeout',
-    'accountService',
-    'affiliationService',
     'contactService',
-    'gaService',
     'layoutService',
-    'participantService',
     'DEBUG'
   ];
 
-  function SectionContactController(
+  function SectionEnglishSkillsController(
     $q,
     $scope,
-    $timeout,
-    accountService,
-    affiliationService,
     contactService,
-    gaService,
     layoutService,
-    participantService,
     DEBUG
   ) {
     var vm = this;
-    vm.section = vm.page.sections.contact;
+    vm.section = vm.page.sections.english_skills;
     vm.section.requestTime = {};
     vm.section.required = [];
+    vm.section.requiredSliders = [
+      'EN_Skills_Ability_to_read_in_English__c',
+      'EN_Skills_Ability_to_write_in_English__c',
+      'EN_Skills_Ability_to_understand_spoken__c',
+      'EN_Skills_Ability_to_speak_English__c'
+    ];
 
     // do some things once we know this section is enabled
     $scope.$watch('vm.page.sectionsEnabled', function(value) {
-
+      // do nothing
     });
 
     vm.section.pre = function() {
       return $q(function(resolve, reject) {
-
+        resolve(true);
       });
     };
 
     vm.section.process = function() {
       return $q(function(resolve, reject) {
-
+        contactService.save(vm.page.contact)
+        .then(
+          function(contact) {
+            if (DEBUG) {
+              console.log('Section.English_Skills: Contact saved');
+            }
+            resolve(contact);
+          },
+          function(err) {
+            if (DEBUG) {
+              console.log('Section.English_Skills: Error saving contact', err);
+            }
+            reject(contact);
+          }
+        );
       });
     };
   }

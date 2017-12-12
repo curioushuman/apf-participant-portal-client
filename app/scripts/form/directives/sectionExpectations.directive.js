@@ -6,75 +6,82 @@
 
   angular
     .module('app.form')
-    .directive('gzSectionContact', gzSectionContact);
+    .directive('gzSectionExpectations', gzSectionExpectations);
 
-  gzSectionContact.$inject = [
-    'layoutService'
+  gzSectionExpectations.$inject = [
+
   ];
 
-  function gzSectionContact(layoutService) {
+  function gzSectionExpectations() {
     return {
       require: '^^gzSection',
-      controller: SectionContactController,
+      controller: SectionExpectationsController,
       controllerAs: 'vm',
       bindToController: true,
       templateUrl:
-        'scripts/form/directives/sectionContact.template.html',
+        'scripts/form/directives/sectionExpectations.template.html',
       restrict: 'E',
       scope: {
         page: '='
       },
       link: function(scope, elem, attrs, sectionCtrl) {
-        sectionCtrl.section = sectionCtrl.page.sections.contact;
+        sectionCtrl.section = sectionCtrl.page.sections.expectations;
         sectionCtrl.section.sectionCtrl = sectionCtrl;
       }
     };
   }
 
-  SectionContactController.$inject = [
+  SectionExpectationsController.$inject = [
     '$q',
     '$scope',
-    '$timeout',
-    'accountService',
-    'affiliationService',
     'contactService',
-    'gaService',
-    'layoutService',
     'participantService',
     'DEBUG'
   ];
 
-  function SectionContactController(
+  function SectionExpectationsController(
     $q,
     $scope,
-    $timeout,
-    accountService,
-    affiliationService,
     contactService,
-    gaService,
-    layoutService,
     participantService,
     DEBUG
   ) {
     var vm = this;
-    vm.section = vm.page.sections.contact;
+    vm.section = vm.page.sections.expectations;
     vm.section.requestTime = {};
-    vm.section.required = [];
+    vm.section.required = [
+      'participantKnowledgeGain',
+      'participantSkillsGain'
+    ];
 
     // do some things once we know this section is enabled
     $scope.$watch('vm.page.sectionsEnabled', function(value) {
-
+      // do nothing
     });
 
     vm.section.pre = function() {
       return $q(function(resolve, reject) {
-
+        resolve(true);
       });
     };
 
     vm.section.process = function() {
       return $q(function(resolve, reject) {
-
+        participantService.save(vm.page.participant)
+        .then(
+          function(participant) {
+            if (DEBUG) {
+              console.log('Section.Expectations: Participant saved');
+            }
+            resolve(participant);
+          },
+          function(err) {
+            if (DEBUG) {
+              console.log('Section.Expectations: Error saving participant', err);
+            }
+            reject(participant);
+          }
+        );
       });
     };
   }
