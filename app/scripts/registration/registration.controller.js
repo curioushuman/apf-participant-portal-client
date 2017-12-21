@@ -168,6 +168,10 @@
         });
         vm.page.sectionsEnabled = true;
 
+        if (DEBUG) {
+          console.log('Is training?', vm.page.action.isTraining);
+        }
+
         // Now that the action has loaded
         // start detection process
         // UP TO — pass this a callback, or use $q
