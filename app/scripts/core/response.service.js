@@ -67,7 +67,10 @@
         console.log('Saving response', response);
       }
       return $q(function(resolve, reject) {
-        if (response.Id === undefined) {
+        if (
+          response.Id === undefined ||
+          response.Id === null
+        ) {
           if (DEBUG) {
             console.log('CREATING response record', response);
           }

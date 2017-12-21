@@ -22,7 +22,8 @@
         'scripts/form/directives/sectionExperience.template.html',
       restrict: 'E',
       scope: {
-        page: '='
+        page: '=',
+        form: '='
       },
       link: function(scope, elem, attrs, sectionCtrl) {
         sectionCtrl.section = sectionCtrl.page.sections.experience;
@@ -95,9 +96,6 @@
         vm.page.participant.exists !== undefined &&
         vm.page.participant.exists === true
       ) {
-        if (DEBUG) {
-          console.log('Cockmuncher', vm.page.participant);
-        }
         // we want to grab responses
         retrieveResponses()
         .then(
@@ -133,12 +131,18 @@
             );
           }
           angular.forEach(vm.page.questions, function(question, index) {
-            var findQuestionResponse = $filter('filter')(
-              vm.page.participant.responses,
-              {
-                Self_assessment_question__c: question.Id
-              }
-            );
+            var findQuestionResponse = null;
+            if (
+              vm.page.participant.responses !== undefined &&
+              vm.page.participant.responses.length > 0
+            ) {
+              findQuestionResponse = $filter('filter')(
+                vm.page.participant.responses,
+                {
+                  Self_assessment_question__c: question.Id
+                }
+              );
+            }
             if (DEBUG) {
               console.log('Found response', findQuestionResponse);
               console.log('To question', question);

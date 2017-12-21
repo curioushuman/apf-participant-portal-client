@@ -57,7 +57,10 @@
         console.log('Saving contact', contact);
       }
       return $q(function(resolve, reject) {
-        if (contact.Id === undefined) {
+        if (
+          contact.Id === undefined ||
+          contact.Id === null
+        ) {
           if (DEBUG) {
             console.log('CREATING contact record', contact);
           }

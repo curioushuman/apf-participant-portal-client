@@ -131,7 +131,10 @@
         console.log('Saving affiliation', affiliation);
       }
       return $q(function(resolve, reject) {
-        if (affiliation.Id === undefined) {
+        if (
+          affiliation.Id === undefined ||
+          affiliation.Id === null
+        ) {
           if (DEBUG) {
             console.log('CREATING affiliation record', affiliation);
           }
@@ -146,6 +149,7 @@
                 affiliation.Id = record.Id;
                 if (DEBUG) {
                   console.log('affiliation Created', affiliation);
+                  console.log('from record', record);
                 }
                 resolve(affiliation);
               } else {

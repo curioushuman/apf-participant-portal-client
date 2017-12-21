@@ -22,7 +22,8 @@
         'scripts/form/directives/sectionEmail.template.html',
       restrict: 'E',
       scope: {
-        page: '='
+        page: '=',
+        form: '='
       },
       link: function(scope, elem, attrs, sectionCtrl) {
         sectionCtrl.section = sectionCtrl.page.sections.email;
@@ -46,6 +47,9 @@
   ) {
     var vm = this;
     vm.section = vm.page.sections.email;
+    vm.section.required = [
+      'contactEmail'
+    ];
 
     if (DEBUG) {
       vm.page.email = 'mike@curioushuman.com.au';

@@ -51,6 +51,7 @@
       Participant: Participant,
       retrieve: Participant.get,
       setDetectionResults: setDetectionResults,
+      initParticipant: initParticipant,
       save: save
     };
 
@@ -74,13 +75,29 @@
       return false;
     }
 
+    function initParticipant(action, contact) {
+      return new Participant(
+        {
+          Contact__c: contact.Id,
+          Type__c: 'Participant',
+          Registration_complete__c: false,
+          Action__c: action.Id,
+          Status__c: 'Registered',
+          exists: false
+        }
+      );
+    }
+
     function save(participant) {
       if (DEBUG) {
         console.log('Saving participant', participant);
       }
       return $q(function(resolve, reject) {
         participant.Status__c = 'Registered';
-        if (participant.Id === undefined) {
+        if (
+          participant.Id === undefined ||
+          participant.Id === null
+        ) {
           if (DEBUG) {
             console.log('CREATING participant record');
           }

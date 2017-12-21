@@ -196,9 +196,10 @@
     vm.page.contact = {};
     vm.page.participant = {};
     // some initial contact and participant stuff
-    $scope.$watch('vm.page.contact', function(value) {
+    $scope.$watch('vm.page.contact.Id', function(value) {
       if (DEBUG) {
         console.log('vm.page.contact changed', vm.page.contact);
+        console.log('CHANGE ID', vm.page.contact.Id);
       }
 
       // if they exist, see if they're already registered as a participant
@@ -226,16 +227,10 @@
             if (err.status === 404) {
               // this is ok, we just didn't find a record
               // create a new Participant object
-              vm.page.participant = new participantService.Participant(
-                {
-                  Contact__c: vm.page.contact.Id,
-                  Type__c: 'Participant',
-                  Registration_complete__c: false,
-                  Action__c: vm.page.action.Id,
-                  Status__c: 'Registered'
-                }
+              vm.page.participant = participantService.initParticipant(
+                vm.page.action,
+                vm.page.contact
               );
-              vm.page.participant.exists = false;
 
               // set the detection results here as well
               // this will do nothing more than set the values on the
@@ -275,6 +270,29 @@
               // an idea might be to have a page.error = true
               // and display that potentially in a similar place to
               // where the section errors appear
+            }
+          }
+        );
+      } else if (vm.page.contact.Id !== undefined) {
+        if (DEBUG) {
+          console.log('No contact found, empty participant created');
+        }
+        vm.page.participant = participantService.initParticipant(
+          vm.page.action,
+          vm.page.contact
+        );
+        // set and save (as above)
+        setDetectionResults();
+        participantService.save(vm.page.participant)
+        .then(
+          function(participant) {
+            if (DEBUG) {
+              console.log('Initial: New Participant saved');
+            }
+          },
+          function(err) {
+            if (DEBUG) {
+              console.log('Initial: Error saving new participant', err);
             }
           }
         );

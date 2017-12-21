@@ -22,7 +22,8 @@
         'scripts/form/directives/sectionEnglishSkills.template.html',
       restrict: 'E',
       scope: {
-        page: '='
+        page: '=',
+        form: '='
       },
       link: function(scope, elem, attrs, sectionCtrl) {
         sectionCtrl.section = sectionCtrl.page.sections.english_skills;

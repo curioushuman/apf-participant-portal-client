@@ -22,7 +22,8 @@
         'scripts/form/directives/sectionSessions.template.html',
       restrict: 'E',
       scope: {
-        page: '='
+        page: '=',
+        form: '='
       },
       link: function(scope, elem, attrs, sectionCtrl) {
         sectionCtrl.section = sectionCtrl.page.sections.sessions;
@@ -183,13 +184,18 @@
           vm.section.sessionsAndParticipationLoaded.participations === true
         ) {
           angular.forEach(vm.page.sessions, function(session, index) {
-
-            var findSessionParticipation = $filter('filter')(
-              vm.page.participant.sessionParticipations,
-              {
-                Session__c: session.Id
-              }
-            );
+            var findSessionParticipation = null;
+            if (
+              vm.page.participant.sessionParticipations !== undefined &&
+              vm.page.participant.sessionParticipations.length > 0
+            ) {
+              findSessionParticipation = $filter('filter')(
+                vm.page.participant.sessionParticipations,
+                {
+                  Session__c: session.Id
+                }
+              );
+            }
             if (DEBUG) {
               console.log(
                 'Found sessionParticipation',
@@ -198,6 +204,7 @@
               console.log('To session', session);
             }
             if (
+              findSessionParticipation !== undefined &&
               findSessionParticipation !== null &&
               findSessionParticipation.length > 0
             ) {

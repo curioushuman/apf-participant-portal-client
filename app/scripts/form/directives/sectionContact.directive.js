@@ -22,7 +22,8 @@
         'scripts/form/directives/sectionContact.template.html',
       restrict: 'E',
       scope: {
-        page: '='
+        page: '=',
+        form: '='
       },
       link: function(scope, elem, attrs, sectionCtrl) {
         sectionCtrl.section = sectionCtrl.page.sections.contact;
@@ -101,6 +102,10 @@
           });
           return;
         }
+
+        // reset the validation to empty
+        // so we don't get stuck at the valid function above in section
+        vm.section.required = [];
 
         if (DEBUG) {
           console.log('Contact info submitted', vm.page.contact);

@@ -142,6 +142,11 @@
     };
 
     vm.process = function() {
+
+      // reset errors
+      vm.section.error = false;
+      vm.section.invalid = false;
+
       // validate the section
       if (
         vm.section.required !== undefined &&
@@ -231,7 +236,6 @@
 
     function isValid(requiredFields) {
       var valid = true;
-      console.log(vm.form);
       angular.forEach(requiredFields, function(field, index) {
         if (vm.form[field].$invalid) {
           valid = false;

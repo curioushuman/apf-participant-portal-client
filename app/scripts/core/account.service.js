@@ -90,7 +90,10 @@
         console.log('Saving account', account);
       }
       return $q(function(resolve, reject) {
-        if (account.Id === undefined) {
+        if (
+          account.Id === undefined ||
+          account.Id === null
+        ) {
           if (DEBUG) {
             console.log('CREATING account record', account);
           }

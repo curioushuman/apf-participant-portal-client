@@ -68,7 +68,10 @@
         console.log('Saving sessionParticipation', sessionParticipation);
       }
       return $q(function(resolve, reject) {
-        if (sessionParticipation.Id === undefined) {
+        if (
+          sessionParticipation.Id === undefined ||
+          sessionParticipation.Id === null
+        ) {
           if (DEBUG) {
             console.log('CREATING sessionParticipation record', sessionParticipation);
           }

@@ -22,7 +22,8 @@
         'scripts/form/directives/sectionOrganisation.template.html',
       restrict: 'E',
       scope: {
-        page: '='
+        page: '=',
+        form: '='
       },
       link: function(scope, elem, attrs, sectionCtrl) {
         sectionCtrl.section = sectionCtrl.page.sections.organisation;
@@ -125,9 +126,9 @@
 
     vm.section.pre = function() {
       return $q(function(resolve, reject) {
-        // this function recurses 5 times, once a second
+        // this function recurses up to 5 times, once a second
         // (well to the parent (section directive) to be precise)
-        // when no NHRIs or ORGs currently exist
+        // if no NHRIs or ORGs yet exist
         if (DEBUG) {
           console.log('Section.Organisation pre');
           console.log('nhris', vm.page.nhris.length);
@@ -138,7 +139,10 @@
           vm.page.nhris.length > 0 &&
           vm.page.organisations.length > 0
         ) {
-          if (vm.page.contact.exists) {
+          if (
+            vm.page.contact.exists &&
+            vm.page.affiliations.length === 0
+          ) {
             retrieveAffiliations()
             .then(
               function(affiliations) {
@@ -267,9 +271,17 @@
                 }
               }
             );
-          } else {
+          } else if (vm.page.affiliation === null) {
             // there was no contact, create empty affiliation
+            if (DEBUG) {
+              console.log(
+                'Creating empty affiliation, current is',
+                vm.page.affiliation
+              );
+            }
             vm.page.affiliation = new affiliationService.Affiliation();
+            resolve(vm.page.affiliation);
+          } else {
             resolve(vm.page.affiliation);
           }
         } else if (vm.section.preOrgCount < 5) {
@@ -307,7 +319,7 @@
         vm.page.affiliationFound =
           vm.section.affiliationsFound[vm.section.orgTypeSelected];
         if (vm.section.orgTypeSelected === 'nhri') {
-          vm.section.required.push('affiliationOrganisation');
+          vm.section.required.push('affiliationNhri');
         } else if (vm.section.orgTypeSelected === 'organisation') {
           vm.section.required.push('orgSearchText');
         }
@@ -317,6 +329,7 @@
         }
 
         if (vm.section.sectionCtrl.isValid(vm.section.required) === false) {
+          console.log('2 vm.section.required', vm.section.required);
           vm.section.invalid = true;
           reject({
             name: 'Invalid',
@@ -325,14 +338,21 @@
           return;
         }
 
+        // reset the validation to empty
+        // so we don't get stuck at the valid function above in section
+        vm.section.required = [];
+
         // update some contact fields
         // Set on contact if no affiliation existed before
         // OR if affiliations did exist
         // and the one they're updating is the primary
         if (
-          vm.page.affiliationFound === undefined ||
-          vm.page.affiliationFound === null ||
-          vm.page.affiliationFound.npe5__Primary__c === true
+          vm.page.affiliations.length === 0 ||
+          (
+            vm.page.affiliationFound !== undefined &&
+            vm.page.affiliationFound !== null &&
+            vm.page.affiliationFound.npe5__Primary__c === true
+          )
         ) {
           vm.page.contact.Department = vm.page.affiliation.Department__c;
           vm.page.contact.Title = vm.page.affiliation.npe5__Role__c;
@@ -365,7 +385,15 @@
             if (organisation !== null) {
               // we did
               vm.page.affiliation.npe5__Organization__c = organisation.Id;
+              vm.section.orgSearchExistingOrgSelected = organisation;
+              // DOESN'T WORK
+              // The new org isn't coming up in the search
+              // low priority at this time
               vm.page.organisations.push(organisation);
+              if (DEBUG) {
+                console.log('New org created', organisation);
+                console.log('Added to', vm.page.organisations);
+              }
             }
 
             return saveAffiliation();
@@ -383,24 +411,31 @@
             if (affiliation !== null) {
               // we did
               vm.page.affiliation = affiliation;
+              vm.page.affiliation.type = vm.section.orgTypeSelected;
               // set the date on the affiliation to be an object again
               vm.page.affiliation.npe5__StartDate__c =
                 new Date(vm.page.affiliation.npe5__StartDate__c);
               // let the form know we now have a found affiliation
+              vm.page.affiliations.push(vm.page.affiliation);
               vm.section.affiliationsFound[vm.section.orgTypeSelected] =
                 affiliationService.saveFoundAffiliation(vm.page.affiliation);
+              vm.section.affiliationsSwitching[vm.section.orgTypeSelected] =
+                vm.page.affiliation;
               if (DEBUG) {
                 console.log(
                   'Affiliation saved, putting it to found',
                   vm.section.affiliationsFound[vm.section.orgTypeSelected]
                 );
               }
+
+              // add this to the participant
+              vm.page.participant.Organisation__c =
+                vm.page.affiliation.npe5__Organization__c;
+              // and save
+              return participantService.save(vm.page.participant);
             }
 
-            // add this to the participant
-            vm.page.participant.Organisation__c =
-              vm.page.affiliation.npe5__Organization__c;
-            return participantService.save(vm.page.participant);
+            resolve(vm.page.affiliation);
           },
           function(err) {
             if (DEBUG) {
@@ -574,35 +609,47 @@
       }
     };
 
-    function isNewOrganisation(organisation) {
-      if (DEBUG) {
-        console.log('isNewOrganisation', organisation);
-        console.log('searchText', vm.section.orgSearchText);
-        console.log(
-          'existingOrgSelected',
-          vm.section.orgSearchExistingOrgSelected);
-      }
+    function isNewOrganisation() {
       return $q(function(resolve, reject) {
-        // determine if this is requires a new org or not
-        // if org.name empty, or we found a match we don't need a new org
-        if (
-          !vm.section.orgSearchText ||
-          vm.section.orgSearchExistingOrgSelected
-        ) {
+        if (vm.section.orgTypeSelected === 'organisation') {
+          var newOrganisation = new accountService.Account();
+          newOrganisation.Name = vm.section.orgSearchText;
+
           if (DEBUG) {
-            console.log('Either no new org name entered, or match found');
+            console.log('isNewOrganisation', newOrganisation);
+            console.log('searchText', vm.section.orgSearchText);
+            console.log(
+              'existingOrgSelected',
+              vm.section.orgSearchExistingOrgSelected);
+          }
+
+          // determine if this is requires a new org or not
+          // if org.name empty, or we found a match we don't need a new org
+          if (
+            !vm.section.orgSearchText ||
+            vm.section.orgSearchExistingOrgSelected
+          ) {
+            if (DEBUG) {
+              console.log('Either no new org name entered, or match found');
+            }
+            resolve(null);
+          } else {
+            accountService.save(newOrganisation)
+            .then(
+              function(organisation) {
+                resolve(organisation);
+              },
+              function(err) {
+                reject(err);
+              }
+            );
+          }
+        } else {
+          // we don't need to save a new org for an NHRI
+          if (DEBUG) {
+            console.log('isNewOrg — no check, is an NHRI');
           }
           resolve(null);
-        } else {
-          accountService.save(organisation)
-          .then(
-            function(organisation) {
-              resolve(organisation);
-            },
-            function(err) {
-              reject(err);
-            }
-          );
         }
       });
     }
@@ -648,7 +695,7 @@
           return;
         }
         if (DEBUG) {
-          console.log('Saving affiliation balls', vm.page.affiliation);
+          console.log('Saving affiliation', vm.page.affiliation);
         }
         affiliationService.save(vm.page.affiliation)
         .then(
