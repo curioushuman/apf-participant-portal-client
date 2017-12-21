@@ -9,10 +9,10 @@
     .directive('gzSectionItSkills', gzSectionItSkills);
 
   gzSectionItSkills.$inject = [
-    'layoutService'
+
   ];
 
-  function gzSectionItSkills(layoutService) {
+  function gzSectionItSkills() {
     return {
       require: '^^gzSection',
       controller: SectionItSkillsController,
@@ -33,17 +33,13 @@
 
   SectionItSkillsController.$inject = [
     '$q',
-    '$scope',
     'contactService',
-    'layoutService',
     'DEBUG'
   ];
 
   function SectionItSkillsController(
     $q,
-    $scope,
     contactService,
-    layoutService,
     DEBUG
   ) {
     var vm = this;
@@ -57,11 +53,6 @@
       'IT_Skill_Ability_to_use_Word_documents__c',
       'IT_Skill_Ability_to_use_spreadsheets__c'
     ];
-
-    // do some things once we know this section is enabled
-    $scope.$watch('vm.page.sectionsEnabled', function(value) {
-      // do nothing
-    });
 
     vm.section.pre = function() {
       return $q(function(resolve, reject) {

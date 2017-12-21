@@ -147,23 +147,24 @@
 
     // when participant is found, obtain their sessionParticipations
     $scope.$watch('vm.page.participant', function(value) {
-      if (vm.page.participant.exists !== undefined) {
-        if (vm.page.participant.exists === true) {
-          // we want to grab sessionParticipations
-          retrieveSessionParticipations()
-          .then(
-            function(sessionParticipations) {
-              vm.page.participant.sessionParticipations = sessionParticipations;
-              vm.section.sessionsAndParticipationLoaded.participations = true;
-            },
-            function(err) {
-              vm.section.errorInitial = true;
-            }
-          );
-        } else {
-          // no participant, we don't need participation so just set to true
-          vm.section.sessionsAndParticipationLoaded.participations = true;
-        }
+      if (
+        vm.page.participant.exists !== undefined &&
+        vm.page.participant.exists === true
+      ) {
+        // we want to grab sessionParticipations
+        retrieveSessionParticipations()
+        .then(
+          function(sessionParticipations) {
+            vm.page.participant.sessionParticipations = sessionParticipations;
+            vm.section.sessionsAndParticipationLoaded.participations = true;
+          },
+          function(err) {
+            vm.section.errorInitial = true;
+          }
+        );
+      } else {
+        // no participant, we don't need participation so just set to true
+        vm.section.sessionsAndParticipationLoaded.participations = true;
       }
     });
 

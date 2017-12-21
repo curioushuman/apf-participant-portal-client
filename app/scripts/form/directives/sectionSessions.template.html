@@ -1,0 +1,9 @@
+<div class="sessions" ng-hide="vm.page.sessions.length === 0"><p class="intro" layout="column" layout-padding="layout-padding" md-colors="{background: 'default-background-hue-2'}">This event involves the following parallel sessions. 
+Please select your preferred session, by selecting ‘1’ 
+next to your first preference, and ‘2’ for your second 
+preference. <br/><br/>Please note that all groups will be limited to the maximum 
+number of seating available. The APF shall endeavour to 
+place you within the first group of your choice, and where 
+this is not possible, you will be provided with your second 
+preference. Preferences will be allocated on a first 
+come, first serve basis.</p><gz-session-participation-form-input ng-repeat="session in vm.page.sessions" session="session" sessions-days="vm.section.sessionsDays"></gz-session-participation-form-input></div>

@@ -9,10 +9,10 @@
     .directive('gzSectionContact', gzSectionContact);
 
   gzSectionContact.$inject = [
-    'layoutService'
+
   ];
 
-  function gzSectionContact(layoutService) {
+  function gzSectionContact() {
     return {
       require: '^^gzSection',
       controller: SectionContactController,
@@ -33,27 +33,13 @@
 
   SectionContactController.$inject = [
     '$q',
-    '$scope',
-    '$timeout',
-    'accountService',
-    'affiliationService',
     'contactService',
-    'gaService',
-    'layoutService',
-    'participantService',
     'DEBUG'
   ];
 
   function SectionContactController(
     $q,
-    $scope,
-    $timeout,
-    accountService,
-    affiliationService,
     contactService,
-    gaService,
-    layoutService,
-    participantService,
     DEBUG
   ) {
     var vm = this;
@@ -63,24 +49,20 @@
 
     vm.section.emailIsWork = 'yes';
     vm.section.phoneTypes = ['Work', 'Mobile', 'Home', 'Other'];
-
-    // do some things once we know this section is enabled
-    $scope.$watch('vm.page.sectionsEnabled', function(value) {
-      // nothing
-    });
+    vm.section.phoneNumber = '';
 
     vm.section.pre = function() {
       return $q(function(resolve, reject) {
         switch (vm.page.contact.npe01__PreferredPhone__c) {
           case 'Mobile':
-            vm.Phone = vm.page.contact.MobilePhone;
+            vm.section.phoneNumber = vm.page.contact.MobilePhone;
             break;
           case 'Home':
-            vm.Phone = vm.page.contact.HomePhone;
+            vm.section.phoneNumber = vm.page.contact.HomePhone;
             break;
           case 'Work':
           default:
-            vm.Phone = vm.page.contact.npe01__WorkPhone__c;
+            vm.section.phoneNumber = vm.page.contact.npe01__WorkPhone__c;
             break;
         }
 
@@ -125,14 +107,14 @@
 
         switch (vm.page.contact.npe01__PreferredPhone__c) {
           case 'Mobile':
-            vm.page.contact.MobilePhone = vm.Phone;
+            vm.page.contact.MobilePhone = vm.section.phoneNumber;
             break;
           case 'Home':
-            vm.page.contact.HomePhone = vm.Phone;
+            vm.page.contact.HomePhone = vm.section.phoneNumber;
             break;
           case 'Work':
           default:
-            vm.page.contact.npe01__WorkPhone__c = vm.Phone;
+            vm.page.contact.npe01__WorkPhone__c = vm.section.phoneNumber;
             break;
         }
 

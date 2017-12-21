@@ -1,0 +1,38 @@
+p.question.p-required Please provide details of any knowledge and experience 
+  | you have with issues related to this topic
+md-input-container.md-block(flex)
+  label Knowledge and experience
+  textarea(
+    ng-model='vm.page.participant.Prior_experience_with_action_topic__c',
+    name='participantPriorExperienceTopic',
+    md-maxlength='500',
+    rows='5',
+    md-select-on-focus,
+    required
+  )
+  div(ng-messages='vm.form.participantPriorExperienceTopic.$error')
+    div(ng-message='required')
+      | This field is required
+      
+div.self-assessment-questions(ng-hide='vm.page.questions.length === 0')
+  p.intro(
+    layout='column'
+    layout-padding,
+    md-colors="{background: 'default-background-hue-2'}",
+    ng-hide='true'
+  )
+    | To help us in tailoring the course to participants' needs 
+    | please 
+    | rate your abilities and knowledge related to the 
+    | following on a scale of 1-5. 
+    | Where 1 indicates you have little 
+    | to no ability or knowledge and 5 indicates great ability or 
+    | knowledge on the topic.
+    br
+    | If you would like to comment on the 
+    | topic please click on the comment button.
+  
+  gz-response-form-input(
+    ng-repeat='question in vm.page.questions',
+    question='question'
+  )

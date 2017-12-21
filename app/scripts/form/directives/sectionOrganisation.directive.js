@@ -9,10 +9,10 @@
     .directive('gzSectionOrganisation', gzSectionOrganisation);
 
   gzSectionOrganisation.$inject = [
-    'layoutService'
+
   ];
 
-  function gzSectionOrganisation(layoutService) {
+  function gzSectionOrganisation() {
     return {
       require: '^^gzSection',
       controller: SectionOrganisationController,
@@ -39,7 +39,6 @@
     'affiliationService',
     'contactService',
     'gaService',
-    'layoutService',
     'participantService',
     'DEBUG'
   ];
@@ -52,7 +51,6 @@
     affiliationService,
     contactService,
     gaService,
-    layoutService,
     participantService,
     DEBUG
   ) {

@@ -16,7 +16,6 @@
     '$routeParams',
     'gaService',
     'layoutService',
-    'userService',
     'API_URI',
     'DEBUG'
   ];
@@ -28,7 +27,6 @@
     $routeParams,
     gaService,
     layoutService,
-    userService,
     API_URI,
     DEBUG
   ) {

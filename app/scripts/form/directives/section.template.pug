@@ -34,6 +34,7 @@ div(ng-show='vm.section.enabled === true')
             ng-disabled='vm.page.working'
           ) Try again
       
+      //- Section specific content
       div(ng-transclude)
         
       p.error(
@@ -53,6 +54,10 @@ div(ng-show='vm.section.enabled === true')
         | seconds and try again.
 
       md-card-actions(layout='row', layout-align='end center', layout-padding)
+        span(ng-show='vm.working && vm.section.processing.processes > 1')
+          | Please be patient, we are saving 
+          | {{ vm.section.processing.processing }} of 
+          | {{ vm.section.processing.processes }} responses
         md-progress-circular.md-primary(ng-show='vm.page.working', md-mode='indeterminate', md-diameter='20px')
         md-button(
           ng-show='vm.sectionPrevious',

@@ -9,10 +9,10 @@
     .directive('gzSectionEmail', gzSectionEmail);
 
   gzSectionEmail.$inject = [
-    'layoutService'
+
   ];
 
-  function gzSectionEmail(layoutService) {
+  function gzSectionEmail() {
     return {
       require: '^^gzSection',
       controller: SectionEmailController,
@@ -33,19 +33,15 @@
 
   SectionEmailController.$inject = [
     '$q',
-    '$scope',
     'contactService',
     'gaService',
-    'layoutService',
     'DEBUG'
   ];
 
   function SectionEmailController(
     $q,
-    $scope,
     contactService,
     gaService,
-    layoutService,
     DEBUG
   ) {
     var vm = this;

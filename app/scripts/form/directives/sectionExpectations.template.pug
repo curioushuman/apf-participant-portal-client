@@ -1,0 +1,54 @@
+p.question.p-required What knowledge do you hope to gain through 
+  | participation in this course? In other words what would you 
+  | like to learn about? How could this knowledge benefit you 
+  | and the work you are doing?
+md-input-container.md-block(flex)
+  textarea(
+    ng-model='vm.page.participant.Knowledge_they_would_like_to_gain__c',
+    name='participantKnowledgeGain',
+    md-maxlength='300',
+    rows='3',
+    md-select-on-focus,
+    aria-label='What knowledge do you hope to gain through participation in this course?',
+    required
+  )
+  //- div.hint
+  //-   | Should we add some help text?
+  div(ng-messages='vm.form.participantKnowledgeGain.$error')
+    div(ng-message='required')
+      | This field is required
+p.question.p-required What skills do you hope to gain through 
+  | participation in this course? In other words what would you 
+  | like to learn how to do? How could these skills benefit you 
+  | and the work you are doing?
+md-input-container.md-block(flex)
+  textarea(
+    ng-model='vm.page.participant.Skills_they_would_like_to_gain__c',
+    name='participantSkillsGain',
+    md-maxlength='300',
+    rows='3',
+    aria-label='What skills do you hope to gain through participation in this course?',
+    md-select-on-focus,
+    required
+  )
+  //- div.hint
+  //-   | Should we add some help text?
+  div(ng-messages='vm.form.participantSkillsGain.$error')
+    div(ng-message='required')
+      | This field is required
+p.question Is there any additional information you would like to 
+  | add to your application?
+md-input-container.md-block(flex)
+  textarea(
+    ng-model='vm.page.participant.Additional_information__c',
+    name='participantAdditionalInfo',
+    md-maxlength='300',
+    rows='3',
+    aria-label='Is there any additional information you would like to add to your application?',
+    md-select-on-focus
+  )
+  //- div.hint
+  //-   | Should we add some help text?
+  //- div(ng-messages='vm.form.participantAdditionalInfo.$error')
+  //-   div(ng-message='required')
+  //-     | This field is required

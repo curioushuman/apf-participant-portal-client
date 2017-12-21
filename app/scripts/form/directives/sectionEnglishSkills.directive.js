@@ -9,10 +9,10 @@
     .directive('gzSectionEnglishSkills', gzSectionEnglishSkills);
 
   gzSectionEnglishSkills.$inject = [
-    'layoutService'
+
   ];
 
-  function gzSectionEnglishSkills(layoutService) {
+  function gzSectionEnglishSkills() {
     return {
       require: '^^gzSection',
       controller: SectionEnglishSkillsController,
@@ -33,17 +33,13 @@
 
   SectionEnglishSkillsController.$inject = [
     '$q',
-    '$scope',
     'contactService',
-    'layoutService',
     'DEBUG'
   ];
 
   function SectionEnglishSkillsController(
     $q,
-    $scope,
     contactService,
-    layoutService,
     DEBUG
   ) {
     var vm = this;
@@ -56,11 +52,6 @@
       'EN_Skills_Ability_to_understand_spoken__c',
       'EN_Skills_Ability_to_speak_English__c'
     ];
-
-    // do some things once we know this section is enabled
-    $scope.$watch('vm.page.sectionsEnabled', function(value) {
-      // do nothing
-    });
 
     vm.section.pre = function() {
       return $q(function(resolve, reject) {

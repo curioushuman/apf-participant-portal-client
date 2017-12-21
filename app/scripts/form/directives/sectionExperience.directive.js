@@ -89,23 +89,24 @@
 
     // when participant is found, obtain their responses
     $scope.$watch('vm.page.participant', function(value) {
-      if (vm.page.participant.exists !== undefined) {
-        if (vm.page.participant.exists === true) {
-          // we want to grab responses
-          retrieveResponses()
-          .then(
-            function(responses) {
-              vm.page.participant.responses = responses;
-              vm.section.questionsAndResponsesLoaded.responses = true;
-            },
-            function(err) {
-              vm.section.errorInitial = true;
-            }
-          );
-        } else {
-          // no participant, we don't need responses so just set to true
-          vm.section.questionsAndResponsesLoaded.responses = true;
-        }
+      if (
+        vm.page.participant.exists !== undefined &&
+        vm.page.participant.exists === true
+      ) {
+        // we want to grab responses
+        retrieveResponses()
+        .then(
+          function(responses) {
+            vm.page.participant.responses = responses;
+            vm.section.questionsAndResponsesLoaded.responses = true;
+          },
+          function(err) {
+            vm.section.errorInitial = true;
+          }
+        );
+      } else {
+        // no participant, we don't need responses so just set to true
+        vm.section.questionsAndResponsesLoaded.responses = true;
       }
     });
 

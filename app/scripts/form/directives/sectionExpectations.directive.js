@@ -33,16 +33,12 @@
 
   SectionExpectationsController.$inject = [
     '$q',
-    '$scope',
-    'contactService',
     'participantService',
     'DEBUG'
   ];
 
   function SectionExpectationsController(
     $q,
-    $scope,
-    contactService,
     participantService,
     DEBUG
   ) {
@@ -53,11 +49,6 @@
       'participantKnowledgeGain',
       'participantSkillsGain'
     ];
-
-    // do some things once we know this section is enabled
-    $scope.$watch('vm.page.sectionsEnabled', function(value) {
-      // do nothing
-    });
 
     vm.section.pre = function() {
       return $q(function(resolve, reject) {

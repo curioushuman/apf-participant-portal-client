@@ -9,10 +9,10 @@
     .directive('gzSectionPersonal', gzSectionPersonal);
 
   gzSectionPersonal.$inject = [
-    'layoutService'
+
   ];
 
-  function gzSectionPersonal(layoutService) {
+  function gzSectionPersonal() {
     return {
       require: '^^gzSection',
       controller: SectionPersonalController,
@@ -33,19 +33,13 @@
 
   SectionPersonalController.$inject = [
     '$q',
-    '$scope',
     'contactService',
-    'gaService',
-    'layoutService',
     'DEBUG'
   ];
 
   function SectionPersonalController(
     $q,
-    $scope,
     contactService,
-    gaService,
-    layoutService,
     DEBUG
   ) {
     var vm = this;

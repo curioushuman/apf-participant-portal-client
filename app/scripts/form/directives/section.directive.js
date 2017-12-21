@@ -29,7 +29,6 @@
   }
 
   SectionController.$inject = [
-    '$filter',
     '$scope',
     'gaService',
     'layoutService',
@@ -37,7 +36,6 @@
   ];
 
   function SectionController(
-    $filter,
     $scope,
     gaService,
     layoutService,
@@ -52,6 +50,8 @@
         if (DEBUG) {
           console.log('sectionsEnabled');
         }
+
+        // init the current section
         vm.section.complete = false;
         vm.section.errorInitial = false;
         vm.section.error = false;
@@ -61,6 +61,8 @@
           processing: 1
         };
         vm.section.invalid = false;
+
+        // work out what sections are previous and next
         vm.sectionNext = false;
         vm.sectionPrevious = false;
         var nextSectionDisabled = false;
@@ -116,12 +118,15 @@
         gaService.addEvent('Navigation', 'Section, ' + source, vm.section.id);
       }
 
+      // call the section pre function
       vm.section.pre()
       .then(
         function(result) {
           if (DEBUG) {
             console.log('Done section pre things');
           }
+
+          // then open the section
           vm.page.working = false;
           editSection();
         },
@@ -137,6 +142,7 @@
     };
 
     vm.process = function() {
+      // validate the section
       if (
         vm.section.required !== undefined &&
         vm.section.required.length > 0 &&
@@ -146,6 +152,7 @@
         return;
       }
 
+      // special validation for sliders
       // this could be handled better
       // i.e. to not be so necessarily tied to contact
       if (
@@ -170,11 +177,15 @@
         }
       }
 
+      // indicate we're thinking about it
       vm.page.working = true;
 
+      // call the section process function
       vm.section.process()
       .then(
         function(result) {
+          // mark the section as complete, and move to the next section
+          // or simply complete the form
           vm.section.complete = true;
           if (vm.sectionNext !== false) {
             vm.sectionNext.sectionCtrl.pre();
@@ -183,6 +194,7 @@
           }
         },
         function(err) {
+          // stop thinking about it, show the error
           vm.page.working = false;
           vm.section.error = true;
           if (DEBUG) {
@@ -202,10 +214,11 @@
         console.log('editSection', vm.section.id);
       }
       vm.page.currentSection = vm.section.id;
+      // this is problematic, it won't anchor to the right point
       // layoutService.navigate(null, vm.section.id);
       layoutService.navigate(null, 'top');
 
-      // adding event
+      // adding GA event
       if (source === undefined) {
         gaService.addEvent('Navigation', 'Section, next', vm.section.id);
       } else {

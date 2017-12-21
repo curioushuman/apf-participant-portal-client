@@ -1,0 +1,67 @@
+div(ng-show='vm.page.action.IsTraining')
+  p.question.p-required Is the email you've provided your 
+    strong work 
+    | email address?
+  md-input-container.md-block(flex)
+    md-radio-group(ng-model='vm.section.emailIsWork', name='emailIsWork', required)
+      md-radio-button(value='yes', ng-click='vm.changeEmailWork()') Yes
+      md-radio-button(value='no', ng-click='vm.changeEmailWork()')  No
+    div(ng-messages='vm.form.emailIsWork.$error')
+      div(ng-message='required')
+        | This field is required
+  md-input-container.md-block(flex, ng-hide="vm.section.emailIsWork === 'yes'")
+    label What is your  
+      strong work 
+      | email address?
+    input(
+      required,
+      type='email',
+      name='contactWorkEmail',
+      ng-model='vm.page.contact.npe01__WorkEmail__c',
+      minlength='10',
+      maxlength='155',
+      ng-pattern="/^.+@.+\..+$/"
+    )
+    div(ng-messages='vm.form.contactWorkEmail.$error')
+      div(ng-message-exp="['minlength', 'maxlength', 'pattern']")
+        | Your email must be between 10 and 155 characters long and look like an e-mail address.
+div(ng-hide='vm.page.action.IsTraining')
+  p.question.p-required Would you like your email added to the APF mailing list?
+  md-input-container.md-block(flex)
+    md-radio-group(ng-model='vm.page.contact.HasOptedOutOfEmail', name='contactEmailOptOut', required)
+      md-radio-button(value='0') Yes
+      md-radio-button(value='1') No
+    div(ng-messages='vm.form.contactEmailOptOut.$error')
+      div(ng-message='required')
+        | This field is required
+md-input-container.md-block(flex)
+  label Phone 
+  input(ng-model='vm.section.phoneNumber', name='contactPhone', required)
+  div(ng-messages='vm.form.contactPhone.$error')
+    div(ng-message='required')
+      | This field is required
+md-input-container.md-block(flex)
+  label Which phone number is this?
+  md-select(ng-model='vm.page.contact.npe01__PreferredPhone__c', name='contactPreferredPhone', required)
+    md-option(ng-repeat='phoneType in vm.section.phoneTypes', value='{{ phoneType }}')
+      | {{ phoneType }}
+  //- div.hint
+  //-   | Is it you work phone, mobile phone, home phone?
+  div(ng-messages='vm.form.contactPreferredPhone.$error')
+    div(ng-message='required')
+      | This field is required
+md-input-container.md-block(flex)
+  label Fax 
+  input(ng-model='vm.page.contact.Fax', name='contactFax')
+  //- div(ng-messages='vm.form.contactFax.$error')
+  //-   div(ng-message='required')
+  //-     | This field is required
+md-input-container.md-block(flex, ng-show='vm.page.action.IsTraining')
+  label Your nearest airport 
+  input(ng-model='vm.page.contact.Closest_airport__c', name='contactClosestAirport', required)
+  div.hint
+    | If you attend the face to face component we'll need to know 
+    | where to book your ticket.
+  div(ng-messages='vm.form.contactClosestAirport.$error')
+    div(ng-message='required')
+      | This field is required

@@ -52,10 +52,30 @@ section(ng-show='vm.page.action.loaded')
 
       //- Form
       div(flex, layout='column')
+        
+        //- If form is closed
         gz-closed(
           status='vm.page.action.formStatus',
           owner-id='vm.page.action.OwnerId'
         )
+        
+        //- Thank you section
+        md-card(
+          ng-show="vm.page.action.formStatus === 'complete'"
+        )
+          md-card-header(md-colors="{background: 'default-primary-hue-2'}")
+            md-card-avatar
+              img(
+                ng-src='/images/APF-logo-circle.png',
+                alt='Asia Pacific Forum logo'
+              )
+            md-card-header-text
+              span.md-headline Your registration has been received
+          md-card-content
+            p Thank you for taking the time to complete our application form. 
+              | Someone from the APF wil be in contact soon.
+        
+        //- the form
         form(
           name='form',
           ng-submit='form.$valid',
@@ -76,3 +96,52 @@ section(ng-show='vm.page.action.loaded')
             gz-section-organisation(
               page='vm.page'
             )
+            
+          gz-section(page='vm.page', form='form')
+            gz-section-contact(
+              page='vm.page'
+            )
+            
+          //- gz-section(page='vm.page', form='form')
+          //-   gz-section-experience(
+          //-     page='vm.page'
+          //-   )
+          //- 
+          //- gz-section(page='vm.page', form='form')
+          //-   gz-section-it-skills(
+          //-     page='vm.page'
+          //-   )
+          //- 
+          //- gz-section(page='vm.page', form='form')
+          //-   gz-section-english-skills(
+          //-     page='vm.page'
+          //-   )
+          //- 
+          //- gz-section(page='vm.page', form='form')
+          //-   gz-section-expectations(
+          //-     page='vm.page'
+          //-   )
+          //- 
+          //- gz-section(page='vm.page', form='form')
+          //-   gz-section-sessions(
+          //-     page='vm.page'
+          //-   )
+
+  div.footer(layout='row', layout-padding, md-colors="{background: 'default-background-hue-3'}")
+    img.logo-icon(
+      ng-src='/images/APF-logo-footer-2x.png',
+      alt='Asia Pacific Forum logo'
+    )
+    p 2017 The Asia Pacific Forum of National Human Rights 
+      | Institutions. 
+      a(
+        href='http://asiapacificforum.net/accessibility-policy/',
+        title='The accessibility policy of the APF'
+      )
+        | Accessibility policy
+      |  -&nbsp;
+      a(
+        href='http://asiapacificforum.net/terms-and-conditions/',
+        title='The terms and conditions of the APF'
+      )
+        | Terms and conditions

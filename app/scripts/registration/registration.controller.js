@@ -11,51 +11,29 @@
     .controller('RegistrationController', RegistrationController);
 
   RegistrationController.$inject = [
-    '$routeParams',
-    '$scope',
     '$q',
-    '$location',
     '$filter',
-    '$timeout',
     '$mdDateLocale',
-    'layoutService',
+    '$scope',
     'actionService',
-    'contactService',
-    'accountService',
-    'affiliationService',
-    'gaService',
-    'participantService',
-    'questionService',
-    'responseService',
-    'sessionService',
-    'userService',
     'detectionService',
-    'sessionParticipationService',
+    'gaService',
+    'layoutService',
+    'participantService',
     'DEBUG',
     'API_URI'
   ];
 
   function RegistrationController(
-    $routeParams,
-    $scope,
     $q,
-    $location,
     $filter,
-    $timeout,
     $mdDateLocale,
-    layoutService,
+    $scope,
     actionService,
-    contactService,
-    accountService,
-    affiliationService,
-    gaService,
-    participantService,
-    questionService,
-    responseService,
-    sessionService,
-    userService,
     detectionService,
-    sessionParticipationService,
+    gaService,
+    layoutService,
+    participantService,
     DEBUG,
     API_URI
   ) {
@@ -137,30 +115,31 @@
       sectionsEnabled: false
     };
 
-    // FIX THIS WHEN YOU GET TO IT
+    // this could do with some minor attention
+    // if participant save fails you should show an error
     vm.page.complete = function() {
       vm.page.working = false;
       console.log('Completing form');
       // just submit, don't show a summary of all fields
       // indicate the participant has completed the form
-      // vm.participant.Registration_complete__c = true;
-      // processUpdateParticipant()
-      // .then(
-      //   function() {
-      //     // good stuff
-      //   },
-      //   function(err) {
-      //     if (DEBUG) {
-      //       console.log('Error completeForm', err);
-      //     }
-      //     // ahhh shit
-      //   }
-      // );
-      // vm.working = false;
-      // vm.sectionActive = '';
-      // vm.expectationsSectionStatus = 'complete';
-      // vm.formStatus = 'complete';
-      // layoutService.navigate(null, 'top');
+      vm.page.participant.Registration_complete__c = true;
+      participantService.save(vm.page.participant)
+      .then(
+        function(participant) {
+          if (DEBUG) {
+            console.log('Final: Participant saved');
+          }
+        },
+        function(err) {
+          if (DEBUG) {
+            console.log('Final: Error saving participant', err);
+          }
+        }
+      );
+
+      vm.page.currentSection = false;
+      vm.page.action.formStatus = 'complete';
+      layoutService.navigate(null, 'top');
     }
 
     // date stuff
@@ -213,18 +192,6 @@
       }
     );
 
-    function setDetectionResults() {
-      if (
-        participantService.setDetectionResults(vm.page.participant) === true
-      ) {
-        // you could do a participant save here if you wanted to save the
-        // detection results independently
-        // OR
-        // wait until they're saved during one of the many other participant
-        // saves
-      }
-    }
-
     // make space for the contact and participant
     vm.page.contact = {};
     vm.page.participant = {};
@@ -234,6 +201,7 @@
         console.log('vm.page.contact changed', vm.page.contact);
       }
 
+      // if they exist, see if they're already registered as a participant
       if (vm.page.contact.exists === true) {
         gaService.addSalesforceRequest('Retrieve', 'Participant');
         participantService.retrieve(
@@ -268,17 +236,27 @@
                 }
               );
               vm.page.participant.exists = false;
+
+              // set the detection results here as well
+              // this will do nothing more than set the values on the
+              // participant, to those found in detection service
+              // if they exist
+              // if they do not, they'll be added later, when they do
+              // as this is one of the first saves we want to make sure they
+              // exist on the freshly minted participant
+              setDetectionResults();
+
               // do a quick participant save to kick things off
               participantService.save(vm.page.participant)
               .then(
                 function(participant) {
                   if (DEBUG) {
-                    console.log('Initial: Participant saved');
+                    console.log('Initial: New Participant saved');
                   }
                 },
                 function(err) {
                   if (DEBUG) {
-                    console.log('Initial: Error saving participant', err);
+                    console.log('Initial: Error saving new participant', err);
                   }
                 }
               );
@@ -302,5 +280,20 @@
         );
       }
     });
+
+    function setDetectionResults() {
+      if (
+        participantService.setDetectionResults(vm.page.participant) === true
+      ) {
+        // you could do a participant save here if you wanted to save the
+        // detection results independently
+        // OR
+        // wait until they're saved during one of the many other participant
+        // saves
+
+        // it is advised to wait, so participation identification can be
+        // completed first
+      }
+    }
   }
 })();
