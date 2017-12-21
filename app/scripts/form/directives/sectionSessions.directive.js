@@ -96,7 +96,6 @@
             vm.section.sessionsDays.sessionsDaysCount = 0;
             vm.section.sessionsDays.sessionsPeriodsCount = 0;
             angular.forEach(vm.page.sessions, function(session, index) {
-              vm.section.processing.processes++;
               if (
                 sessionsDay === null ||
                 sessionsDay.id !== session.Day__c

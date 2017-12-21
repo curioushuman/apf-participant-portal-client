@@ -87,7 +87,9 @@
               // create a new Contact object
               vm.page.contact = new contactService.Contact(
                 {
-                  email: vm.page.email
+                  email: vm.page.email,
+                  npe01__WorkEmail__c: vm.page.email,
+                  npe01__Preferred_Email__c: 'Work'
                 }
               );
               vm.page.contact.exists = false;

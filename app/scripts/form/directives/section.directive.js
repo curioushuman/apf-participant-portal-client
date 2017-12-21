@@ -57,7 +57,7 @@
         vm.section.error = false;
         vm.section.errors = {};
         vm.section.processing = {
-          processes: 1,
+          processes: 0,
           processing: 1
         };
         vm.section.invalid = false;

@@ -109,6 +109,7 @@
 
         if (DEBUG) {
           console.log('Contact info submitted', vm.page.contact);
+          console.log('vm.section.emailIsWork', vm.section.emailIsWork);
         }
 
         if (vm.page.contact.AddEmailToMailingList) {
@@ -119,6 +120,7 @@
 
         if (vm.section.emailIsWork === 'yes') {
           vm.page.contact.npe01__Preferred_Email__c = 'Work';
+          vm.page.contact.npe01__WorkEmail__c = vm.email;
         } else {
           vm.page.contact.npe01__Preferred_Email__c = 'Home';
           vm.page.contact.npe01__HomeEmail__c = vm.email;

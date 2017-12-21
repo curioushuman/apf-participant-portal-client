@@ -130,6 +130,11 @@
               vm.page.participant.responses
             );
           }
+
+          // set the processes to 1
+          // as we have an additional question in this section
+          vm.section.processing.processes = 1;
+
           angular.forEach(vm.page.questions, function(question, index) {
             var findQuestionResponse = null;
             if (
