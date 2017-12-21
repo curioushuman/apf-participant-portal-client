@@ -92,7 +92,7 @@
         },
         english_skills: {
           id: 'english_skills',
-          title: 'Ensligh Skills',
+          title: 'English Skills',
           next: 'expectations',
           enabled: false,
           enabler: 'Show_English_Skills_section__c'

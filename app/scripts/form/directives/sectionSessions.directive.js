@@ -131,11 +131,11 @@
               console.log('vm.page.sessions', vm.page.sessions);
               console.log('vm.section.sessionsDays', vm.section.sessionsDays);
               console.log(
-                'vm.sessionsPeriodsCount',
+                'vm.section.sessionsDays.sessionsPeriodsCount',
                 vm.section.sessionsDays.sessionsPeriodsCount
               );
               console.log(
-                'vm.section.sessionsDaysCount',
+                'vm.section.sessionsDays.sessionsDaysCount',
                 vm.section.sessionsDays.sessionsDaysCount
               );
             }
@@ -230,7 +230,7 @@
           );
         });
         if (DEBUG) {
-          console.log('vm.section.sessionsDays', vm.section.sessionsDays);
+          console.log('PROCESS vm.section.sessionsDays', vm.section.sessionsDays);
         }
         angular.forEach(vm.page.sessions, function(session, index) {
           if (DEBUG) {
@@ -245,7 +245,7 @@
             );
         });
         if (DEBUG) {
-          console.log('sessionsDays', vm.section.sessionsDays);
+          console.log('PROCESS sessionsDays', vm.section.sessionsDays);
         }
         var periodsValid = 0;
         angular.forEach(vm.section.sessionsDays, function(sessionsDay, index) {
@@ -274,9 +274,9 @@
           );
         });
         if (DEBUG) {
-          console.log('periodsValid', periodsValid);
+          console.log('PROCESS periodsValid', periodsValid);
           console.log(
-            'sessionsPeriodsCount',
+            'PROCESS sessionsPeriodsCount',
             vm.section.sessionsDays.sessionsPeriodsCount
           );
         }
@@ -290,6 +290,7 @@
             name: 'Invalid',
             message: 'Sessions information was found to be invalid'
           });
+          return;
         }
 
         // reset the processing count

@@ -196,7 +196,9 @@
         function(err) {
           // stop thinking about it, show the error
           vm.page.working = false;
-          vm.section.error = true;
+          if (vm.section.invalid !== true) {
+            vm.section.error = true;
+          }
           if (DEBUG) {
             console.log('Error: ' + vm.section.id, err);
           }
