@@ -33,21 +33,25 @@ section(ng-show='vm.page.action.loaded')
                 md-icon.material-icons.md-avatar event
                 p Registrations close 
                   strong {{ vm.page.action.registrationDate }}
-            p {{ vm.page.action.Help_text__c }}
+            p(ng-hide="vm.page.action.formStatus === 'closed'")
+              | {{ vm.page.action.Help_text__c }}
 
         gz-supporting-text(
           content='vm.page.action.Selection_criteria__c',
           title='Participants must',
-          display='list'
+          display='list',
+          ng-hide="vm.page.action.formStatus === 'closed'"
         )
         gz-supporting-text(
           content='vm.page.action.Ideal_candidate__c',
           title='Ideal candidates will have one or more of',
-          display='list'
+          display='list',
+          ng-hide="vm.page.action.formStatus === 'closed'"
         )
         gz-supporting-text(
           content='vm.page.action.Supporting_text__c',
-          display='html'
+          display='html',
+          ng-hide="vm.page.action.formStatus === 'closed'"
         )
 
       //- Form
