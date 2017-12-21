@@ -8,7 +8,7 @@ div(ng-show='vm.section.enabled === true')
   //- Complete version
   gz-complete-section(
     title='vm.section.title',
-    ng-click="vm.editSection(vm.section, 'banner')",
+    ng-click="vm.pre('banner')",
     ng-show='vm.page.currentSection !== vm.section.id && vm.section.complete === true'
   )
   //- Active version

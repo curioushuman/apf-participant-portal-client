@@ -69,6 +69,8 @@
         if (vm.page.contact.HasOptedOutOfEmail === undefined) {
           vm.page.contact.HasOptedOutOfEmail = true;
         }
+
+        resolve(true);
       });
     };
 

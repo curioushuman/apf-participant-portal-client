@@ -321,7 +321,7 @@
           vm.section.required.push('affiliationStartDate');
         }
 
-        if (isValid(vm.section.required) === false) {
+        if (vm.section.sectionCtrl.isValid(vm.section.required) === false) {
           vm.section.invalid = true;
           reject({
             name: 'Invalid',
@@ -613,7 +613,7 @@
 
     function saveAffiliation() {
       if (DEBUG) {
-        console.log('saveAffiliation', vm.page.affiliation);
+        console.log('saveAffiliation top', vm.page.affiliation);
         console.log('saveAffiliation-original', vm.page.affiliationFound);
       }
       return $q(function(resolve, reject) {
@@ -649,6 +649,10 @@
             console.log('Affiliation unchanged, do not save');
           }
           resolve(null);
+          return;
+        }
+        if (DEBUG) {
+          console.log('Saving affiliation balls', vm.page.affiliation);
         }
         affiliationService.save(vm.page.affiliation)
         .then(

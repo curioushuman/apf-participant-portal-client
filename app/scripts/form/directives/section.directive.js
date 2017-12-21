@@ -9,10 +9,10 @@
     .directive('gzSection', gzSection);
 
   gzSection.$inject = [
-    'layoutService'
+
   ];
 
-  function gzSection(layoutService) {
+  function gzSection() {
     return {
       templateUrl:
         'scripts/form/directives/section.template.html',
@@ -239,5 +239,6 @@
 
       return valid;
     }
+    vm.isValid = isValid;
   }
 })();
