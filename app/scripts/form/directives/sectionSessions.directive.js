@@ -164,7 +164,10 @@
             vm.section.errorInitial = true;
           }
         );
-      } else {
+      } else if (
+        vm.page.participant.exists !== undefined &&
+        vm.page.participant.exists === false
+      ) {
         // no participant, we don't need participation so just set to true
         vm.section.sessionsAndParticipationLoaded.participations = true;
       }

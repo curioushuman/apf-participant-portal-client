@@ -95,6 +95,9 @@
         vm.page.participant.exists !== undefined &&
         vm.page.participant.exists === true
       ) {
+        if (DEBUG) {
+          console.log('Cockmuncher', vm.page.participant);
+        }
         // we want to grab responses
         retrieveResponses()
         .then(
@@ -106,7 +109,10 @@
             vm.section.errorInitial = true;
           }
         );
-      } else {
+      } else if (
+        vm.page.participant.exists !== undefined &&
+        vm.page.participant.exists === false
+      ) {
         // no participant, we don't need responses so just set to true
         vm.section.questionsAndResponsesLoaded.responses = true;
       }
@@ -120,6 +126,12 @@
           vm.section.questionsAndResponsesLoaded.questions === true &&
           vm.section.questionsAndResponsesLoaded.responses === true
         ) {
+          if (DEBUG) {
+            console.log(
+              'Questions and responses loaded',
+              vm.page.participant.responses
+            );
+          }
           angular.forEach(vm.page.questions, function(question, index) {
             var findQuestionResponse = $filter('filter')(
               vm.page.participant.responses,
