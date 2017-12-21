@@ -66,8 +66,16 @@
             break;
         }
 
-        if (vm.page.contact.HasOptedOutOfEmail === undefined) {
-          vm.page.contact.HasOptedOutOfEmail = true;
+        vm.page.contact.AddEmailToMailingList = false;
+        if (
+          vm.page.contact.HasOptedOutOfEmail !== undefined &&
+          vm.page.contact.HasOptedOutOfEmail === false
+        ) {
+          vm.page.contact.AddEmailToMailingList = true;
+        }
+
+        if (DEBUG) {
+          console.log('Pre contact', vm.page.contact);
         }
 
         resolve(true);
@@ -85,7 +93,7 @@
           vm.section.required.push('contactClosestAirport');
         }
 
-        if (isValid(vm.section.required) === false) {
+        if (vm.section.sectionCtrl.isValid(vm.section.required) === false) {
           vm.section.invalid = true;
           reject({
             name: 'Invalid',
@@ -94,10 +102,14 @@
           return;
         }
 
-        if (vm.page.contact.HasOptedOutOfEmail === '1') {
-          vm.page.contact.HasOptedOutOfEmail = true;
-        } else {
+        if (DEBUG) {
+          console.log('Contact info submitted', vm.page.contact);
+        }
+
+        if (vm.page.contact.AddEmailToMailingList) {
           vm.page.contact.HasOptedOutOfEmail = false;
+        } else {
+          vm.page.contact.HasOptedOutOfEmail = true;
         }
 
         if (vm.section.emailIsWork === 'yes') {

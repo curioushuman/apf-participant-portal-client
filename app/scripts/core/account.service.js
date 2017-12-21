@@ -10,12 +10,22 @@
     .factory('accountService', accountService);
 
   accountService.$inject = [
-    '$resource',
     '$filter',
-    'API_URI'
+    '$q',
+    '$resource',
+    'gaService',
+    'API_URI',
+    'DEBUG'
   ];
 
-  function accountService($resource, $filter, API_URI) {
+  function accountService(
+    $filter,
+    $q,
+    $resource,
+    gaService,
+    API_URI,
+    DEBUG
+  ) {
     var Account = $resource(API_URI + '/account',
       {},
       {

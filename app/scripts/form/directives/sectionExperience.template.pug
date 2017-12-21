@@ -13,8 +13,8 @@ md-input-container.md-block(flex)
   div(ng-messages='vm.form.participantPriorExperienceTopic.$error')
     div(ng-message='required')
       | This field is required
-      
-div.self-assessment-questions(ng-hide='vm.page.questions.length === 0')
+
+div.self-assessment-questions(ng-show='vm.page.questions.length > 0')
   p.intro(
     layout='column'
     layout-padding,
@@ -32,7 +32,7 @@ div.self-assessment-questions(ng-hide='vm.page.questions.length === 0')
     | If you would like to comment on the 
     | topic please click on the comment button.
   
-  gz-response-form-input(
+  gz-response-input(
     ng-repeat='question in vm.page.questions',
     question='question'
   )

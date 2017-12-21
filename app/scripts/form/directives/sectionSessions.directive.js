@@ -32,6 +32,7 @@
   }
 
   SectionSessionsController.$inject = [
+    '$filter',
     '$q',
     '$scope',
     'gaService',
@@ -42,6 +43,7 @@
   ];
 
   function SectionSessionsController(
+    $filter,
     $q,
     $scope,
     gaService,
@@ -175,9 +177,7 @@
       function(value) {
         if (
           vm.section.sessionsAndParticipationLoaded.sessions === true &&
-          vm.section.sessionsAndParticipationLoaded.participations === true &&
-          vm.page.participant.sessionParticipations !== undefined &&
-          vm.page.participant.sessionParticipations.length > 0
+          vm.section.sessionsAndParticipationLoaded.participations === true
         ) {
           angular.forEach(vm.page.sessions, function(session, index) {
 
@@ -339,7 +339,7 @@
         gaService.addSalesforceRequest('List', 'Sessions');
       return sessionService.list(
         {
-          actionid: vm.action.Id
+          actionid: vm.page.action.Id
         }
       )
       .$promise
@@ -424,7 +424,7 @@
       return promises;
     }
 
-    function prepareSessionParticipationForSave() {
+    function prepareSessionParticipationForSave(sessionParticipation) {
       return $q(function(resolve, reject) {
         if (DEBUG) {
           console.log('Saving sessionParticipation', sessionParticipation);

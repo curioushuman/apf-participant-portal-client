@@ -28,9 +28,9 @@ div(ng-show='vm.page.action.IsTraining')
 div(ng-hide='vm.page.action.IsTraining')
   p.question.p-required Would you like your email added to the APF mailing list?
   md-input-container.md-block(flex)
-    md-radio-group(ng-model='vm.page.contact.HasOptedOutOfEmail', name='contactEmailOptOut', required)
-      md-radio-button(value='0') Yes
-      md-radio-button(value='1') No
+    md-radio-group(ng-model='vm.page.contact.AddEmailToMailingList', name='contactEmailOptOut', required)
+      md-radio-button(value='1') Yes
+      md-radio-button(value='0') No
     div(ng-messages='vm.form.contactEmailOptOut.$error')
       div(ng-message='required')
         | This field is required

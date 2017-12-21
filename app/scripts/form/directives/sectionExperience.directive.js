@@ -32,6 +32,7 @@
   }
 
   SectionExperienceController.$inject = [
+    '$filter',
     '$q',
     '$scope',
     'gaService',
@@ -42,6 +43,7 @@
   ];
 
   function SectionExperienceController(
+    $filter,
     $q,
     $scope,
     gaService,
@@ -116,9 +118,7 @@
       function(value) {
         if (
           vm.section.questionsAndResponsesLoaded.questions === true &&
-          vm.section.questionsAndResponsesLoaded.responses === true &&
-          vm.page.participant.responses !== undefined &&
-          vm.page.participant.responses.length > 0
+          vm.section.questionsAndResponsesLoaded.responses === true
         ) {
           angular.forEach(vm.page.questions, function(question, index) {
             var findQuestionResponse = $filter('filter')(
@@ -132,6 +132,7 @@
               console.log('To question', question);
             }
             if (
+              findQuestionResponse !== undefined &&
               findQuestionResponse !== null &&
               findQuestionResponse.length > 0
             ) {
@@ -222,7 +223,7 @@
         gaService.addSalesforceRequest('List', 'Questions');
       return questionService.list(
         {
-          actionid: vm.action.Id
+          actionid: vm.page.action.Id
         }
       )
       .$promise
@@ -286,7 +287,7 @@
     function prepareResponsesForSave() {
       var promises = [];
       angular.forEach(vm.page.questions, function(question, index) {
-        question.response.Participant__c = vm.participant.Id;
+        question.response.Participant__c = vm.page.participant.Id;
         question.response.Self_assessment_question__c = question.Id;
         promises.push(prepareResponseForSave(question.response));
       });
@@ -294,7 +295,7 @@
       return promises;
     }
 
-    function prepareResponseForSave() {
+    function prepareResponseForSave(response) {
       return $q(function(resolve, reject) {
         if (vm.debug) {
           console.log('Saving response', response);

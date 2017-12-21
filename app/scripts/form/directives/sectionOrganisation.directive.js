@@ -174,78 +174,73 @@
                     } else {
                       affiliation.type = 'organisation';
                     }
+                    if (DEBUG) {
+                      console.log(
+                        'found affiliation type',
+                        affiliation.type
+                      );
+                    }
 
+                    // grab the first one to come our way
+                    // or if it's primary, override
                     if (
-                      affiliation.type === 'nhri' &&
-                      (
-                        vm.section.affiliationsFound.nhri === null ||
-                        affiliation.npe5__Primary__c === true
-                      )
+                      vm.section.affiliationsFound[affiliation.type] === null ||
+                      affiliation.npe5__Primary__c === true
                     ) {
-                      vm.page.affiliation = affiliation;
-                      vm.section.affiliationsFound.nhri =
+                      vm.section.affiliationsFound[affiliation.type] =
                         affiliationService.saveFoundAffiliation(affiliation);
-                      vm.section.affiliationsSwitching.nhri = affiliation;
-                      if (DEBUG) {
-                        console.log(
-                          'NHRI found',
-                          vm.section.affiliationsFound.nhri
-                        );
-                      }
-                    } else if (
-                      affiliation.type === 'organisation' &&
-                      (
-                        vm.section.affiliationsFound.organisation === null ||
-                        affiliation.npe5__Primary__c === true
-                      )
-                    ) {
-                      vm.section.orgSearchText = findIfOrganisation.Name;
-                      vm.section.affiliationsFound.organisation =
-                        affiliationService.saveFoundAffiliation(affiliation);
-                      vm.section.affiliationsSwitching.organisation =
+                      vm.section.affiliationsSwitching[affiliation.type] =
                         affiliation;
+                      if (affiliation.type === 'organisation') {
+                        vm.section.orgSearchText = findIfOrganisation.Name;
+                      }
+                    }
+
+                    // if it's previously selected, or primary set to page
+                    if (
+                      vm.page.participant.Organisation__c ===
+                        affiliation.npe5__Organization__c ||
+                      (
+                        vm.page.affiliation === null &&
+                        affiliation.npe5__Primary__c === true
+                      )
+                    ) {
                       if (DEBUG) {
                         console.log(
-                          'found an organisation',
-                          vm.section.affiliationsFound.organisation
+                          'Setting page affilitation',
+                          affiliation.type
                         );
                       }
-                      if (affiliation.npe5__Primary__c === true) {
-                        if (DEBUG) {
-                          console.log(
-                            'it is primary, setting affiliation to org'
-                          );
-                        }
-                        vm.page.affiliation = affiliation;
-                        vm.section.orgTypeSelected = 'organisation';
-                      }
+                      vm.page.affiliation = affiliation;
+                      vm.section.orgTypeSelected = affiliation.type;
+                    }
                   }
-                });
+                );
 
-                // as the focus above is on NHRI
-                // if we made it through and there isn't an affiliation
-                // but a non-primary org affiliation was found
-                // set affiliation to that
-                if (
-                  vm.page.affiliation === null &&
-                  vm.section.affiliationsFound.organisation
-                ) {
+                // no primary or previously chosen affiliations
+                if (vm.page.affiliation === null) {
                   if (DEBUG) {
                     console.log(
-                      'if we are here it means org found, not primary'
+                      'No primary or previously chosen affiliation found'
                     );
                   }
-                  vm.page.affiliation =
-                    vm.section.affiliationsFound.organisation;
-                  vm.section.orgTypeSelected = 'organisation';
-                } else if (vm.page.affiliation === undefined) {
-                  if (DEBUG) {
-                    console.log(
-                      'if we are here it means no affiliations found'
-                    );
+
+                  if (vm.section.affiliationsFound.nhri !== null) {
+                    // set to NHRI first
+                    vm.page.affiliation = vm.section.affiliationsFound.nhri;
+                    vm.section.orgTypeSelected = 'nhri';
+                  } else if (
+                    vm.section.affiliationsFound.organisation !== null
+                  ) {
+                    // then org
+                    vm.page.affiliation =
+                      vm.section.affiliationsFound.organisation;
+                    vm.section.orgTypeSelected = 'organisation';
+                  } else {
+                    // then empty affiliation
+                    vm.page.affiliation =
+                      new affiliationService.Affiliation();
                   }
-                  vm.page.affiliation =
-                    new affiliationService.Affiliation();
                 }
 
                 resolve(vm.page.affiliation);
@@ -336,6 +331,7 @@
         // and the one they're updating is the primary
         if (
           vm.page.affiliationFound === undefined ||
+          vm.page.affiliationFound === null ||
           vm.page.affiliationFound.npe5__Primary__c === true
         ) {
           vm.page.contact.Department = vm.page.affiliation.Department__c;

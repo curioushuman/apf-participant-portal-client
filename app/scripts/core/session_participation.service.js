@@ -11,11 +11,20 @@
     .factory('sessionParticipationService', sessionParticipationService);
 
   sessionParticipationService.$inject = [
+    '$q',
     '$resource',
-    'API_URI'
+    'gaService',
+    'API_URI',
+    'DEBUG'
   ];
 
-  function sessionParticipationService($resource, API_URI) {
+  function sessionParticipationService(
+    $q,
+    $resource,
+    gaService,
+    API_URI,
+    DEBUG
+  ) {
     var SessionParticipation = $resource(API_URI + '/session_participation',
       {},
       {

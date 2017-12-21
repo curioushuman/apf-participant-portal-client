@@ -10,11 +10,20 @@
     .factory('responseService', responseService);
 
   responseService.$inject = [
+    '$q',
     '$resource',
-    'API_URI'
+    'gaService',
+    'API_URI',
+    'DEBUG'
   ];
 
-  function responseService($resource, API_URI) {
+  function responseService(
+    $q,
+    $resource,
+    gaService,
+    API_URI,
+    DEBUG
+  ) {
     var Response = $resource(API_URI + '/response',
       {},
       {
