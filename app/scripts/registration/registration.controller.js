@@ -50,6 +50,7 @@
     vm.page = {
       email: null,
       working: false,
+      requests: {},
       currentSection: 'email',
       sections: {
         email: {

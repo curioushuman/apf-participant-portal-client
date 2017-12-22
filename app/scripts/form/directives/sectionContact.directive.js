@@ -34,13 +34,17 @@
 
   SectionContactController.$inject = [
     '$q',
+    '$scope',
     'contactService',
+    'countryService',
     'DEBUG'
   ];
 
   function SectionContactController(
     $q,
+    $scope,
     contactService,
+    countryService,
     DEBUG
   ) {
     var vm = this;
@@ -51,6 +55,32 @@
     vm.section.emailIsWork = 'yes';
     vm.section.phoneTypes = ['Work', 'Mobile', 'Home', 'Other'];
     vm.section.phoneNumber = '';
+
+    vm.page.countries = [];
+
+    // do some things once we know this section is enabled
+    $scope.$watch('vm.page.sectionsEnabled', function(value) {
+      if (
+        vm.page.sectionsEnabled === true &&
+        vm.section.enabled !== undefined &&
+        vm.section.enabled === true &&
+        vm.page.countries.length === 0
+      ) {
+        // grab countries
+        countryService.listAll()
+        .then(
+          function(countries) {
+            if (DEBUG) {
+              console.log('Yay countries', countries[0]);
+            }
+            vm.page.countries = countries;
+          },
+          function(err) {
+            vm.section.errorInitial = true;
+          }
+        );
+      }
+    });
 
     vm.section.pre = function() {
       return $q(function(resolve, reject) {
@@ -88,8 +118,7 @@
         vm.section.required = [
           'contactPhone',
           'contactPreferredPhone',
-          'contactEmergencyContactName',
-          'contactEmergencyContactPhoneEmail'
+          'contactCountry'
         ];
 
         if (vm.page.action.isTraining === true) {
