@@ -60,19 +60,19 @@
         },
         personal: {
           id: 'personal',
-          title: 'Personal Information',
+          title: 'Personal information',
+          next: 'contact',
+          enabled: true
+        },
+        contact: {
+          id: 'contact',
+          title: 'Contact information',
           next: 'organisation',
           enabled: true
         },
         organisation: {
           id: 'organisation',
           title: 'Organisation',
-          next: 'contact',
-          enabled: true
-        },
-        contact: {
-          id: 'contact',
-          title: 'Contact details',
           next: 'experience',
           enabled: true
         },

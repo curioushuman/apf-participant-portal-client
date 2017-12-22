@@ -87,7 +87,9 @@
       return $q(function(resolve, reject) {
         vm.section.required = [
           'contactPhone',
-          'contactPreferredPhone'
+          'contactPreferredPhone',
+          'contactEmergencyContactName',
+          'contactEmergencyContactPhoneEmail'
         ];
 
         if (vm.page.action.isTraining === true) {
