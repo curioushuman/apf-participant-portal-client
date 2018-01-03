@@ -39,6 +39,7 @@
     'accountService',
     'affiliationService',
     'contactService',
+    'countryService',
     'gaService',
     'participantService',
     'DEBUG'
@@ -51,6 +52,7 @@
     accountService,
     affiliationService,
     contactService,
+    countryService,
     gaService,
     participantService,
     DEBUG
@@ -72,55 +74,74 @@
       nhri: new affiliationService.Affiliation(),
       organisation: new affiliationService.Affiliation()
     };
+    vm.section.organisationCountry = null;
 
     vm.page.nhris = [];
     vm.page.organisations = [];
     vm.page.affiliation = null;
     vm.page.affiliations = [];
+    vm.page.countries = [];
 
     // do some things once we know this section is enabled
     $scope.$watch('vm.page.sectionsEnabled', function(value) {
       if (
         vm.page.sectionsEnabled === true &&
         vm.section.enabled !== undefined &&
-        vm.section.enabled === true &&
-        vm.page.nhris.length === 0
+        vm.section.enabled === true
       ) {
 
         // grab NHRIs, and then non-NHRIs
-        retrieveNhris()
-        .then(
-          function(nhris) {
-            vm.page.nhris = nhris;
-            if (DEBUG) {
-              console.log('found nhris', nhris.length);
+        if (vm.page.nhris.length === 0) {
+          retrieveNhris()
+          .then(
+            function(nhris) {
+              vm.page.nhris = nhris;
+              if (DEBUG) {
+                console.log('found nhris', nhris.length);
+              }
+              return retrieveNonNhris();
+            },
+            function(err) {
+              vm.section.errorInitial = true;
+              if (DEBUG) {
+                console.log('There was an error retrieving the NHRIs', err);
+              }
             }
-            return retrieveNonNhris();
-          },
-          function(err) {
-            vm.section.errorInitial = true;
-            if (DEBUG) {
-              console.log('There was an error retrieving the NHRIs', err);
+          )
+          .then(
+            function(organisations) {
+              vm.page.organisations = organisations;
+              if (DEBUG) {
+                console.log('found non-nhris', organisations.length);
+              }
+            },
+            function(err) {
+              vm.section.errorInitial = true;
+              if (DEBUG) {
+                console.log(
+                  'There was an error retrieving other organisations',
+                  err
+                );
+              }
             }
-          }
-        )
-        .then(
-          function(organisations) {
-            vm.page.organisations = organisations;
-            if (DEBUG) {
-              console.log('found non-nhris', organisations.length);
+          );
+        }
+
+        // grab countries
+        if (vm.page.countries.length === 0) {
+          countryService.listAll()
+          .then(
+            function(countries) {
+              if (DEBUG) {
+                console.log('Yay org countries', countries[0]);
+              }
+              vm.page.countries = countries;
+            },
+            function(err) {
+              vm.section.errorInitial = true;
             }
-          },
-          function(err) {
-            vm.section.errorInitial = true;
-            if (DEBUG) {
-              console.log(
-                'There was an error retrieving other organisations',
-                err
-              );
-            }
-          }
-        );
+          );
+        }
       }
     });
 
@@ -283,6 +304,11 @@
             resolve(vm.page.affiliation);
           } else {
             resolve(vm.page.affiliation);
+          }
+
+          // default the country for a new org, to that of the person
+          if (vm.section.organisationCountry === null) {
+            vm.section.organisationCountry = vm.page.contact.Country__c;
           }
         } else if (vm.section.preOrgCount < 5) {
           // NHRIs and orgs not found yet, recurse for up to 5 seconds
@@ -612,8 +638,12 @@
     function isNewOrganisation() {
       return $q(function(resolve, reject) {
         if (vm.section.orgTypeSelected === 'organisation') {
-          var newOrganisation = new accountService.Account();
-          newOrganisation.Name = vm.section.orgSearchText;
+          var newOrganisation = new accountService.Account(
+            {
+              Name: vm.section.orgSearchText,
+              Country__c: vm.section.organisationCountry
+            }
+          );
 
           if (DEBUG) {
             console.log('isNewOrganisation', newOrganisation);

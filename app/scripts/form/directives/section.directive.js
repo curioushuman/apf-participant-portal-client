@@ -238,6 +238,10 @@
       var valid = true;
       angular.forEach(requiredFields, function(field, index) {
         if (vm.form[field].$invalid) {
+          if (DEBUG) {
+            console.log('Invalid', field);
+            console.log('Field', vm.form[field]);
+          }
           valid = false;
           vm.form[field].$setTouched();
         }

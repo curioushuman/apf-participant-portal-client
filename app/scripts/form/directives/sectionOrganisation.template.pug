@@ -56,6 +56,25 @@ md-autocomplete(
   div(ng-messages='vm.form.orgSearchText.$error')
     div(ng-message='required')
       | This field is required
+md-input-container.md-block(
+  flex,
+  ng-show="vm.section.orgTypeSelected === 'organisation' && !vm.section.orgSearchExistingOrgSelected",
+  required
+)
+  label Country
+  md-select(
+    ng-model='vm.section.organisationCountry',
+    name='organisationCountry',
+    required,
+    ng-disabled='vm.section.errorInitial'
+  )
+    md-option(ng-repeat='country in vm.page.countries', value='{{ country.Id }}')
+      | {{ country.Name }}
+  div.hint
+    | Which would be the main country for this organisation?
+  div(ng-messages='vm.form.organisationCountry.$error')
+    div(ng-message='required')
+      | This field is required
 div(ng-hide="vm.section.orgTypeSelected === 'individual' || vm.page.action.isTraining !== true")
   p.question.p-required(ng-hide="vm.section.orgTypeSelected === 'individual'")
     | When did you start working at this organisation?
