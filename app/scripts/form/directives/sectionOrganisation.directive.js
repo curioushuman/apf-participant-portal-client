@@ -198,6 +198,7 @@
                       affiliation.type = 'nhri';
                     } else {
                       affiliation.type = 'organisation';
+                      affiliation.organisation = findIfOrganisation;
                     }
                     if (DEBUG) {
                       console.log(
@@ -207,7 +208,7 @@
                     }
 
                     // grab the first one to come our way
-                    // or if it's primary, override
+                    // or if it's primary, override anything previously found
                     if (
                       vm.section.affiliationsFound[affiliation.type] === null ||
                       affiliation.npe5__Primary__c === true
@@ -218,6 +219,8 @@
                         affiliation;
                       if (affiliation.type === 'organisation') {
                         vm.section.orgSearchText = findIfOrganisation.Name;
+                        vm.section.orgSearchExistingOrgSelected =
+                          findIfOrganisation;
                       }
                     }
 
