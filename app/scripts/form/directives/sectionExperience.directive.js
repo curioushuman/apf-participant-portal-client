@@ -1,5 +1,6 @@
 /* eslint no-unused-vars: 0 */
 /* eslint require-jsdoc: 0 */
+/* eslint camelcase: 0 */
 /* global angular */
 (function() {
   'use strict';
@@ -84,6 +85,12 @@
             vm.section.questionsAndResponsesLoaded.questions = true;
           },
           function(err) {
+            if (DEBUG) {
+              console.log(
+                'Error retrieving questions',
+                err
+              );
+            }
             vm.section.errorInitial = true;
           }
         );
@@ -104,6 +111,12 @@
             vm.section.questionsAndResponsesLoaded.responses = true;
           },
           function(err) {
+            if (DEBUG) {
+              console.log(
+                'Error retrieving responses',
+                err
+              );
+            }
             vm.section.errorInitial = true;
           }
         );

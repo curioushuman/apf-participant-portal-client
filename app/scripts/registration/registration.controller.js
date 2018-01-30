@@ -141,7 +141,7 @@
       vm.page.currentSection = false;
       vm.page.action.formStatus = 'complete';
       layoutService.navigate(null, 'top');
-    }
+    };
 
     // date stuff
     $mdDateLocale.formatDate = function(date) {

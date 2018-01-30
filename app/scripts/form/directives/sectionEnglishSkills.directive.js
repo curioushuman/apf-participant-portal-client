@@ -74,7 +74,7 @@
             if (DEBUG) {
               console.log('Section.English_Skills: Error saving contact', err);
             }
-            reject(contact);
+            reject(err);
           }
         );
       });

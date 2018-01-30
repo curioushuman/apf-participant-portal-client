@@ -25,16 +25,9 @@
     };
   }
 
-  ActionHeroController.$inject = [
+  ActionHeroController.$inject = [];
 
-  ];
-
-  function ActionHeroController(
-
-  ) {
+  function ActionHeroController() {
     var vm = this;
-
-
-
   }
 })();

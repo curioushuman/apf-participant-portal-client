@@ -1,5 +1,6 @@
 /* eslint no-unused-vars: 0 */
 /* eslint require-jsdoc: 0 */
+/* eslint camelcase: 0 */
 /* global angular */
 (function() {
   'use strict';
@@ -76,6 +77,9 @@
             vm.page.countries = countries;
           },
           function(err) {
+            if (DEBUG) {
+              console.log('Error listing countries', err);
+            }
             vm.section.errorInitial = true;
           }
         );

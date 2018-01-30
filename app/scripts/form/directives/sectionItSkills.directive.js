@@ -75,7 +75,7 @@
             if (DEBUG) {
               console.log('Section.It_Skills: Error saving contact', err);
             }
-            reject(contact);
+            reject(err);
           }
         );
       });

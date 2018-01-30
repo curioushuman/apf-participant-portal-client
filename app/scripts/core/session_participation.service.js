@@ -73,7 +73,10 @@
           sessionParticipation.Id === null
         ) {
           if (DEBUG) {
-            console.log('CREATING sessionParticipation record', sessionParticipation);
+            console.log(
+              'CREATING sessionParticipation record',
+              sessionParticipation
+            );
           }
           gaService.addSalesforceRequest('Create', 'SessionParticipation');
           sessionParticipation.$save(
@@ -85,12 +88,17 @@
               if (record.success) {
                 sessionParticipation.Id = record.Id;
                 if (DEBUG) {
-                  console.log('sessionParticipation Created', sessionParticipation);
+                  console.log(
+                    'sessionParticipation Created',
+                    sessionParticipation
+                  );
                 }
                 resolve(sessionParticipation);
               } else {
                 if (DEBUG) {
-                  console.log('There was an error creating the sessionParticipation');
+                  console.log(
+                    'There was an error creating the sessionParticipation'
+                  );
                 }
                 reject('There was an error creating the sessionParticipation');
               }
@@ -102,14 +110,20 @@
                 err.status
               );
               if (DEBUG) {
-                console.log('There was an error creating the sessionParticipation', err);
+                console.log(
+                  'There was an error creating the sessionParticipation',
+                  err
+                );
               }
               reject(err);
             }
           );
         } else {
           if (DEBUG) {
-            console.log('UPDATING sessionParticipation record', sessionParticipation);
+            console.log(
+              'UPDATING sessionParticipation record',
+              sessionParticipation
+            );
           }
           gaService.addSalesforceRequest('Update', 'SessionParticipation');
           sessionParticipation.$update(
@@ -123,12 +137,17 @@
               );
               if (record.success) {
                 if (DEBUG) {
-                  console.log('sessionParticipation Updated', sessionParticipation);
+                  console.log(
+                    'sessionParticipation Updated',
+                    sessionParticipation
+                  );
                 }
                 resolve(sessionParticipation);
               } else {
                 if (DEBUG) {
-                  console.log('There was an error updating the sessionParticipation');
+                  console.log(
+                    'There was an error updating the sessionParticipation'
+                  );
                 }
                 reject('There was an error updating the sessionParticipation');
               }
@@ -140,7 +159,10 @@
                 err.status
               );
               if (DEBUG) {
-                console.log('There was an error updating the sessionParticipation', err);
+                console.log(
+                  'There was an error updating the sessionParticipation',
+                  err
+                );
               }
               reject(err);
             }

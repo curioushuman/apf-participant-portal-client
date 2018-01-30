@@ -1,5 +1,6 @@
 /* eslint no-unused-vars: 0 */
 /* eslint require-jsdoc: 0 */
+/* eslint camelcase: 0 */
 /* global angular */
 (function() {
   'use strict';
@@ -141,6 +142,9 @@
             }
           },
           function(err) {
+            if (DEBUG) {
+              console.log('Error retrieving sessions', err);
+            }
             vm.section.errorInitial = true;
           }
         );
@@ -161,6 +165,9 @@
             vm.section.sessionsAndParticipationLoaded.participations = true;
           },
           function(err) {
+            if (DEBUG) {
+              console.log('Error retrieving sessionParticipations', err);
+            }
             vm.section.errorInitial = true;
           }
         );
@@ -236,7 +243,10 @@
           );
         });
         if (DEBUG) {
-          console.log('PROCESS vm.section.sessionsDays', vm.section.sessionsDays);
+          console.log(
+            'PROCESS vm.section.sessionsDays',
+            vm.section.sessionsDays
+          );
         }
         angular.forEach(vm.page.sessions, function(session, index) {
           if (DEBUG) {
@@ -270,7 +280,10 @@
                   }
                 }
               );
-              if (periodOptionsSelected === vm.section.sessionsPeriodOptions.length) {
+              if (
+                periodOptionsSelected ===
+                  vm.section.sessionsPeriodOptions.length
+              ) {
                 sessionsDayPeriod.valid = true;
                 periodsValid++;
               } else {

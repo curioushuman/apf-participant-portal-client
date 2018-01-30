@@ -69,9 +69,12 @@
           },
           function(err) {
             if (DEBUG) {
-              console.log('Section.Expectations: Error saving participant', err);
+              console.log(
+                'Section.Expectations: Error saving participant',
+                err
+              );
             }
-            reject(participant);
+            reject(err);
           }
         );
       });

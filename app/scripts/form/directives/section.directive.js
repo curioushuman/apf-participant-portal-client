@@ -131,6 +131,9 @@
           editSection();
         },
         function(err) {
+          if (DEBUG) {
+            console.log('Error during specific section pre', err);
+          }
           // if there is an error, show the section anyway
           // so the error can be seen
           if (vm.section.errorInitial) {
@@ -142,7 +145,6 @@
     };
 
     vm.process = function() {
-
       // reset errors
       vm.section.error = false;
       vm.section.invalid = false;
@@ -192,10 +194,10 @@
           // mark the section as complete, and move to the next section
           // or simply complete the form
           vm.section.complete = true;
-          if (vm.sectionNext !== false) {
-            vm.sectionNext.sectionCtrl.pre();
-          } else {
+          if (vm.sectionNext === false) {
             vm.page.complete();
+          } else {
+            vm.sectionNext.sectionCtrl.pre();
           }
         },
         function(err) {

@@ -29,6 +29,7 @@
 
   ClosedController.$inject = [
     '$scope',
+    'gaService',
     'layoutService',
     'userService',
     'DEBUG'
@@ -36,6 +37,7 @@
 
   function ClosedController(
     $scope,
+    gaService,
     layoutService,
     userService,
     DEBUG

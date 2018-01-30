@@ -1,5 +1,7 @@
 /* eslint no-unused-vars: 0 */
 /* eslint require-jsdoc: 0 */
+/* eslint camelcase: 0 */
+/* eslint no-negated-condition: 0 */
 /* global angular */
 (function() {
   'use strict';
@@ -89,7 +91,6 @@
         vm.section.enabled !== undefined &&
         vm.section.enabled === true
       ) {
-
         // grab NHRIs, and then non-NHRIs
         if (vm.page.nhris.length === 0) {
           retrieveNhris()
@@ -138,6 +139,9 @@
               vm.page.countries = countries;
             },
             function(err) {
+              if (DEBUG) {
+                console.log('Error obtaining countries', err);
+              }
               vm.section.errorInitial = true;
             }
           );
@@ -606,7 +610,7 @@
         vm.page.organisations.filter(createFilterFor(query)) :
         vm.page.organisations;
       return results;
-    }
+    };
 
     function createFilterFor(query) {
       var lowercaseQuery = angular.lowercase(query);
