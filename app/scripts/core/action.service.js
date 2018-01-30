@@ -44,6 +44,13 @@
 
     function retrieveAndInit() {
       return $q(function(resolve, reject) {
+        if ($routeParams.actionSlug === 'none-specified') {
+          var err = {
+            status: 404
+          };
+          reject(err);
+          return;
+        }
         gaService.addSalesforceRequest('Retrieve', 'Action');
         Action.get(
           {
