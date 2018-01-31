@@ -3,8 +3,10 @@ md-card(ng-show='vm.content || vm.list')
     md-card-title-text.md-headline
       | {{ vm.title }}
   md-card-content
-    md-list(ng-show='vm.list')
+    md-list.md-dense(ng-show='vm.list')
+      
       md-list-item(ng-repeat='item in vm.list')
         .md-list-item-text
           p {{ item }}
+        md-divider(ng-if='!$last')
     div(ng-hide='vm.list', ng-bind-html='vm.content | trust')
