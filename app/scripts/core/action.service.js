@@ -80,21 +80,22 @@
 
             // see if there is a due date
             // first check for closed override
+            action.formStatus = 'closed';
             if ($location.search().closed === 'override') {
               // do nothing, allow the form to open
               action.formStatus = 'open';
-            } else if (action.Registrations_due_date__c) {
+            }
+
+            if (action.Registrations_due_date__c) {
               // format accordingly
               action.registrationDate =
                 layoutService.formatDate(action.Registrations_due_date__c);
               // determine if it has passed
               var registrationDate = new Date(action.Registrations_due_date__c);
               var nowDate = new Date();
-              if (nowDate.getTime() > registrationDate.getTime()) {
-                action.formStatus = 'closed';
+              if (registrationDate.getTime() > nowDate.getTime()) {
+                action.formStatus = 'open';
               }
-            } else {
-              action.formStatus = 'closed';
             }
 
             // is training an action?

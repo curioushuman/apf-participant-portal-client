@@ -23,25 +23,26 @@ section(ng-show='vm.page.action.loaded')
       
       //- Help text
       div(flex-xs, flex-gt-sm='50', layout='column')
-        md-card(ng-hide="vm.page.action.formStatus === 'closed'")
-          md-card-title
+        md-card
+          md-card-title(ng-hide="vm.page.action.formStatus === 'closed'")
             md-card-title-text
               span.md-headline To complete this form
           md-card-content
-            p {{ vm.page.action.Help_text__c }}
-            md-list
-              md-divider
-              md-list-item
-                div.md-list-item-text
-                  p Registrations close 
-                    strong {{ vm.page.action.registrationDate }}
-              md-divider
-              md-list-item
-                div.md-list-item-text
-                  p You can 
-                    strong save and return 
-                    | to this form at any time
-              md-divider
+            div(ng-hide="vm.page.action.formStatus === 'closed'")
+              p {{ vm.page.action.Help_text__c }}
+              md-list
+                md-divider
+                md-list-item
+                  div.md-list-item-text
+                    p Registrations close 
+                      strong {{ vm.page.action.registrationDate }}
+                md-divider
+                md-list-item
+                  div.md-list-item-text
+                    p You can 
+                      strong save and return 
+                      | to this form at any time
+                md-divider
             div(
               layout='row',
               layout-xs='column',
