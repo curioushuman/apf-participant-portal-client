@@ -168,6 +168,8 @@
             vm.page.contact.exists &&
             vm.page.affiliations.length === 0
           ) {
+            vm.section.errorInitial = false;
+
             retrieveAffiliations()
             .then(
               function(affiliations) {
@@ -321,7 +323,7 @@
           if (vm.section.organisationCountry === null) {
             vm.section.organisationCountry = vm.page.contact.Country__c;
           }
-        } else if (vm.section.preOrgCount < 5) {
+        } else if (vm.section.preOrgCount < 3) {
           // NHRIs and orgs not found yet, recurse for up to 5 seconds
           vm.section.preOrgCount++;
           $timeout(vm.section.sectionCtrl.pre, 1000);
