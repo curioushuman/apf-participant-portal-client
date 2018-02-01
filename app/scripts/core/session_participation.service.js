@@ -128,7 +128,7 @@
           gaService.addSalesforceRequest('Update', 'SessionParticipation');
           sessionParticipation.$update(
             {
-              sessionParticipationid: sessionParticipation.Id
+              session_participationid: sessionParticipation.Id
             },
             function(record) {
               gaService.addSalesforceResponse(
