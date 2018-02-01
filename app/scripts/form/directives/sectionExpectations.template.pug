@@ -11,6 +11,7 @@ md-input-container.md-block(flex)
     md-select-on-focus,
     aria-label='What knowledge do you hope to gain through participation in this course?',
     required,
+    md-no-asterisk,
     ng-set-focus='expectations'
   )
   //- div.hint
@@ -30,7 +31,8 @@ md-input-container.md-block(flex)
     rows='3',
     aria-label='What skills do you hope to gain through participation in this course?',
     md-select-on-focus,
-    required
+    required,
+    md-no-asterisk
   )
   //- div.hint
   //-   | Should we add some help text?
@@ -38,7 +40,7 @@ md-input-container.md-block(flex)
     div(ng-message='required')
       | This field is required
 p.question Is there any additional information you would like to 
-  | add to your application?
+  | add to your application? (optional)
 md-input-container.md-block(flex)
   textarea(
     ng-model='vm.page.participant.Additional_information__c',
@@ -48,8 +50,3 @@ md-input-container.md-block(flex)
     aria-label='Is there any additional information you would like to add to your application?',
     md-select-on-focus
   )
-  //- div.hint
-  //-   | Should we add some help text?
-  //- div(ng-messages='vm.form.participantAdditionalInfo.$error')
-  //-   div(ng-message='required')
-  //-     | This field is required

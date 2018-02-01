@@ -2,6 +2,7 @@ md-input-container.md-block(flex)
   label Your email address
   input(
     required,
+    md-no-asterisk,
     type='email',
     name='contactEmail',
     ng-model='vm.page.email',
@@ -11,7 +12,7 @@ md-input-container.md-block(flex)
     ng-set-focus='email'
   )
   div.hint(ng-show='vm.page.action.isTraining')
-    | Please enter a valid email address that 
+    | Please enter an email that 
     | you check often.
   div(ng-messages='vm.form.contactEmail.$error')
     div(ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']")

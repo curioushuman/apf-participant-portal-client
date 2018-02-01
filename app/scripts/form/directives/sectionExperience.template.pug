@@ -1,7 +1,7 @@
-p.question.p-required Please provide details of any knowledge and experience 
-  | you have with issues related to this topic
+//- p.question.p-required Please provide details of any knowledge and experience 
+//-   | you have with issues related to this topic
 md-input-container.md-block(flex)
-  label Knowledge and experience
+  label Please provide details of any knowledge and experience you have with issues related to this topic
   textarea(
     ng-model='vm.page.participant.Prior_experience_with_action_topic__c',
     name='participantPriorExperienceTopic',
@@ -9,6 +9,7 @@ md-input-container.md-block(flex)
     rows='5',
     md-select-on-focus,
     required,
+    md-no-asterisk,
     ng-set-focus='experience'
   )
   div(ng-messages='vm.form.participantPriorExperienceTopic.$error')

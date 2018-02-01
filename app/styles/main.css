@@ -56,6 +56,8 @@ div.subheader {
 
 p.intro {
   font-size: 0.9em;
+  -webkit-margin-before: 0em;
+  -webkit-margin-after: 2em;
 }
 .error {
   font-size: 0.9em;
@@ -96,12 +98,12 @@ p.p-required {
   color: #444444;
 }
 
-p.p-required:after {
+/* p.p-required:after {
   content: ' *';
   font-size: 13px;
   vertical-align: top;
   color: rgba(0,0,0,0.54);
-}
+} */
 
 .form-progress {
   height: 100%;
@@ -110,11 +112,11 @@ p.p-required:after {
 }
 
 .form-progress .value {
-
+  /* color: #00458F; */
 }
 
 .form-progress .percentage {
-
+  /* color: #00458F; */
 }
 
 /* content */

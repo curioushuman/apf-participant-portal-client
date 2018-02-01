@@ -5,6 +5,8 @@ div.sessions(ng-hide='vm.page.sessions.length === 0')
     md-colors="{background: 'default-background-hue-2'}"
   )
     | This event involves the following parallel sessions. 
+    span(ng-show='vm.section.sessionsDays.sessionsDaysCount > 1 || vm.section.sessionsDays.sessionsPeriodsCount > 1')
+      | For each of the periods outlined below 
     | Please select your preferred session, by selecting ‘1’ 
     | next to your first preference, and ‘2’ for your second 
     | preference. 

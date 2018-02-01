@@ -13,10 +13,11 @@ div.response
       layout='row',
       layout-align='end center'
     )
-      md-button.md-fab.md-mini.md-accent(
+      md-button.md-fab.md-mini(
         aria-label='Add comment',
         ng-click='vm.showComment()',
-        ng-show='vm.hideComment'
+        ng-show='vm.hideComment',
+        md-colors="{background: 'default-accent-hue-3'}"
       )
         md-icon comment
   div(layout='row', ng-hide='vm.question.Type__c==="Score and comment"')
@@ -32,7 +33,9 @@ div.response
       step='1',
       min='0',
       max='5',
-      aria-label='{{ vm.question.Question_text__c }}'
+      aria-label='{{ vm.question.Question_text__c }}',
+      required,
+      md-no-asterisk
     )
     span 5
   div.slider-invalid(ng-show='vm.question.response.error')

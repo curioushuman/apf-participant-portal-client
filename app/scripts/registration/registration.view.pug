@@ -34,27 +34,26 @@ section(ng-show='vm.page.action.loaded')
                 md-divider
                 md-list-item
                   div.md-list-item-text
+                    p This form will take 
+                      strong 5-10 minutes 
+                      | to complete
+                md-divider
+                md-list-item
+                  div.md-list-item-text
+                    p You can 
+                      md-icon.material-icons(md-colors="{color: 'default-accent-hue-3'}") save
+                      strong  save 
+                      | your work and complete later
+                md-divider
+                md-list-item
+                  div.md-list-item-text
                     p Registrations close 
                       strong {{ vm.page.action.registrationDate }}
                 md-divider
                 md-list-item
                   div.md-list-item-text
-                    p Fields marked with 
-                      strong * 
-                      | are required
-                md-divider
-                md-list-item
-                  div.md-list-item-text
-                    p You can 
-                      md-icon.material-icons.md-primary save
-                      strong  save 
-                      | any time, and complete your registration later
-                md-divider
-                md-list-item
-                  div.md-list-item-text
                     p Enter your email address to 
                       strong begin or resume 
-                      | your registration
                 md-divider
             div(
               layout='row',
@@ -114,8 +113,8 @@ section(ng-show='vm.page.action.loaded')
             md-card-header-text
               span.md-headline Registration complete
           md-card-content
-            p Thank you for taking the time to complete our application form. 
-              | Someone from the APF wil be in contact soon.
+            p Thank you for your registration. 
+              strong Someone from the APF wil be in contact soon.
               
         //- Saved section
         md-card(
@@ -130,8 +129,9 @@ section(ng-show='vm.page.action.loaded')
             md-card-header-text
               span.md-headline Registration saved
           md-card-content
-            p Your registration information has been saved. Return at any time 
-              | to complete your registration.
+            p 
+              strong Your registration information has been saved. 
+              | Return at any time to complete your registration.
             md-list
               md-divider
               md-list-item

@@ -4,6 +4,7 @@ md-input-container.md-block(flex)
     ng-model='vm.section.orgTypeSelected',
     name='organisationType',
     required,
+    md-no-asterisk,
     ng-change='vm.changeOrganisationType()',
     ng-disabled='vm.section.errorInitial',
     ng-set-focus='organisation'
@@ -30,6 +31,7 @@ md-input-container.md-block(flex, ng-show="vm.section.orgTypeSelected === 'nhri'
     ng-model='vm.page.affiliation.npe5__Organization__c',
     name='affiliationNhri',
     required,
+    md-no-asterisk,
     ng-disabled='vm.section.errorInitial'
   )
     md-option(ng-repeat='nhri in vm.page.nhris', value='{{ nhri.Id }}')
@@ -40,6 +42,7 @@ md-input-container.md-block(flex, ng-show="vm.section.orgTypeSelected === 'nhri'
 md-autocomplete(
   flex,
   required,
+  md-no-asterisk,
   md-input-name='orgSearchText',
   md-selected-item='vm.section.orgSearchExistingOrgSelected',
   md-search-text='vm.section.orgSearchText',
@@ -58,21 +61,22 @@ md-autocomplete(
     div(ng-message='required')
       | This field is required
 md-input-container.md-block(
-  flex,
+  flex-xs,
+  flex-gt-sm='50',
   ng-show="vm.section.orgTypeSelected === 'organisation' && !vm.section.orgSearchExistingOrgSelected",
-  required
+  required,
+  md-no-asterisk
 )
-  label Country
+  label Country your organisation is based in
   md-select(
     ng-model='vm.section.organisationCountry',
     name='organisationCountry',
     required,
+    md-no-asterisk,
     ng-disabled='vm.section.errorInitial'
   )
     md-option(ng-repeat='country in vm.page.countries', value='{{ country.Id }}')
       | {{ country.Name }}
-  div.hint
-    | Which would be the main country for this organisation?
   div(ng-messages='vm.form.organisationCountry.$error')
     div(ng-message='required')
       | This field is required
@@ -85,6 +89,7 @@ div(ng-hide="vm.section.orgTypeSelected === 'individual' || vm.page.action.isTra
       ng-model='vm.page.affiliation.npe5__StartDate__c',
       name='affiliationStartDate',
       required,
+      md-no-asterisk,
       md-open-on-focus,
       md-placeholder='Enter date',
       ng-disabled='vm.section.errorInitial'
@@ -98,6 +103,7 @@ md-input-container.md-block(flex, ng-hide="vm.section.orgTypeSelected === 'indiv
     ng-model='vm.page.affiliation.npe5__Role__c',
     name='affiliationRole',
     required,
+    md-no-asterisk,
     md-maxlength='80',
     ng-disabled='vm.section.errorInitial'
   )
@@ -106,20 +112,20 @@ md-input-container.md-block(flex, ng-hide="vm.section.orgTypeSelected === 'indiv
   div(ng-messages='vm.form.affiliationRole.$error')
     div(ng-message='required')
       | This field is required and can have a maximum of 80 characters
-md-input-container.md-block(flex, ng-show='vm.page.action.isTraining')
-  label Description of your role
-  textarea(
-    ng-model='vm.page.affiliation.npe5__Description__c',
-    name='affiliationDescription',
-    md-maxlength='500',
-    rows='5',
-    md-select-on-focus,
-    ng-disabled='vm.section.errorInitial'
-  )
-md-input-container.md-block(flex, ng-hide="vm.section.orgTypeSelected === 'individual'")
-  label Department
-  input(
-    ng-model='vm.page.affiliation.Department__c',
-    name='affiliationDepartment',
-    ng-disabled='vm.section.errorInitial'
-  )
+//- md-input-container.md-block(flex, ng-show='vm.page.action.isTraining')
+//-   label Description of your role
+//-   textarea(
+//-     ng-model='vm.page.affiliation.npe5__Description__c',
+//-     name='affiliationDescription',
+//-     md-maxlength='500',
+//-     rows='5',
+//-     md-select-on-focus,
+//-     ng-disabled='vm.section.errorInitial'
+//-   )
+//- md-input-container.md-block(flex, ng-hide="vm.section.orgTypeSelected === 'individual'")
+//-   label Department
+//-   input(
+//-     ng-model='vm.page.affiliation.Department__c',
+//-     name='affiliationDepartment',
+//-     ng-disabled='vm.section.errorInitial'
+//-   )
