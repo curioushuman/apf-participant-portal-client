@@ -62,6 +62,10 @@
           processing: 1
         };
         vm.section.invalid = false;
+        vm.section.progress = {
+          total: 0,
+          complete: 0
+        };
 
         // work out what sections are previous and next
         vm.sectionNext = false;
@@ -103,13 +107,17 @@
           }
           if (section.enabled === true) {
             lastEnabledSection = section;
+            vm.section.progress.total++;
+          }
+          if (vm.section.id === section.id) {
+            vm.section.progress.complete = vm.section.progress.total;
           }
         });
         if (
           vm.section.first !== undefined &&
           vm.section.first === true
         ) {
-          console.log('Our sectoin is first', vm.section.id);
+          console.log('Our section is first', vm.section.id);
           vm.pre();
         }
         if (DEBUG) {
@@ -206,6 +214,7 @@
           // or simply complete the form
           vm.section.complete = true;
           if (vm.save === true) {
+            vm.save = false;
             vm.page.save();
           } else if (vm.sectionNext === false) {
             vm.page.complete();

@@ -15,7 +15,7 @@ div.session
   //-   | Please make sure you have selected a first and second preference
   
   div(flex, layout='row', layout-padding)
-    div(flex='15')
+    div(flex-xs='30',flex-gt-sm='15')
       md-select(
         ng-model='vm.session.sessionParticipation.Registration_preference__c',
         name='sessionParticipationRegoPreference{{ vm.session.sessionParticipation.Name }}',

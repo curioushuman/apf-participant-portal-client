@@ -56,7 +56,7 @@
       sections: {
         email: {
           id: 'email',
-          title: 'Email',
+          title: 'Begin or Resume',
           next: 'personal',
           enabled: true,
           first: true

@@ -1,8 +1,18 @@
 div.response
   div(layout='row', ng-show='vm.question.Type__c==="Score and comment"')
-    div(flex='85', layout='row', layout-align='start center')
+    div(
+      flex-xs='75',
+      flex-gt-sm='85'
+      layout='row',
+      layout-align='start center'
+    )
       p.question {{ vm.question.Question_text__c }}
-    div(flex='15', layout='row', layout-align='end center')
+    div(
+      flex-xs='25',
+      flex-gt-sm='15'
+      layout='row',
+      layout-align='end center'
+    )
       md-button.md-fab.md-mini.md-accent(
         aria-label='Add comment',
         ng-click='vm.showComment()',

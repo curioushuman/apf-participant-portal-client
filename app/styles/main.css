@@ -103,6 +103,20 @@ p.p-required:after {
   color: rgba(0,0,0,0.54);
 }
 
+.form-progress {
+  height: 100%;
+  text-align: right;
+  background-color: #00458F;
+}
+
+.form-progress .value {
+
+}
+
+.form-progress .percentage {
+
+}
+
 /* content */
 
 a {

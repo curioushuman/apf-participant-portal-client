@@ -54,7 +54,7 @@
     }
 
     function formatDate(dateString) {
-      return $filter('date')(dateString, 'd MMMM yyyy');
+      return $filter('date')(dateString, 'd MMM yyyy');
     }
 
     function listFromString(str) {

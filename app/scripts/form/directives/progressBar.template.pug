@@ -1,0 +1,4 @@
+div.form-progress-bar(md-colors="{background: 'default-primary-hue-1'}")
+  div.form-progress(style="width: {{ vm.percentage }}%")
+    span.value(ng-if='vm.percentage > 8') {{ vm.percentage }}
+    span.percentage %

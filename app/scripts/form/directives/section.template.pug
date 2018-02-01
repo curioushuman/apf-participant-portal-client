@@ -24,10 +24,10 @@ div(ng-show='vm.section.enabled === true')
         md-colors="{background: 'default-warn'}",
         ng-show='vm.section.errorInitial'
       )
-        div(flex='70', layout='row', layout-align='start center')
+        div(flex-xs='60',flex-gt-sm='70', layout='row', layout-align='start center')
           | There was an error reaching the database. Please wait 5 
           | seconds and then try again.
-        div(flex='30', layout='row', layout-align='end center')
+        div(flex-xs='40',flex-gt-sm='30', layout='row', layout-align='end center')
           md-progress-circular.md-background(ng-show='vm.page.working', md-mode='indeterminate', md-diameter='20px')
           md-button.md-background.md-raised(
             ng-click="vm.pre('try again')",
@@ -61,9 +61,9 @@ div(ng-show='vm.section.enabled === true')
           ) 
             md-icon.md-material-icons save
         span(ng-show='vm.page.working && vm.section.processing.processes > 1')
-          | Please be patient, we are saving 
+          | Saving 
           | {{ vm.section.processing.processing }} of 
-          | {{ vm.section.processing.processes }} responses
+          | {{ vm.section.processing.processes }}
         md-progress-circular.md-primary(ng-show='vm.page.working', md-mode='indeterminate', md-diameter='20px')
         md-button.md-fab.md-mini(
           ng-show='vm.sectionPrevious',
@@ -92,3 +92,7 @@ div(ng-show='vm.section.enabled === true')
           ng-disabled='vm.page.working'
         ) 
           | Register for this event
+    gz-progress-bar(
+      progress='vm.section.progress',
+      ng-hide='vm.section.first'
+    )
