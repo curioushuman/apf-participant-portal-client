@@ -1,13 +1,6 @@
-md-card.section-complete(
-  md-colors="{background: 'default-accent-hue-2'}"
-)
+md-card.section-complete
   md-card-header
-    //- md-card-avatar
-    //-   img(
-    //-     ng-src='/images/APF-logo-circle.png',
-    //-     alt='Asia Pacific Forum logo'
-    //-   )
     md-card-header-text
       span.md-headline {{ vm.title }}
     md-card-avatar
-      md-icon.material-icons mode_edit
+      md-icon.material-icons(md-colors="{background: 'default-accent-hue-2'}") mode_edit
