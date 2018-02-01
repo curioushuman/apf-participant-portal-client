@@ -48,6 +48,13 @@
     vm.navigate = layoutService.navigate;
     vm.refresh = layoutService.refresh;
 
+    // at some point make this better
+    if (!DEBUG) {
+      window.onbeforeunload = function (e) {
+        return 'Are you sure you want to navigate away from this page?';
+      };
+    }
+
     vm.page = {
       email: null,
       working: false,
