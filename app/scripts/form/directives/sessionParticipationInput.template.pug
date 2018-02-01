@@ -19,7 +19,8 @@ div.session
       md-select(
         ng-model='vm.session.sessionParticipation.Registration_preference__c',
         name='sessionParticipationRegoPreference{{ vm.session.sessionParticipation.Name }}',
-        aria-label='{{ vm.session.Name }}'
+        aria-label='{{ vm.session.Name }}',
+        ng-set-focus='{{ vm.focus }}'
       )
         md-option(value='')
         md-option(ng-repeat='option in vm.session.period.options', value='{{ option }}')

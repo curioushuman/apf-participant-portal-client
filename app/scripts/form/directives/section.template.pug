@@ -66,7 +66,7 @@ div(ng-show='vm.section.enabled === true')
         ) 
           md-icon.md-material-icons navigate_before
           | Previous
-        md-button(
+        md-button.md-accent.md-raised(
           ng-show='vm.sectionNext',
           ng-click="vm.process()",
           ng-disabled="vm.page.working"
@@ -78,4 +78,4 @@ div(ng-show='vm.section.enabled === true')
           ng-click="vm.process()",
           ng-disabled="vm.page.working"
         ) 
-          | Register
+          | Register for this event

@@ -9,7 +9,8 @@ md-slider-container.md-block(flex)
     step='1',
     min='0',
     max='5',
-    aria-label='{{ vm.question }}'
+    aria-label='{{ vm.question }}',
+    ng-set-focus='{{ vm.focus }}'
   )
   span 5
 div.slider-invalid(ng-show='vm.error')

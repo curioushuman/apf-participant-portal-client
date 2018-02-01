@@ -51,13 +51,14 @@
       email: null,
       working: false,
       requests: {},
-      currentSection: 'email',
+      currentSection: '',
       sections: {
         email: {
           id: 'email',
           title: 'Email',
           next: 'personal',
-          enabled: true
+          enabled: true,
+          first: true
         },
         personal: {
           id: 'personal',

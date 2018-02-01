@@ -3,7 +3,12 @@ div(ng-show='vm.page.action.isTraining')
     strong work 
     | email address?
   md-input-container.md-block(flex)
-    md-radio-group(ng-model='vm.section.emailIsWork', name='emailIsWork', required)
+    md-radio-group(
+      ng-model='vm.section.emailIsWork',
+      name='emailIsWork',
+      required,
+      ng-set-focus='contact'
+    )
       md-radio-button(value='yes', ng-click='vm.changeEmailWork()') Yes
       md-radio-button(value='no', ng-click='vm.changeEmailWork()')  No
     div(ng-messages='vm.form.emailIsWork.$error')

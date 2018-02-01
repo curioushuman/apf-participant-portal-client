@@ -23,7 +23,8 @@
         question: '@',
         model: '=',
         name: '@',
-        error: '='
+        error: '=',
+        focus: '@'
       }
     };
   }

@@ -9,7 +9,11 @@ p.intro(
   | database. Please check your information is up to date.
 md-input-container.md-block(flex)
   label Salutation
-  md-select(ng-model='vm.page.contact.Salutation', name='contactSalutation')
+  md-select(
+    ng-model='vm.page.contact.Salutation',
+    name='contactSalutation',
+    ng-set-focus='personal'
+    )
     md-option(ng-repeat='salutation in vm.page.salutations', value='{{ salutation }}')
       | {{ salutation }}
 md-input-container.md-block(flex)

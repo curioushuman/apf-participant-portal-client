@@ -104,6 +104,13 @@
             lastEnabledSection = section;
           }
         });
+        if (
+          vm.section.first !== undefined &&
+          vm.section.first === true
+        ) {
+          console.log('Our sectoin is first', vm.section.id);
+          vm.pre();
+        }
         if (DEBUG) {
           console.log('Init section', vm.section);
         }
@@ -117,6 +124,9 @@
       ) {
         gaService.addEvent('Navigation', 'Section, ' + source, vm.section.id);
       }
+
+      // set focus to the first input of this section
+      $scope.$broadcast(vm.section.id);
 
       // call the section pre function
       vm.section.pre()

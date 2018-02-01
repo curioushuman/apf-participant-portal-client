@@ -21,5 +21,6 @@ div.sessions(ng-hide='vm.page.sessions.length === 0')
   gz-session-participation-input(
     ng-repeat='session in vm.page.sessions',
     session='session',
-    sessions-days='vm.section.sessionsDays'
+    sessions-days='vm.section.sessionsDays',
+    first='$first'
   )

@@ -275,6 +275,10 @@
                   }
                 }
 
+                // we need to also broadcast from here
+                // as sometimes as we need to delay to wait for orgs to load
+                $scope.$broadcast(vm.section.id);
+
                 resolve(vm.page.affiliation);
               },
               function(err) {

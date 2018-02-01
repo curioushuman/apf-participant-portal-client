@@ -26,7 +26,8 @@
       bindToController: true,
       scope: {
         session: '=',
-        sessionsDays: '='
+        sessionsDays: '=',
+        first: '='
       }
     };
   }
@@ -39,6 +40,11 @@
     layoutService
   ) {
     var vm = this;
+
+    vm.focus = '';
+    if (vm.first) {
+      vm.focus = 'sessions';
+    }
 
     vm.navigate = layoutService.navigate;
   }
