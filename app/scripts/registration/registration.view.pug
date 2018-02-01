@@ -41,7 +41,7 @@ section(ng-show='vm.page.action.loaded')
                 md-list-item
                   div.md-list-item-text
                     p You can 
-                      md-icon.material-icons(md-colors="{color: 'default-accent-hue-3'}") save
+                      md-icon.material-icons(md-colors="{color: 'default-accent-hue-2'}") save
                       strong  save 
                       | your progress and complete later
                 md-divider
@@ -57,8 +57,6 @@ section(ng-show='vm.page.action.loaded')
                 md-divider
             div(
               layout='row',
-              layout-sm='column',
-              layout-xs='column',
               ng-show='vm.page.action.startDate !== undefined || vm.page.action.finishDate !== undefined'
               )
               md-list(flex='50')
