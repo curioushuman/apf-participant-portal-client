@@ -46,6 +46,7 @@
     }
 
     vm.navigate = layoutService.navigate;
+    vm.refresh = layoutService.refresh;
 
     vm.page = {
       email: null,
@@ -121,7 +122,9 @@
     // if participant save fails you should show an error
     vm.page.complete = function() {
       vm.page.working = false;
-      console.log('Completing form');
+      if (DEBUG) {
+        console.log('Completing form');
+      }
       // just submit, don't show a summary of all fields
       // indicate the participant has completed the form
       vm.page.participant.Registration_complete__c = true;
@@ -141,6 +144,21 @@
 
       vm.page.currentSection = false;
       vm.page.action.formStatus = 'complete';
+      layoutService.navigate(null, 'top');
+    };
+
+    vm.page.save = function() {
+      vm.page.working = false;
+      vm.page.resumeSection = vm.page.currentSection;
+      vm.page.currentSection = false;
+      vm.page.action.formStatus = 'saved';
+      layoutService.navigate(null, 'top');
+    };
+
+    vm.page.resume = function() {
+      vm.page.working = false;
+      vm.page.currentSection = vm.page.sections[vm.page.resumeSection].next;
+      vm.page.action.formStatus = 'open';
       layoutService.navigate(null, 'top');
     };
 

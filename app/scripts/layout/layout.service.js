@@ -12,13 +12,15 @@
   layoutService.$inject = [
     '$location',
     '$filter',
-    '$anchorScroll'
+    '$anchorScroll',
+    '$route'
   ];
 
   function layoutService(
     $location,
     $filter,
-    $anchorScroll
+    $anchorScroll,
+    $route
   ) {
     var debug = false;
 
@@ -27,6 +29,7 @@
 
     var service = {
       navigate: navigate,
+      refresh: refresh,
       formatDate: formatDate,
       listFromString: listFromString
     };
@@ -44,6 +47,10 @@
         }
         $anchorScroll(hash);
       }
+    }
+
+    function refresh() {
+      $route.reload();
     }
 
     function formatDate(dateString) {

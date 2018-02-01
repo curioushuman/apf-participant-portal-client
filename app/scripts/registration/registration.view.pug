@@ -40,8 +40,15 @@ section(ng-show='vm.page.action.loaded')
                 md-list-item
                   div.md-list-item-text
                     p You can 
-                      strong save and return 
+                      md-icon.material-icons.md-primary save
+                      strong  save and return 
                       | to this form at any time
+                md-divider
+                md-list-item
+                  div.md-list-item-text
+                    p Enter your email address to 
+                      strong begin or resume 
+                      | your registration
                 md-divider
             div(
               layout='row',
@@ -103,6 +110,35 @@ section(ng-show='vm.page.action.loaded')
           md-card-content
             p Thank you for taking the time to complete our application form. 
               | Someone from the APF wil be in contact soon.
+              
+        //- Saved section
+        md-card(
+          ng-show="vm.page.action.formStatus === 'saved'"
+        )
+          md-card-header(md-colors="{background: 'default-primary-hue-2'}")
+            md-card-avatar
+              img(
+                ng-src='/images/APF-logo-circle.png',
+                alt='Asia Pacific Forum logo'
+              )
+            md-card-header-text
+              span.md-headline Registration saved
+          md-card-content
+            p Your registration information has been saved. Return at any time 
+              | to complete your registration.
+            md-list
+              md-divider
+              md-list-item
+                div.md-list-item-text
+                  p Registrations close 
+                    strong {{ vm.page.action.registrationDate }}
+              md-divider
+          md-card-actions(layout='row', layout-align='end center', layout-padding)
+            md-button.md-accent.md-raised(
+              ng-click="vm.page.resume()"
+            ) 
+              | Resume
+              md-icon.md-material-icons navigate_next
         
         //- the form
         form(
