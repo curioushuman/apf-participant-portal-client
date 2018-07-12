@@ -2,6 +2,7 @@
 /* eslint require-jsdoc: 0 */
 /* eslint quotes: 0 */
 /* eslint camelcase: 0 */
+/* eslint no-undef: 0 */
 /* global angular */
 (function() {
   'use strict';
@@ -49,11 +50,11 @@
     vm.refresh = layoutService.refresh;
 
     // at some point make this better
-    if (!DEBUG) {
-      window.onbeforeunload = function (e) {
-        return 'Are you sure you want to navigate away from this page?';
-      };
-    }
+    // if (!DEBUG) {
+    //   window.onbeforeunload = function(e) {
+    //     return 'Are you sure you want to navigate away from this page?';
+    //   };
+    // }
 
     vm.page = {
       email: null,

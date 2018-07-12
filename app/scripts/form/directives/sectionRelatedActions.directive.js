@@ -1,5 +1,6 @@
 /* eslint no-unused-vars: 0 */
 /* eslint require-jsdoc: 0 */
+/* eslint camelcase: 0 */
 /* global angular */
 (function() {
   'use strict';
@@ -350,20 +351,20 @@
                 participant.Status__c
               );
             }
-            participant.Prior_experience_with_action_topic__c
-              = vm.page.participant.Prior_experience_with_action_topic__c;
-            participant.Knowledge_they_would_like_to_gain__c
-              = vm.page.participant.Knowledge_they_would_like_to_gain__c;
-            participant.Skills_they_would_like_to_gain__c
-              = vm.page.participant.Skills_they_would_like_to_gain__c;
-            participant.Additional_information__c
-              = vm.page.participant.Additional_information__c;
-            participant.Organisation__c
-              = vm.page.participant.Organisation__c;
-            participant.Type__c
-              = vm.page.participant.Type__c;
-            participant.Registration_complete__c
-              = vm.page.participant.Registration_complete__c;
+            participant.Prior_experience_with_action_topic__c =
+              vm.page.participant.Prior_experience_with_action_topic__c;
+            participant.Knowledge_they_would_like_to_gain__c =
+              vm.page.participant.Knowledge_they_would_like_to_gain__c;
+            participant.Skills_they_would_like_to_gain__c =
+              vm.page.participant.Skills_they_would_like_to_gain__c;
+            participant.Additional_information__c =
+              vm.page.participant.Additional_information__c;
+            participant.Organisation__c =
+              vm.page.participant.Organisation__c;
+            participant.Type__c =
+              vm.page.participant.Type__c;
+            participant.Registration_complete__c =
+              vm.page.participant.Registration_complete__c;
             if (DEBUG) {
               console.log(
                 'Section.RelatedActions: updatedParticipant',

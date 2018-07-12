@@ -37,7 +37,7 @@
     vm.percentage = 0;
 
     $scope.$watch('vm.progress.total', function(value) {
-      if (typeof(vm.progress) === 'object') {
+      if (typeof vm.progress === 'object') {
         vm.percentage =
           Math.round(vm.progress.complete / vm.progress.total * 100);
       }
