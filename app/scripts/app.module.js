@@ -16,6 +16,7 @@
       'app.core',
       'app.form',
       'app.landing',
+      // 'app.participation',
       'app.registration',
       'app.layout'
     ])

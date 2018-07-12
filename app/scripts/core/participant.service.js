@@ -44,6 +44,15 @@
           params: {
             participantid: '@participantid'
           }
+        },
+        queryRelatedAction: {
+          method: 'GET',
+          url: API_URI + '/participant/related_action/:contactid/:actionid',
+          params: {
+            contactid: '@contactid',
+            actionid: '@actionid'
+          },
+          isArray: true
         }
       }
     );
@@ -51,6 +60,7 @@
     var service = {
       Participant: Participant,
       retrieve: Participant.get,
+      listByRelatedAction: Participant.queryRelatedAction,
       setDetectionResults: setDetectionResults,
       initParticipant: initParticipant,
       save: save

@@ -3,5 +3,5 @@
 (function() {
   'use strict';
 
-  angular.module('app.why', []);
+  angular.module('app.participation', []);
 })();

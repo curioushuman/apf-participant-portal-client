@@ -101,7 +101,8 @@
     $scope.$watch('vm.page.participant', function(value) {
       if (
         vm.page.participant.exists !== undefined &&
-        vm.page.participant.exists === true
+        vm.page.participant.exists === true &&
+        vm.section.questionsAndResponsesLoaded.responses === false
       ) {
         // we want to grab responses
         retrieveResponses()

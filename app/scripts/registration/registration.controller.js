@@ -117,9 +117,16 @@
         sessions: {
           id: 'sessions',
           title: 'Sessions',
-          next: false,
+          next: 'related_actions',
           enabled: false,
           enabler: 'Show_Sessions_section__c'
+        },
+        related_actions: {
+          id: 'related_actions',
+          title: 'Related Events',
+          next: false,
+          enabled: false,
+          enabler: 'Show_Related_Events_section__c'
         }
       },
       sectionsEnabled: false
@@ -305,6 +312,7 @@
           }
         );
       } else if (vm.page.contact.Id !== undefined) {
+        // this section only fires once a New Contact has been created
         if (DEBUG) {
           console.log('No contact found, empty participant created');
         }

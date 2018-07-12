@@ -205,6 +205,12 @@ section(ng-show='vm.page.action.loaded')
               page='vm.page',
               form='form'
             )
+            
+          gz-section(page='vm.page', form='form')
+            gz-section-related-actions(
+              page='vm.page',
+              form='form'
+            )
 
   div.footer(layout='row', layout-padding, md-colors="{background: 'default-background-hue-3'}")
     img.logo-icon(

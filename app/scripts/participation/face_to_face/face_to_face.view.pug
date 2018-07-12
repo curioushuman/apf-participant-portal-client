@@ -1,0 +1,56 @@
+section
+  
+  div.header(layout='row', layout-padding, md-colors="{background: 'default-primary'}")
+    img.logo(
+      ng-src='/images/APF-logo-main-1x.png',
+      alt='Asia Pacific Forum logo'
+    )
+    
+  div.subheader(layout='row', md-colors="{background: 'default-primary-hue-1'}")
+    h1.md-title Participate in 
+      span blah blah
+    
+  //- gz-action-hero(
+  //-   action='vm.page.action'
+  //- )
+
+section
+  
+  //- Content
+  div.content
+
+    md-content(layout-padding, layout='row', layout-sm='column', layout-xs='column')
+      
+      //- Help text
+      div(flex-xs, flex-sm, flex-gt-sm='50', layout='column')
+        md-card
+          md-card-title
+            md-card-title-text
+              span.md-headline To complete this form
+          md-card-content
+            div
+              p This is a card
+
+      //- Right
+      div(flex, layout='column')
+        
+        h1 right section for face to face
+
+  div.footer(layout='row', layout-padding, md-colors="{background: 'default-background-hue-3'}")
+    img.logo-icon(
+      ng-src='/images/APF-logo-footer-2x.png',
+      alt='Asia Pacific Forum logo'
+    )
+    p 2017 The Asia Pacific Forum of National Human Rights 
+      | Institutions. 
+      a(
+        href='http://asiapacificforum.net/accessibility-policy/',
+        title='The accessibility policy of the APF'
+      )
+        | Accessibility policy
+      |  -&nbsp;
+      a(
+        href='http://asiapacificforum.net/terms-and-conditions/',
+        title='The terms and conditions of the APF'
+      )
+        | Terms and conditions

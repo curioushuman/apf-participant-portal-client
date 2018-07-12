@@ -1,0 +1,8 @@
+div.related-action(ng-hide='vm.relatedAction.Related_registration_is_automatic__c')
+  div(layout='row')
+    div(flex, layout='row', layout-align='start center')
+      p.md-body-2 {{ vm.relatedAction.Name }}
+      p.description {{ vm.relatedAction.Description__c }}
+  md-input-container.md-block
+    md-checkbox(ng-model='vm.page.relatedAction.attending', aria-label="I would like to attend this event")
+      | I would like to attend the {{ vm.relatedAction.Name }}

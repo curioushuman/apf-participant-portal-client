@@ -33,11 +33,22 @@
     var Action = $resource(API_URI + '/action/:slug',
       {
         slug: '@slug'
+      },
+      {
+        queryRelatedAction: {
+          method: 'GET',
+          url: API_URI + '/action/related_action/:actionid',
+          params: {
+            actionid: '@actionid'
+          },
+          isArray: true
+        }
       }
     );
 
     var service = {
       list: Action.query,
+      listByRelatedAction: Action.queryRelatedAction,
       retrieve: Action.get,
       retrieveAndInit: retrieveAndInit
     };
