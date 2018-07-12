@@ -77,7 +77,7 @@
               if (vm.page.relatedActions.length > 0) {
                 vm.section.actionsAndContactLoaded.actions = true;
                 if (DEBUG) {
-                  console.log('Found related actions', actions.length);
+                  console.log('Found related actions', vm.page.relatedActions);
                 }
               } else {
                 vm.section.actionsAndContactLoaded.actions = false;
