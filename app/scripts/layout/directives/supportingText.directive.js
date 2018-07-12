@@ -45,7 +45,11 @@
     vm.navigate = layoutService.navigate;
 
     $scope.$watch('vm.content', function(value) {
-      if (value !== undefined && vm.display === 'list') {
+      if (
+        value !== undefined &&
+        value !== null &&
+        vm.display === 'list'
+      ) {
         vm.list = layoutService.listFromString(value);
       }
     });
