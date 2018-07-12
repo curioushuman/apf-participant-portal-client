@@ -33,6 +33,7 @@
   }
 
   SectionRelatedActionsController.$inject = [
+    '$filter',
     '$q',
     '$scope',
     'actionService',
@@ -42,6 +43,7 @@
   ];
 
   function SectionRelatedActionsController(
+    $filter,
     $q,
     $scope,
     actionService,
@@ -53,10 +55,8 @@
     vm.section = vm.page.sections.related_actions;
     vm.section.requestTime = {};
     vm.section.required = [];
-    vm.section.actionsAndContactLoaded = {
-      actions: null,
-      contact: false
-    };
+    vm.section.relatedActionsExist = null;
+    vm.section.relatedActionParticipantsExist = null;
 
     vm.page.relatedActions = [];
     vm.page.relatedActionParticipants = [];
@@ -69,18 +69,19 @@
         vm.section.enabled === true
       ) {
         // grab actions that are related to this action
-        if (vm.section.actionsAndContactLoaded.actions === null) {
+        if (vm.section.relatedActionsExist === null) {
           retrieveRelatedActions()
           .then(
             function(actions) {
               vm.page.relatedActions = actions;
               if (vm.page.relatedActions.length > 0) {
-                vm.section.actionsAndContactLoaded.actions = true;
+                vm.section.relatedActionsExist = true;
+                setRelatedEventsAttending();
                 if (DEBUG) {
                   console.log('Found related actions', vm.page.relatedActions);
                 }
               } else {
-                vm.section.actionsAndContactLoaded.actions = false;
+                vm.section.relatedActionsExist = false;
                 if (DEBUG) {
                   console.log('No related actions were found', actions.length);
                 }
@@ -102,25 +103,14 @@
 
     // watch for changes to contact.Id
     $scope.$watch('vm.page.contact.Id', function(value) {
-      if (DEBUG) {
-        console.log(
-          'vm.page.contact changed (detected within sectionRelatedActions)',
-          vm.page.contact
-        );
-      }
       if (vm.page.contact.exists === true) {
-        // this indicates a contact was found
-        vm.section.actionsAndContactLoaded.contact = true;
-      }
-    });
-
-    // Wait until contact is found, and related actions exist
-    $scope.$watch('vm.section.actionsAndContactLoaded', function(value) {
-      if (
-        vm.section.actionsAndContactLoaded.actions === true &&
-        vm.section.actionsAndContactLoaded.contact === true
-      ) {
-        // if contact exists, look for related action participant records
+        if (DEBUG) {
+          console.log(
+            'vm.page.contact exists (detected within sectionRelatedActions)',
+            vm.page.contact
+          );
+        }
+        // contact exists, look for related action participant records
         gaService.addSalesforceRequest('List', 'Participant');
         participantService.listByRelatedAction(
           {
@@ -134,6 +124,10 @@
             );
 
             vm.page.relatedActionParticipants = participants;
+            if (vm.page.relatedActionParticipants.length > 0) {
+              vm.section.relatedActionParticipantsExist = true;
+            }
+            setRelatedEventsAttending();
 
             if (DEBUG) {
               console.log('Related Action Participants found', participants);
@@ -167,8 +161,25 @@
 
     // whenever the participant changes, update the related participants
     $scope.$watch('vm.page.participant', function(value) {
-      // finish this later
-      // this is if a contact exists, and participants exist for that contact
+      var promises = syncRelatedActionParticipants();
+      $q.all(promises).then(
+        function(data) {
+          if (vm.debug) {
+            console.log(
+              'Section.RelatedActions: participants synced on update',
+              data
+            );
+          }
+        },
+        function(err) {
+          if (vm.debug) {
+            console.log(
+              'Section.Experience: error syncing participants on update',
+              err
+            );
+          }
+        }
+      );
     });
 
     vm.section.pre = function() {
@@ -179,8 +190,75 @@
 
     vm.section.process = function() {
       return $q(function(resolve, reject) {
-        // HAVEN'T FNISHED THIS
+        // loop through the related actions
+        // create / update participants for opted in actions
+        // then run the sync function
+        if (DEBUG) {
+          console.log(
+            'Section.RelatedActions: existing participants',
+            vm.page.relatedActionParticipants
+          );
+        }
+        var participantExists = false;
+        angular.forEach(vm.page.relatedActions, function(relatedAction, index) {
+          if (DEBUG) {
+            console.log(
+              'Section.RelatedActions: relatedAction',
+              relatedAction
+            );
+          }
+          participantExists = false;
+          angular.forEach(
+            vm.page.relatedActionParticipants,
+            function(participant, index) {
+              if (participant.Action__c === relatedAction.Id) {
+                participantExists = true;
+                if (
+                  relatedAction.Related_registration_is_automatic__c ||
+                  relatedAction.attending
+                ) {
+                  // do nothing
+                } else {
+                  participant.Status__c = 'Cancelled';
+                  participantService.setDetectionResults(participant);
+                }
+              }
+            }
+          );
+          if (
+            participantExists === false &&
+            (
+              relatedAction.Related_registration_is_automatic__c ||
+              relatedAction.attending
+            )
+          ) {
+            var newParticipant = participantService.initParticipant(
+              relatedAction,
+              vm.page.contact
+            );
+            participantService.setDetectionResults(newParticipant);
+            vm.page.relatedActionParticipants.push(newParticipant);
+          }
+        });
 
+        var promises = syncRelatedActionParticipants();
+        $q.all(promises).then(
+          function(data) {
+            if (vm.debug) {
+              console.log('Section.RelatedActions: participants synced', data);
+            }
+            resolve(data);
+          },
+          function(err) {
+            if (vm.debug) {
+              console.log(
+                'Section.Experience: error syncing participants',
+                err
+              );
+            }
+            reject(err);
+          }
+        );
       });
     };
 
@@ -214,32 +292,110 @@
       );
     }
 
-    function initRelatedActionParticipants() {
-      angular.forEach(vm.page.relatedActions, function(relatedAction, index) {
-        var participant = participantService.initParticipant(
-          relatedAction,
-          vm.page.contact
+    function setRelatedEventsAttending() {
+      if (
+        vm.section.relatedActionParticipantsExist === true &&
+        vm.section.relatedActionsExist === true
+      ) {
+        if (DEBUG) {
+          console.log(
+            'Section.RelatedActions: setting attending',
+            vm.page.relatedActions
+          );
+        }
+        angular.forEach(
+          vm.page.relatedActionParticipants,
+          function(participant, i) {
+            angular.forEach(
+              vm.page.relatedActions,
+              function(relatedAction, j) {
+                if (
+                  relatedAction.Id === participant.Action__c &&
+                  participant.Status__c === 'Registered'
+                ) {
+                  relatedAction.attending = true;
+                }
+              }
+            );
+          }
         );
-        participantService.setDetectionResults(participant);
-        // save each of the participants as you do for the main one
-        participantService.save(participant)
-        .then(
-          function(participant) {
+      }
+    }
+
+    // this function makes sure that all related action participants
+    // have the same information as the participant for this action
+    function syncRelatedActionParticipants() {
+      if (DEBUG) {
+        console.log(
+          'Section.RelatedActions: syncRelatedActionParticipants'
+        );
+      }
+      var promises = [];
+      if (
+        vm.page.relatedActionParticipants.length > 0 &&
+        vm.page.participant.Id !== undefined
+      ) {
+        if (DEBUG) {
+          console.log(
+            'Section.RelatedActions: syncRelatedActionParticipants PAX',
+            vm.page.relatedActionParticipants
+          );
+        }
+        angular.forEach(
+          vm.page.relatedActionParticipants,
+          function(participant, index) {
             if (DEBUG) {
               console.log(
-                'RelatedActions: New Participant saved',
+                'Section.RelatedActions: syncing participant',
+                participant.Status__c
+              );
+            }
+            participant.Prior_experience_with_action_topic__c
+              = vm.page.participant.Prior_experience_with_action_topic__c;
+            participant.Knowledge_they_would_like_to_gain__c
+              = vm.page.participant.Knowledge_they_would_like_to_gain__c;
+            participant.Skills_they_would_like_to_gain__c
+              = vm.page.participant.Skills_they_would_like_to_gain__c;
+            participant.Additional_information__c
+              = vm.page.participant.Additional_information__c;
+            participant.Organisation__c
+              = vm.page.participant.Organisation__c;
+            participant.Type__c
+              = vm.page.participant.Type__c;
+            participant.Registration_complete__c
+              = vm.page.participant.Registration_complete__c;
+            if (DEBUG) {
+              console.log(
+                'Section.RelatedActions: updatedParticipant',
                 participant
               );
             }
-            vm.page.relatedActionParticipants.push(participant);
+            // save the participant
+            promises.push(syncRelatedActionParticipant(participant));
+          }
+        );
+      }
+      return promises;
+    }
+
+    function syncRelatedActionParticipant(participant) {
+      return $q(function(resolve, reject) {
+        participantService.save(participant)
+        .then(
+          function(savedParticipant) {
+            if (DEBUG) {
+              console.log('Section.RelatedActions: participant saved');
+            }
+            resolve(savedParticipant);
           },
           function(err) {
             if (DEBUG) {
               console.log(
-                'RelatedActions: Error saving new participant',
+                'Section.RelatedActions: Error saving participant',
                 err
               );
             }
+            reject(err);
           }
         );
       });

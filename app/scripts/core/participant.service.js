@@ -104,7 +104,6 @@
         console.log('Saving participant', participant);
       }
       return $q(function(resolve, reject) {
-        participant.Status__c = 'Registered';
         if (
           participant.Id === undefined ||
           participant.Id === null
