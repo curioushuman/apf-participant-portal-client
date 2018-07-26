@@ -62,8 +62,8 @@
               console.log('Error obtaining owner', err);
             }
             gaService.addSalesforceError(
-              'Retrieve',
-              'User',
+              'Retrieve User',
+              vm.ownerId,
               err.status
             );
           }

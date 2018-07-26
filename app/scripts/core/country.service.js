@@ -50,7 +50,7 @@
       if (requests.list === undefined) {
         requests.list = $q(function(resolve, reject) {
           requestTime.listAll =
-            gaService.addSalesforceRequest('List', 'Countries');
+            gaService.addSalesforceRequest('List Countries', 'All');
           Country.query(
             {},
             function(data) {

@@ -243,7 +243,10 @@
 
       // if they exist, see if they're already registered as a participant
       if (vm.page.contact.exists === true) {
-        gaService.addSalesforceRequest('Retrieve', 'Participant');
+        gaService.addSalesforceRequest(
+          'Retrieve Participant',
+          vm.page.contact.Email + ' @ ' + vm.page.action.Name
+        );
         participantService.retrieve(
           {
             contactid: vm.page.contact.Id,
@@ -251,8 +254,8 @@
           },
           function(participant) {
             gaService.addSalesforceResponse(
-              'Retrieve',
-              'Participant'
+              'Retrieve Participant',
+              vm.page.contact.Email + ' @ ' + vm.page.action.Name
             );
 
             vm.page.participant = participant;
@@ -296,8 +299,8 @@
               );
             } else {
               gaService.addSalesforceError(
-                'Retrieve',
-                'Participant',
+                'Retrieve Participant',
+                vm.page.contact.Email + ' @ ' + vm.page.action.Name,
                 err.status
               );
               if (DEBUG) {

@@ -62,15 +62,18 @@
           reject(err);
           return;
         }
-        gaService.addSalesforceRequest('Retrieve', 'Action');
+        gaService.addSalesforceRequest(
+          'Retrieve Action',
+          $routeParams.actionSlug
+        );
         Action.get(
           {
             slug: $routeParams.actionSlug
           },
           function(action) {
             gaService.addSalesforceResponse(
-              'Retrieve',
-              'Action'
+              'Retrieve Action',
+              $routeParams.actionSlug
             );
             action.loaded = true;
 
@@ -121,8 +124,8 @@
           },
           function(err) {
             gaService.addSalesforceError(
-              'Retrieve',
-              'Action',
+              'Retrieve Action',
+              $routeParams.actionSlug,
               err.status
             );
 

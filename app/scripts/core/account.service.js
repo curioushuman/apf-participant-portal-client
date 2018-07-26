@@ -97,29 +97,34 @@
           if (DEBUG) {
             console.log('CREATING account record', account);
           }
-          gaService.addSalesforceRequest('Create', 'Account');
+          gaService.addSalesforceRequest('Create Account', 'New Account');
           account.$save(
             function(record) {
-              gaService.addSalesforceResponse(
-                'Create',
-                'Account'
-              );
               if (record.success) {
                 account.Id = record.Id;
                 if (DEBUG) {
                   console.log('account Created', account);
                 }
+                gaService.addSalesforceResponse(
+                  'Create Account',
+                  record.Id
+                );
                 resolve(account);
               } else {
                 if (DEBUG) {
                   console.log('There was an error creating the account');
                 }
+                gaService.addSalesforceError(
+                  'Create Account',
+                  'New Account',
+                  'No error status'
+                );
                 reject('There was an error creating the account');
               }
             },
             function(err) {
               gaService.addSalesforceError(
-                'Create',
+                'Create Account',
                 'Account',
                 err.status
               );
@@ -133,32 +138,37 @@
           if (DEBUG) {
             console.log('UPDATING account record', account);
           }
-          gaService.addSalesforceRequest('Update', 'Account');
+          gaService.addSalesforceRequest('Update Account', account.Id);
           account.$update(
             {
               accountid: account.Id
             },
             function(record) {
-              gaService.addSalesforceResponse(
-                'Update',
-                'Account'
-              );
               if (record.success) {
                 if (DEBUG) {
                   console.log('account Updated', account);
                 }
+                gaService.addSalesforceResponse(
+                  'Update Account',
+                  record.Id
+                );
                 resolve(account);
               } else {
                 if (DEBUG) {
                   console.log('There was an error updating the account');
                 }
+                gaService.addSalesforceError(
+                  'Update Account',
+                  account.Id,
+                  'No error status'
+                );
                 reject('There was an error updating the account');
               }
             },
             function(err) {
               gaService.addSalesforceError(
-                'Update',
-                'Account',
+                'Update Account',
+                account.Id,
                 err.status
               );
               if (DEBUG) {

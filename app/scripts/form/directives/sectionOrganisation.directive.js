@@ -61,7 +61,6 @@
   ) {
     var vm = this;
     vm.section = vm.page.sections.organisation;
-    vm.section.requestTime = {};
     vm.section.required = [];
 
     vm.section.preOrgCount = 0;
@@ -505,8 +504,7 @@
     };
 
     function retrieveNhris() {
-      vm.section.requestTime.retrieveNhris =
-        gaService.addSalesforceRequest('List', 'NHRI');
+      gaService.addSalesforceRequest('List NHRI', vm.page.action.Name);
       return accountService.listByType(
         {
           type: 'National Human Rights Institution'
@@ -516,17 +514,15 @@
       .then(
         function(data) {
           gaService.addSalesforceResponse(
-            'List',
-            'NHRI',
-            vm.section.requestTime.retrieveNhris
+            'List NHRI',
+            vm.page.action.Name
           );
           return data;
         },
         function(err) {
           gaService.addSalesforceError(
-            'List',
-            'NHRI',
-            vm.section.requestTime.retrieveNhris,
+            'List NHRI',
+            vm.page.action.Name,
             err.status
           );
           return err;
@@ -535,8 +531,7 @@
     }
 
     function retrieveNonNhris() {
-      vm.section.requestTime.retrieveNonNhris =
-        gaService.addSalesforceRequest('List', 'Non NHRI');
+      gaService.addSalesforceRequest('List Non NHRI', vm.page.action.Name);
       return accountService.listByOtherTypes(
         {
           type: 'National Human Rights Institution'
@@ -546,17 +541,15 @@
       .then(
         function(data) {
           gaService.addSalesforceResponse(
-            'List',
-            'Non NHRI',
-            vm.section.requestTime.retrieveNonNhris
+            'List Non NHRI',
+            vm.page.action.Name
           );
           return data;
         },
         function(err) {
           gaService.addSalesforceError(
-            'List',
-            'Non NHRI',
-            vm.section.requestTime.retrieveNonNhris,
+            'List Non NHRI',
+            vm.page.action.Name,
             err.status
           );
           return err;
@@ -565,7 +558,7 @@
     }
 
     function retrieveAffiliations() {
-      gaService.addSalesforceRequest('List', 'Affiliation');
+      gaService.addSalesforceRequest('List Affiliation', vm.page.contact.Email);
       return affiliationService.listByContact(
         {
           contactid: vm.page.contact.Id
@@ -575,15 +568,15 @@
       .then(
         function(data) {
           gaService.addSalesforceResponse(
-            'List',
-            'Affiliation'
+            'List Affiliation',
+            vm.page.contact.Email
           );
           return data;
         },
         function(err) {
           gaService.addSalesforceError(
-            'List',
-            'Affiliation',
+            'List Affiliation',
+            vm.page.contact.Email,
             err.status
           );
           return err;

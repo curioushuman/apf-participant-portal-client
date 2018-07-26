@@ -56,7 +56,6 @@
   ) {
     var vm = this;
     vm.section = vm.page.sections.sessions;
-    vm.section.requestTime = {};
     vm.section.required = [];
 
     vm.section.sessions = [];
@@ -358,8 +357,7 @@
     };
 
     function retrieveSessions() {
-      vm.section.requestTime.retrieveSessions =
-        gaService.addSalesforceRequest('List', 'Sessions');
+      gaService.addSalesforceRequest('List Sessions', vm.page.action.Name);
       return sessionService.list(
         {
           actionid: vm.page.action.Id
@@ -369,9 +367,8 @@
       .then(
         function(data) {
           gaService.addSalesforceResponse(
-            'List',
-            'Sessions',
-            vm.section.requestTime.retrieveSessions
+            'List Sessions',
+            vm.page.action.Name
           );
           if (DEBUG) {
             console.log('Sessions', data);
@@ -381,9 +378,8 @@
         },
         function(err) {
           gaService.addSalesforceError(
-            'List',
-            'Sessions',
-            vm.section.requestTime.retrieveSessions,
+            'List Sessions',
+            vm.page.action.Name,
             err.status
           );
           return err;
@@ -392,8 +388,10 @@
     }
 
     function retrieveSessionParticipations() {
-      vm.section.requestTime.retrieveSessionParticipations =
-        gaService.addSalesforceRequest('List', 'SessionParticipations');
+      gaService.addSalesforceRequest(
+        'List SessionParticipations',
+        vm.page.participant.Id
+      );
       return sessionParticipationService.list(
         {
           participantid: vm.page.participant.Id
@@ -403,9 +401,8 @@
       .then(
         function(data) {
           gaService.addSalesforceResponse(
-            'List',
-            'SessionParticipations',
-            vm.section.requestTime.retrieveSessionParticipations
+            'List SessionParticipations',
+            vm.page.participant.Id
           );
           if (DEBUG) {
             console.log('SessionParticipations', data);
@@ -414,9 +411,8 @@
         },
         function(err) {
           gaService.addSalesforceError(
-            'List',
-            'SessionParticipations',
-            vm.section.requestTime.retrieveSessionParticipations,
+            'List SessionParticipations',
+            vm.page.participant.Id,
             err.status
           );
           return err;

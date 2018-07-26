@@ -56,7 +56,6 @@
   ) {
     var vm = this;
     vm.section = vm.page.sections.experience;
-    vm.section.requestTime = {};
     vm.section.required = [
       'participantPriorExperienceTopic'
     ];
@@ -254,8 +253,7 @@
     };
 
     function retrieveQuestions() {
-      vm.section.requestTime.retrieveQuestions =
-        gaService.addSalesforceRequest('List', 'Questions');
+      gaService.addSalesforceRequest('List Questions', vm.page.action.Name);
       return questionService.list(
         {
           actionid: vm.page.action.Id
@@ -265,9 +263,8 @@
       .then(
         function(data) {
           gaService.addSalesforceResponse(
-            'List',
-            'Questions',
-            vm.section.requestTime.retrieveQuestions
+            'List Questions',
+            vm.page.action.Name
           );
           if (DEBUG) {
             console.log('Questions', data);
@@ -276,9 +273,8 @@
         },
         function(err) {
           gaService.addSalesforceError(
-            'List',
-            'Questions',
-            vm.section.requestTime.retrieveQuestions,
+            'List Questions',
+            vm.page.action.Name,
             err.status
           );
           return err;
@@ -287,8 +283,10 @@
     }
 
     function retrieveResponses() {
-      vm.section.requestTime.retrieveResponses =
-        gaService.addSalesforceRequest('List', 'Responses');
+      gaService.addSalesforceRequest(
+        'List Responses',
+        vm.page.participant.Id
+      );
       return responseService.list(
         {
           participantid: vm.page.participant.Id
@@ -298,9 +296,8 @@
       .then(
         function(data) {
           gaService.addSalesforceResponse(
-            'List',
-            'Responses',
-            vm.section.requestTime.retrieveResponses
+            'List Responses',
+            vm.page.participant.Name
           );
           if (DEBUG) {
             console.log('Responses', data);
@@ -309,9 +306,8 @@
         },
         function(err) {
           gaService.addSalesforceError(
-            'List',
-            'Responses',
-            vm.section.requestTime.retrieveResponses,
+            'List Responses',
+            vm.page.participant.Name,
             err.status
           );
           return err;

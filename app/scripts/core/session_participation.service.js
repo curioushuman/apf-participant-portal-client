@@ -78,13 +78,12 @@
               sessionParticipation
             );
           }
-          gaService.addSalesforceRequest('Create', 'SessionParticipation');
+          gaService.addSalesforceRequest(
+            'Create SessionParticipation',
+            'New SessionParticipation'
+          );
           sessionParticipation.$save(
             function(record) {
-              gaService.addSalesforceResponse(
-                'Create',
-                'SessionParticipation'
-              );
               if (record.success) {
                 sessionParticipation.Id = record.Id;
                 if (DEBUG) {
@@ -93,6 +92,10 @@
                     sessionParticipation
                   );
                 }
+                gaService.addSalesforceResponse(
+                  'Create SessionParticipation',
+                  'New SessionParticipation'
+                );
                 resolve(sessionParticipation);
               } else {
                 if (DEBUG) {
@@ -100,13 +103,18 @@
                     'There was an error creating the sessionParticipation'
                   );
                 }
+                gaService.addSalesforceError(
+                  'Create SessionParticipation',
+                  'New SessionParticipation',
+                  'No error status'
+                );
                 reject('There was an error creating the sessionParticipation');
               }
             },
             function(err) {
               gaService.addSalesforceError(
-                'Create',
-                'SessionParticipation',
+                'Create SessionParticipation',
+                'New SessionParticipation',
                 err.status
               );
               if (DEBUG) {
@@ -131,10 +139,6 @@
               session_participationid: sessionParticipation.Id
             },
             function(record) {
-              gaService.addSalesforceResponse(
-                'Update',
-                'SessionParticipation'
-              );
               if (record.success) {
                 if (DEBUG) {
                   console.log(
@@ -142,6 +146,10 @@
                     sessionParticipation
                   );
                 }
+                gaService.addSalesforceResponse(
+                  'Update SessionParticipation',
+                  record.Id
+                );
                 resolve(sessionParticipation);
               } else {
                 if (DEBUG) {
@@ -149,13 +157,18 @@
                     'There was an error updating the sessionParticipation'
                   );
                 }
+                gaService.addSalesforceError(
+                  'Update SessionParticipation',
+                  sessionParticipation.Id,
+                  'No error status'
+                );
                 reject('There was an error updating the sessionParticipation');
               }
             },
             function(err) {
               gaService.addSalesforceError(
-                'Update',
-                'SessionParticipation',
+                'Update SessionParticipation',
+                sessionParticipation.Id,
                 err.status
               );
               if (DEBUG) {

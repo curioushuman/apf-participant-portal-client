@@ -64,7 +64,7 @@
 
     vm.section.process = function() {
       gaService.setUserId(vm.page.email);
-      gaService.addSalesforceRequest('Retrieve', 'Contact');
+      gaService.addSalesforceRequest('Retrieve Contact', vm.page.email);
       return $q(function(resolve, reject) {
         contactService.retrieve(
           {
@@ -72,8 +72,8 @@
           },
           function(contact) {
             gaService.addSalesforceResponse(
-              'Retrieve',
-              'Contact'
+              'Retrieve Contact',
+              vm.page.email
             );
             vm.page.contact = contact;
             vm.page.contact.exists = true;
@@ -97,8 +97,8 @@
               resolve(vm.page.contact);
             } else {
               gaService.addSalesforceError(
-                'Retrieve',
-                'Contact',
+                'Retrieve Contact',
+                vm.page.email,
                 err.status
               );
               reject(err);

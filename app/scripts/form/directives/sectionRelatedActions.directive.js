@@ -54,7 +54,6 @@
   ) {
     var vm = this;
     vm.section = vm.page.sections.related_actions;
-    vm.section.requestTime = {};
     vm.section.required = [];
     vm.section.relatedActionsExist = null;
     vm.section.relatedActionParticipantsExist = null;
@@ -112,7 +111,10 @@
           );
         }
         // contact exists, look for related action participant records
-        gaService.addSalesforceRequest('List', 'Participant');
+        gaService.addSalesforceRequest(
+          'List Related Action Participant',
+          vm.page.contact.Email + ' @ ' + vm.page.action.Name
+        );
         participantService.listByRelatedAction(
           {
             contactid: vm.page.contact.Id,
@@ -120,8 +122,8 @@
           },
           function(participants) {
             gaService.addSalesforceResponse(
-              'List',
-              'Participant'
+              'List Related Action Participant',
+              vm.page.contact.Email + ' @ ' + vm.page.action.Name
             );
 
             vm.page.relatedActionParticipants = participants;
@@ -146,8 +148,8 @@
               }
             } else {
               gaService.addSalesforceError(
-                'List',
-                'Participant',
+                'List Related Action Participant',
+                vm.page.contact.Email + ' @ ' + vm.page.action.Name,
                 err.status
               );
               if (DEBUG) {
@@ -264,8 +266,10 @@
     };
 
     function retrieveRelatedActions() {
-      vm.section.requestTime.retrieveRelatedActions =
-        gaService.addSalesforceRequest('List', 'Action');
+      gaService.addSalesforceRequest(
+        'List Related Action',
+        vm.page.action.Name
+      );
       return actionService.listByRelatedAction(
         {
           actionid: vm.page.action.Id
@@ -275,17 +279,15 @@
       .then(
         function(data) {
           gaService.addSalesforceResponse(
-            'List',
-            'Action',
-            vm.section.requestTime.retrieveRelatedActions
+            'List Related Action',
+            vm.page.action.Name
           );
           return data;
         },
         function(err) {
           gaService.addSalesforceError(
-            'List',
-            'Action',
-            vm.section.requestTime.retrieveRelatedActions,
+            'List Related Action',
+            vm.page.action.Name,
             err.status
           );
           return err;

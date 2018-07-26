@@ -111,30 +111,38 @@
           if (DEBUG) {
             console.log('CREATING participant record');
           }
-          gaService.addSalesforceRequest('Create', 'Participant');
+          gaService.addSalesforceRequest(
+            'Create Participant',
+            'New Participant'
+          );
           participant.$save(
             function(record) {
-              gaService.addSalesforceResponse(
-                'Create',
-                'Participant'
-              );
               if (record.success) {
                 if (DEBUG) {
                   console.log('participant Created');
                 }
+                gaService.addSalesforceResponse(
+                  'Create Participant',
+                  record.Id
+                );
                 participant.Id = record.Id;
                 resolve(participant);
               } else {
                 if (DEBUG) {
                   console.log('There was an error creating the participant');
                 }
+                gaService.addSalesforceError(
+                  'Create Participant',
+                  'New Participant',
+                  'No error status'
+                );
                 reject('There was an error creating the participant');
               }
             },
             function(err) {
               gaService.addSalesforceError(
-                'Create',
-                'Participant',
+                'Create Participant',
+                'New Participant',
                 err.status
               );
               if (DEBUG) {
@@ -147,32 +155,37 @@
           if (DEBUG) {
             console.log('UPDATING participant record');
           }
-          gaService.addSalesforceRequest('Update', 'Participant');
+          gaService.addSalesforceRequest('Update Participant', participant.Id);
           participant.$update(
             {
               participantid: participant.Id
             },
             function(record) {
-              gaService.addSalesforceResponse(
-                'Update',
-                'Participant'
-              );
               if (record.success) {
                 if (DEBUG) {
                   console.log('participant Updated');
                 }
+                gaService.addSalesforceResponse(
+                  'Update Participant',
+                  record.Id
+                );
                 resolve(participant);
               } else {
                 if (DEBUG) {
                   console.log('There was an error updating the participant');
                 }
+                gaService.addSalesforceError(
+                  'Update Participant',
+                  participant.Id,
+                  'No error status'
+                );
                 reject('There was an error updating the participant');
               }
             },
             function(err) {
               gaService.addSalesforceError(
-                'Update',
-                'Participant',
+                'Update Participant',
+                participant.Id,
                 err.status
               );
               if (DEBUG) {

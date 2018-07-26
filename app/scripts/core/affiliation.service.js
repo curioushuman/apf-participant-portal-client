@@ -138,31 +138,39 @@
           if (DEBUG) {
             console.log('CREATING affiliation record', affiliation);
           }
-          gaService.addSalesforceRequest('Create', 'Affiliation');
+          gaService.addSalesforceRequest(
+            'Create Affiliation',
+            'New Affiliation'
+          );
           affiliation.$save(
             function(record) {
-              gaService.addSalesforceResponse(
-                'Create',
-                'Affiliation'
-              );
               if (record.success) {
                 affiliation.Id = record.Id;
                 if (DEBUG) {
                   console.log('affiliation Created', affiliation);
                   console.log('from record', record);
                 }
+                gaService.addSalesforceResponse(
+                  'Create Affiliation',
+                  record.Id
+                );
                 resolve(affiliation);
               } else {
                 if (DEBUG) {
                   console.log('There was an error creating the affiliation');
                 }
+                gaService.addSalesforceError(
+                  'Create Affiliation',
+                  'New Affiliation',
+                  'No error status'
+                );
                 reject('There was an error creating the affiliation');
               }
             },
             function(err) {
               gaService.addSalesforceError(
-                'Create',
-                'Affiliation',
+                'Create Affiliation',
+                'New Affiliation',
                 err.status
               );
               if (DEBUG) {
@@ -175,32 +183,37 @@
           if (DEBUG) {
             console.log('UPDATING affiliation record', affiliation);
           }
-          gaService.addSalesforceRequest('Update', 'Affiliation');
+          gaService.addSalesforceRequest('Update Affiliation', affiliation.Id);
           affiliation.$update(
             {
               affiliationid: affiliation.Id
             },
             function(record) {
-              gaService.addSalesforceResponse(
-                'Update',
-                'Affiliation'
-              );
               if (record.success) {
                 if (DEBUG) {
                   console.log('affiliation Updated', affiliation);
                 }
+                gaService.addSalesforceResponse(
+                  'Update Affiliation',
+                  record.Id
+                );
                 resolve(affiliation);
               } else {
                 if (DEBUG) {
                   console.log('There was an error updating the affiliation');
                 }
+                gaService.addSalesforceError(
+                  'Update Affiliation',
+                  affiliation.Id,
+                  'No error status'
+                );
                 reject('There was an error updating the affiliation');
               }
             },
             function(err) {
               gaService.addSalesforceError(
-                'Update',
-                'Affiliation',
+                'Update Affiliation',
+                affiliation.Id,
                 err.status
               );
               if (DEBUG) {
