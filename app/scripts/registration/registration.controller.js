@@ -111,9 +111,16 @@
         expectations: {
           id: 'expectations',
           title: 'Expectations',
-          next: 'sessions',
+          next: 'outcomes',
           enabled: false,
           enabler: 'Show_Expectations_section__c'
+        },
+        outcomes: {
+          id: 'outcomes',
+          title: 'Outcomes',
+          next: 'sessions',
+          enabled: false,
+          enabler: 'Show_Outcomes_section__c'
         },
         sessions: {
           id: 'sessions',

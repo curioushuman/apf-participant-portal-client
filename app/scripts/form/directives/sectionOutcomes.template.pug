@@ -1,0 +1,24 @@
+p.question What are your intended outcomes, if any, for this event? (optional)
+md-input-container.md-block(flex)
+  textarea(
+    ng-model='vm.page.participant.Expected_outcomes_for_this_event__c',
+    name='participantOutcomes',
+    md-maxlength='300',
+    rows='3',
+    md-select-on-focus,
+    aria-label='What knowledge do you hope to gain through participation in this course?',
+    md-no-asterisk,
+    ng-set-focus='expectations'
+  )
+
+p.question Is there any additional information you would like to 
+  | add to your registration? (optional)
+md-input-container.md-block(flex)
+  textarea(
+    ng-model='vm.page.participant.Additional_information__c',
+    name='participantAdditionalInfo',
+    md-maxlength='300',
+    rows='3',
+    aria-label='Is there any additional information you would like to add to your application?',
+    md-select-on-focus
+  )
