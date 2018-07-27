@@ -14,11 +14,11 @@ md-input-container.md-block(flex)
     md-no-asterisk,
     ng-set-focus='expectations'
   )
-  //- div.hint
-  //-   | Should we add some help text?
   div(ng-messages='vm.form.participantKnowledgeGain.$error')
     div(ng-message='required')
       | This field is required
+    div(ng-message='md-maxlength')
+      | Please limit your response to 300 characters
 p.question.p-required What skills do you hope to gain through 
   | participation in this course? In other words what would you 
   | like to learn how to do? How could these skills benefit you 
@@ -34,11 +34,11 @@ md-input-container.md-block(flex)
     required,
     md-no-asterisk
   )
-  //- div.hint
-  //-   | Should we add some help text?
   div(ng-messages='vm.form.participantSkillsGain.$error')
     div(ng-message='required')
       | This field is required
+    div(ng-message='md-maxlength')
+      | Please limit your response to 300 characters
 p.question Is there any additional information you would like to 
   | add to your registration? (optional)
 md-input-container.md-block(flex)
@@ -50,3 +50,6 @@ md-input-container.md-block(flex)
     aria-label='Is there any additional information you would like to add to your application?',
     md-select-on-focus
   )
+  div(ng-messages='vm.form.participantAdditionalInfo.$error')
+    div(ng-message='md-maxlength')
+      | Please limit your response to 300 characters

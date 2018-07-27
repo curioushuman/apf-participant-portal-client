@@ -46,7 +46,10 @@ div.response
     textarea(
       ng-model='vm.question.response.Comments__c',
       name='responseComment{{ vm.question.Name }}',
-      md-maxlength='500',
+      md-maxlength='300',
       rows='3',
       md-select-on-focus
     )
+    div(ng-messages='vm.form.responseComment{{ vm.question.Name }}.$error')
+      div(ng-message='md-maxlength')
+        | Please limit your response to 300 characters
