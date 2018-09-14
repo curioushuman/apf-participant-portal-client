@@ -44,6 +44,14 @@
           },
           isArray: true
         },
+        queryIds: {
+          method: 'GET',
+          url: API_URI + '/account/ids/:accountids',
+          params: {
+            type: '@accountids'
+          },
+          isArray: true
+        },
         queryTypeExclude: {
           method: 'GET',
           url: API_URI + '/account/type/:type?exclude=true',
@@ -66,6 +74,7 @@
       Account: Account,
       list: Account.query,
       listByType: Account.queryType,
+      listByIds: Account.queryIds,
       listByOtherTypes: Account.queryTypeExclude,
       retrieve: Account.get,
       findAccountInAccounts: findAccountInAccounts,
