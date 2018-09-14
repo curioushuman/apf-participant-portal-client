@@ -43,9 +43,6 @@
     vm.navigate = layoutService.navigate;
     vm.refresh = layoutService.refresh;
 
-    // make space for the contact who is completing the form
-    vm.page.contact = {};
-
     // at some point make this better
     // if (!DEBUG) {
     //   window.onbeforeunload = function(e) {
@@ -62,13 +59,26 @@
         email: {
           id: 'email',
           title: 'Email',
-          next: 'personal',
+          next: 'organisation',
           enabled: true,
           first: true
+        },
+        organisation: {
+          id: 'organisation',
+          title: 'Organisation contact information',
+          next: false,
+          enabled: true
         }
       },
       sectionsEnabled: false
     };
+
+    // make space for the contact who is completing the form
+    vm.page.contact = {};
+
+    // enable the sections
+    // vm.page.sectionsEnabled = true;
+    // this now happens in the email section
 
     // this could do with some minor attention
     // if participant save fails you should show an error

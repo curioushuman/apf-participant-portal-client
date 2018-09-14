@@ -44,7 +44,7 @@
     'DEBUG'
   ];
 
-  function SectionOrganisationController(
+  function ContactsSectionOrganisationController(
     $q,
     $scope,
     $timeout,
@@ -56,6 +56,12 @@
     var vm = this;
     vm.section = vm.page.sections.organisation;
     vm.section.required = [];
+
+    // this either needs to go into the last section loaded
+    // or I find a better way in the controller itself
+    // the latter would be better (if time)
+    vm.page.sectionsEnabled = true;
+    vm.page.formStatus = 'open';
 
     vm.page.affiliation = null;
     vm.page.affiliations = [];
@@ -200,35 +206,53 @@
         }
       );
     }
-  }
 
-  function retrieveOrganisations() {
-    gaService.addSalesforceRequest(
-      'List Organisations by ID',
-      'Contacts form'
-    );
-    return accountService.listByIds(
-      {
-        accountids: vm.page.organisationIds
+    function retrieveOrganisations() {
+      if (DEBUG) {
+        console.log('Organisation IDs', vm.page.organisationIds);
       }
-    )
-    .$promise
-    .then(
-      function(data) {
-        gaService.addSalesforceResponse(
-          'List Organisations by ID',
-          'Contacts form'
-        );
-        return data;
-      },
-      function(err) {
-        gaService.addSalesforceError(
-          'List Organisations by ID',
-          'Contacts form',
-          err.status
-        );
-        return err;
-      }
-    );
+
+      // This is a HACK that needs to be fixed
+      // The retrieveMultiple function doesn't work
+      // You'll need to fix that
+      // when you have, switch off the HACK
+
+      gaService.addSalesforceRequest(
+        'List Organisations by ID',
+        'Contacts form'
+      );
+      // HACK
+      // return accountService.retrieveMultiple(
+      //   {
+      //     accountids: vm.page.organisationIds
+      //   }
+      // )
+      var hack_organisationId = '0016F00001wxetJQAQ';
+      return accountService.retrieve(
+        {
+          accountid: hack_organisationId
+        }
+      )
+      .$promise
+      .then(
+        function(data) {
+          gaService.addSalesforceResponse(
+            'List Organisations by ID',
+            'Contacts form'
+          );
+          // more HACK
+          // return data;
+          return [data];
+        },
+        function(err) {
+          gaService.addSalesforceError(
+            'List Organisations by ID',
+            'Contacts form',
+            err.status
+          );
+          return err;
+        }
+      );
+    }
   }
 })();

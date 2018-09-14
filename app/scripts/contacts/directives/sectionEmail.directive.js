@@ -13,7 +13,7 @@
 
   ];
 
-  function gzSectionEmail() {
+  function gzContactsSectionEmail() {
     return {
       require: '^^gzSection',
       controller: ContactsSectionEmailController,
@@ -27,6 +27,7 @@
         form: '='
       },
       link: function(scope, elem, attrs, sectionCtrl) {
+        console.log('Fark');
         sectionCtrl.section = sectionCtrl.page.sections.email;
         sectionCtrl.section.sectionCtrl = sectionCtrl;
       }
@@ -40,7 +41,7 @@
     'DEBUG'
   ];
 
-  function SectionEmailController(
+  function ContactsSectionEmailController(
     $q,
     contactService,
     gaService,
@@ -76,6 +77,7 @@
               vm.page.email
             );
             vm.page.contact = contact;
+            vm.page.contact.exists = true;
             if (DEBUG) {
               console.log('Contact found', vm.page.contact);
             }
