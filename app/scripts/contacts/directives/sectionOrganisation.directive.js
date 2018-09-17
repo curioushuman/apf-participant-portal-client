@@ -3,6 +3,18 @@
 /* eslint camelcase: 0 */
 /* eslint no-negated-condition: 0 */
 /* global angular */
+
+// NOTE: there is a hack in this page that needs to remain in place
+// until we've fnished testing everything else
+// This hack is in place for 2 reasons
+// 1. to allow us to test using a test organisation in Salesforce
+// 2. Because the retrieveMultiple function on the account service is broken
+// So, initially, leave the HACK in place (marked with HACK)
+// Then once we've tested everything else we'll fix the function
+// and remove the HACK
+// NOTE: to fixe the function you might need to edit both the account service
+// and the related account controller in the apf-participantportal code
+
 (function() {
   'use strict';
 
@@ -55,20 +67,20 @@
   ) {
     var vm = this;
     vm.section = vm.page.sections.organisation;
-    vm.section.required = [];
-
-    // this either needs to go into the last section loaded
-    // or I find a better way in the controller itself
-    // the latter would be better (if time)
-    vm.page.sectionsEnabled = true;
-    vm.page.formStatus = 'open';
+    vm.section.required = [
+      'organisationEmail'
+    ];
+    vm.page.sectionReady('organisation');
 
     vm.page.affiliation = null;
     vm.page.affiliations = [];
     vm.page.organisationIds = [];
-    vm.page.organisations = [];
     vm.page.organisation = null;
 
+    // in our Pre(load) function we will
+    // Grab the affiliations from the contact
+    // and find the organisation we will be updating
+    // NOTE: an affiliation is when a contact is affiliated with an organisation
     vm.section.pre = function() {
       return $q(function(resolve, reject) {
         if (DEBUG) {
@@ -77,23 +89,23 @@
 
         if (
           vm.page.contact.exists &&
-          vm.page.affiliations.length === 0
+          vm.page.contact.affiliations === undefined
         ) {
           vm.section.errorInitial = false;
 
-          retrieveAffiliations()
+          retrieveContactAffiliations()
           .then(
             function(affiliations) {
               if (DEBUG) {
                 console.log('found affiliations', affiliations.length);
               }
 
-              // set affiliations
-              vm.page.affiliations = affiliations;
+              // record affiliations against contact
+              vm.page.contact.affiliations = affiliations;
 
-              // gather org IDs
+              // gather org IDs from the contacts affiliations
               angular.forEach(
-                vm.page.affiliations,
+                vm.page.contact.affiliations,
                 function(affiliation, index) {
                   if (DEBUG) {
                     console.log('processing affiliation', affiliation);
@@ -106,7 +118,7 @@
                 }
               );
 
-              // obtain organisations
+              // obtain organisations this contact is affiliated with
               retrieveOrganisations()
               .then(
                 function(organisations) {
@@ -114,27 +126,34 @@
                     console.log('found organisations', organisations.length);
                   }
 
-                  // set organisations
-                  vm.page.organisations = organisations;
+                  // record organisations against contact
+                  vm.page.contact.organisations = organisations;
 
-                  // find the NHRI
+                  // in this form we only want to update contact information
+                  // for an organisation of type
+                  // "National Human Rights Institution" (NHRI)
+                  // so, find the NHRI record
                   angular.forEach(
-                    vm.page.organisations,
+                    vm.page.contact.organisations,
                     function(organisation, index) {
                       if (DEBUG) {
                         console.log('processing organisation', organisation);
                       }
 
-                      if (
-                        organisation.Type ===
-                        'National Human Rights Institution'
-                      ) {
-                        vm.page.organisation = organisation;
-                      }
+                      // HACK
+                      // if (
+                      //   organisation.Type ===
+                      //   'National Human Rights Institution'
+                      // ) {
+                      //   vm.page.organisation = organisation;
+                      // }
+                      vm.page.organisation = organisation;
+                      // end HACK
                     }
                   );
 
                   // check we found an NHRI
+                  // if we didn't, then this person is not authorised
                   if (vm.page.organisation === null) {
                     vm.page.formStatus = 'unauthorised';
                     reject(vm.page.formStatus);
@@ -154,10 +173,11 @@
             },
             function(err) {
               if (err.status === 404) {
-                // no affiliations were found, but that's OK
+                // no affiliations found
                 if (DEBUG) {
                   console.log('The contact did not have any affiliations');
                 }
+                // therefore this person is not authorised
                 vm.page.formStatus = 'unauthorised';
                 reject(vm.page.formStatus);
               } else {
@@ -174,13 +194,29 @@
       });
     };
 
+    // in our process function we need to
+    // save the organisation email
     vm.section.process = function() {
       return $q(function(resolve, reject) {
-        resolve(true);
+        if (DEBUG) {
+          console.log(
+            'Section.Organisation saving organisation',
+            vm.page.contact
+          );
+        }
+        accountService.save(vm.page.organisation)
+        .then(
+          function(contact) {
+            resolve(vm.page.organisation);
+          },
+          function(err) {
+            reject(err);
+          }
+        );
       });
     };
 
-    function retrieveAffiliations() {
+    function retrieveContactAffiliations() {
       gaService.addSalesforceRequest('List Affiliation', vm.page.contact.Email);
       return affiliationService.listByContact(
         {
@@ -212,22 +248,17 @@
         console.log('Organisation IDs', vm.page.organisationIds);
       }
 
-      // This is a HACK that needs to be fixed
-      // The retrieveMultiple function doesn't work
-      // You'll need to fix that
-      // when you have, switch off the HACK
-
       gaService.addSalesforceRequest(
         'List Organisations by ID',
         'Contacts form'
       );
       // HACK
+      var hack_organisationId = '0016F00001qccTfQAI';
       // return accountService.retrieveMultiple(
       //   {
       //     accountids: vm.page.organisationIds
       //   }
       // )
-      var hack_organisationId = '0016F00001wxetJQAQ';
       return accountService.retrieve(
         {
           accountid: hack_organisationId
