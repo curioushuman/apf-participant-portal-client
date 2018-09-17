@@ -1,0 +1,18 @@
+p.intro Please check the following contact information for your organisation
+      
+md-input-container.md-block(flex)
+  label Email address
+  input(
+    required,
+    md-no-asterisk,
+    type='email',
+    name='organisationEmail',
+    ng-model='vm.page.organisation.Email_for_organisation__c',
+    minlength='10',
+    maxlength='155',
+    ng-pattern="/^.+@.+\..+$/",
+    ng-set-focus='organisation'
+  )
+  div(ng-messages='vm.form.organisationEmail.$error')
+    div(ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']")
+      | Your email must be between 10 and 155 characters long and look like an e-mail address.

@@ -1,0 +1,166 @@
+section
+  
+  div.header(layout='row', layout-padding, md-colors="{background: 'default-primary'}")
+    img.logo(
+      ng-src='/images/APF-logo-main-1x.png',
+      alt='Asia Pacific Forum logo'
+    )
+    
+  div.subheader(layout='row', md-colors="{background: 'default-primary-hue-1'}")
+    h1.md-title Update your NHRI contact details
+
+section
+  
+  //- Content
+  div.content
+
+    md-content(layout-padding, layout='row', layout-sm='column', layout-xs='column')
+      
+      //- Help text
+      div(flex-xs, flex-sm, flex-gt-sm='50', layout='column')
+        md-card
+          md-card-title(ng-hide="vm.page.action.formStatus === 'closed'")
+            md-card-title-text
+              span.md-headline To complete this form
+          md-card-content
+            div(ng-hide="vm.page.action.formStatus === 'closed'")
+              p You will need the contact information of several of your senior staff.
+              md-list
+                md-divider
+                md-list-item
+                  div.md-list-item-text
+                    p This form will take 
+                      strong 5-10 minutes 
+                      | to complete
+                md-divider
+                md-list-item
+                  div.md-list-item-text
+                    p You can 
+                      md-icon.material-icons(md-colors="{color: 'default-accent-hue-2'}") save
+                      strong  save 
+                      | your progress and complete later
+                md-divider
+                md-list-item
+                  div.md-list-item-text
+                    p Enter your email address to 
+                      strong begin or resume 
+                md-divider
+
+      //- Form
+      div(flex, layout='column')
+        
+        //- Unauthorised
+        md-card(
+          ng-show="vm.page.formStatus === 'unauthorised'"
+        )
+          md-card-header(md-colors="{background: 'default-primary-hue-2'}")
+            md-card-avatar
+              img(
+                ng-src='/images/APF-logo-circle.png',
+                alt='Asia Pacific Forum logo'
+              )
+            md-card-header-text
+              span.md-headline Unauthorised
+          md-card-content
+            p To protect the contact information of your NHRI only staff who we 
+              | have a record of are able to complete this form.
+            p Please contact 
+              a(
+                href='mailto:kateturner-mann@asiapacificforum.net',
+                title='Contact Kate Turner-Mann of the APF for more information'
+              ) Kate Turner-Mann 
+              | of the 
+              a(
+                href='mailto:apf@asiapacificforum.net',
+                title='Contact the APF for more information'
+              ) Asia Pacific Forum 
+              | and let them know you would like to be added to the APF database 
+              | for the purpose of updating your NHRI contact information.
+        
+        //- Thank you section
+        md-card(
+          ng-show="vm.page.formStatus === 'complete'"
+        )
+          md-card-header(md-colors="{background: 'default-primary-hue-2'}")
+            md-card-avatar
+              img(
+                ng-src='/images/APF-logo-circle.png',
+                alt='Asia Pacific Forum logo'
+              )
+            md-card-header-text
+              span.md-headline NHRI contacts updated
+          md-card-content
+            p Thank you for taking the time to update your contact information with the APF.
+              
+        //- Saved section
+        md-card(
+          ng-show="vm.page.action.formStatus === 'saved'"
+        )
+          md-card-header(md-colors="{background: 'default-primary-hue-2'}")
+            md-card-avatar
+              img(
+                ng-src='/images/APF-logo-circle.png',
+                alt='Asia Pacific Forum logo'
+              )
+            md-card-header-text
+              span.md-headline NHRI contacts saved
+          md-card-content
+            p 
+              strong Your NHRI contact information has been saved. 
+              | Return at any time to finish updating your contacts.
+          md-card-actions(layout='row', layout-align='end center', layout-padding)
+            md-button.md-accent.md-raised(
+              ng-click="vm.page.resume()"
+            ) 
+              | Resume
+              md-icon.md-material-icons navigate_next
+        
+        //- the form
+        form(
+          name='form',
+          ng-submit='form.$valid',
+          ng-show="vm.page.formStatus === 'open'"
+        )
+
+          gz-section(page='vm.page', form='form')
+            gz-contacts-section-email(
+              page='vm.page',
+              form='form'
+            )
+            
+          gz-section(page='vm.page', form='form')
+            gz-contacts-section-organisation(
+              page='vm.page',
+              form='form'
+            )
+            
+          gz-section(page='vm.page', form='form')
+            gz-contacts-section-chairperson(
+              page='vm.page',
+              form='form'
+            )
+            
+          gz-section(page='vm.page', form='form')
+            gz-contacts-section-commissioners(
+              page='vm.page',
+              form='form'
+            )
+
+  div.footer(layout='row', layout-padding, md-colors="{background: 'default-background-hue-3'}")
+    img.logo-icon(
+      ng-src='/images/APF-logo-footer-2x.png',
+      alt='Asia Pacific Forum logo'
+    )
+    p 2017 The Asia Pacific Forum of National Human Rights 
+      | Institutions. 
+      a(
+        href='http://asiapacificforum.net/accessibility-policy/',
+        title='The accessibility policy of the APF'
+      )
+        | Accessibility policy
+      |  -&nbsp;
+      a(
+        href='http://asiapacificforum.net/terms-and-conditions/',
+        title='The terms and conditions of the APF'
+      )
+        | Terms and conditions

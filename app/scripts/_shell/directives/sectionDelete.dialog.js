@@ -1,0 +1,38 @@
+/* eslint no-unused-vars: 0 */
+/* eslint require-jsdoc: 0 */
+/* eslint camelcase: 0 */
+/* eslint no-negated-condition: 0 */
+/* global angular */
+(function() {
+  'use strict';
+
+  ContactsSectionDeleteController.$inject = [
+    '$scope',
+    '$mdDialog',
+    'DEBUG'
+  ];
+
+  function ContactsSectionDeleteController(
+    $scope,
+    $mdDialog,
+    DEBUG
+  ) {
+
+    var vm = this;
+
+    vm.hide = function() {
+      $mdDialog.hide();
+    };
+
+    // you'll need to undelete the person if they hit cancel
+    vm.cancel = function() {
+      $mdDialog.cancel();
+    };
+
+    // NOTE: you'll need to do some custom validation on this one
+    // to make sure that at least one of the options is chosen
+    vm.save = function() {
+      $mdDialog.hide();
+    };
+  }
+})();
