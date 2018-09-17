@@ -61,16 +61,46 @@
           title: 'Email',
           next: 'organisation',
           enabled: true,
+          ready: false,
           first: true
         },
         organisation: {
           id: 'organisation',
           title: 'Organisation contact information',
+          next: 'chairperson',
+          enabled: true,
+          ready: false
+        },
+        chairperson: {
+          id: 'chairperson',
+          title: 'Chairperson contact information',
           next: false,
-          enabled: true
+          enabled: true,
+          ready: false
         }
       },
-      sectionsEnabled: false
+      sectionsEnabled: false,
+      sectionsEnabledCount: 0,
+      sectionsReadyCount: 0
+    };
+
+    vm.page.sectionReady = function(sectionId) {
+      vm.page.sections[sectionId].ready = true;
+      vm.page.sectionsReadyCount++;
+      if (vm.page.sectionsEnabledCount === 0) {
+        angular.forEach(
+          vm.page.sections,
+          function(section, index) {
+            if (section.enabled === true) {
+              vm.page.sectionsEnabledCount++;
+            }
+          }
+        );
+      }
+      if (vm.page.sectionsReadyCount === vm.page.sectionsEnabledCount) {
+        vm.page.sectionsEnabled = true;
+        vm.page.formStatus = 'open';
+      }
     };
 
     // make space for the contact who is completing the form

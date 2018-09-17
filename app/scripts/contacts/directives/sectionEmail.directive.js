@@ -27,7 +27,6 @@
         form: '='
       },
       link: function(scope, elem, attrs, sectionCtrl) {
-        console.log('Fark');
         sectionCtrl.section = sectionCtrl.page.sections.email;
         sectionCtrl.section.sectionCtrl = sectionCtrl;
       }
@@ -52,19 +51,23 @@
     vm.section.required = [
       'contactEmail'
     ];
+    vm.page.sectionReady('email');
 
     if (DEBUG) {
       vm.page.email = 'mike@curioushuman.com.au';
     }
 
+    // for this section we do nothing in our pre(load) function
     vm.section.pre = function() {
       return $q(function(resolve, reject) {
         resolve(true);
       });
     };
 
+    // in our process function we need to
+    // find the contact based on the email provided
+    // if we can't find them they're not authorised, instructions are provided
     vm.section.process = function() {
-      gaService.setUserId(vm.page.email);
       gaService.addSalesforceRequest('Retrieve Contact', vm.page.email);
       return $q(function(resolve, reject) {
         contactService.retrieve(
@@ -81,12 +84,14 @@
             if (DEBUG) {
               console.log('Contact found', vm.page.contact);
             }
+            gaService.setUserId(vm.page.email);
             resolve(vm.page.contact);
           },
           function(err) {
             if (err.status === 404) {
               // if we don't have the in the database we'll not allow them
               // to edit the contact information
+              // this person is not authorised
               vm.page.formStatus = 'unauthorised';
             } else {
               gaService.addSalesforceError(
