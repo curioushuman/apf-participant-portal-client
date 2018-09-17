@@ -1,1 +1,92 @@
-p.intro This is an empty section ready to be populated with awesome stuff
+//- I've added all of the code below
+//- not all of it should be visible all the time
+//- I've included comments as to when things should be visible / invisible
+//- use the flow as the main source of truth
+
+p.intro Is this your current Chairperson? 
+  strong Please make sure their contact information is correct.
+    
+md-list.md-dense
+  md-list-item
+    p
+      br
+      strong Mr. James Dean
+      br
+      | james@dean.com
+      br
+      | +61 9520 9862
+    //- md-icon.material-icons.md-accent mode_edit
+    //- md-icon.material-icons.md-accent delete
+    md-button.md-accent.md-hue-2.md-raised.md-icon-button
+      md-icon.md-material-icons edit
+    md-button.md-accent.md-hue-3.md-raised.md-icon-button(ng-click='vm.section.deleteDialog()')
+      md-icon.md-material-icons delete
+    md-divider
+
+//- This would be hidden until the edit button is clicked above
+div.form-email(ng-show='true', layout='row')
+  div(flex='90', flex-xs='80')
+    md-input-container.md-block(flex)
+      label Work email address
+      input(
+        required,
+        md-no-asterisk,
+        type='email',
+        name='affiliationContactEmail',
+        ng-model='',
+        minlength='10',
+        maxlength='155',
+        ng-pattern="/^.+@.+\..+$/"
+      )
+      //- div.hint
+      //-   | Please enter their work email, rather than their personal email address
+      div(ng-messages='vm.form.affiliationContactEmail.$error')
+        div(ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']")
+          | Your email must be between 10 and 155 characters long and look like an e-mail address.
+  
+  //- this should not be visible if we are editing existing chairperson
+  div(ng-show='true', flex='10', flex-xs='20')
+    md-button.md-accent.md-hue-2.md-raised.md-icon-button
+      md-icon.md-material-icons search
+  
+//- this will be visible either if
+//- - we are editing existing Chairperson
+//- - or after we've searched for an email address
+div.form-other(ng-show='true')
+  md-input-container.md-block(flex-xs='40', flex-gt-sm='25')
+    label Salutation
+    md-select(
+      ng-model='',
+      name='affiliationContactSalutation',
+      ng-set-focus='chairperson'
+      )
+      md-option(ng-repeat='salutation in vm.page.salutations', value='{{ salutation }}')
+        | {{ salutation }}
+
+  md-input-container.md-block(flex-xs, flex-gt-sm='50')
+    label First name
+    input(ng-model='', name='affiliationContactFirstName', required, md-no-asterisk)
+    div(ng-messages='vm.form.affiliationContactFirstName.$error')
+      div(ng-message='required')
+        | Please enter a first name
+
+  md-input-container.md-block(flex-xs, flex-gt-sm='50')
+    label Last name
+    input(ng-model='', name='affiliationContactLastName', required, md-no-asterisk)
+    div(ng-messages='vm.form.affiliationContactLastName.$error')
+      div(ng-message='required')
+        | Please enter a last name
+
+  md-input-container.md-block(flex-xs, flex-gt-sm='50')
+    label Phone number
+    input(ng-model='vm.section.phoneNumber', name='affiliateContactPhone', md-no-asterisk)
+    //- div.hint
+    //-   | What is the best number to reach them on?
+
+  md-input-container.md-block(flex-xs, flex-gt-sm='50')
+    label Which phone number is this?
+    md-select(ng-model='', name='affiliationContactPreferredPhone', md-no-asterisk)
+      md-option(ng-repeat='phoneType in vm.section.phoneTypes', value='{{ phoneType }}')
+        | {{ phoneType }}
+    //- div.hint
+    //-   | Is it you work phone, mobile phone, home phone?

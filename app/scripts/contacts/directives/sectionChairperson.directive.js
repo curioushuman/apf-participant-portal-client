@@ -53,10 +53,12 @@
   ContactsSectionChairpersonController.$inject = [
     '$q',
     '$scope',
+    '$mdDialog',
     '$timeout',
     'accountService',
     'affiliationService',
     'contactService',
+    'formService',
     'gaService',
     'DEBUG'
   ];
@@ -64,10 +66,12 @@
   function ContactsSectionChairpersonController(
     $q,
     $scope,
+    $mdDialog,
     $timeout,
     accountService,
     affiliationService,
     contactService,
+    formService,
     gaService,
     DEBUG
   ) {
@@ -76,6 +80,11 @@
     vm.section.required = [];
     vm.page.sectionReady('chairperson');
 
+    vm.page.salutations = formService.salutations();
+
+    // this hides the form until
+    vm.section.formDisabled = true;
+
     // as with all sections the model is
     // we do / load things in the pre(load) function that we need to
     // that pertain to this section
@@ -83,6 +92,15 @@
     // sections
     vm.section.pre = function() {
       return $q(function(resolve, reject) {
+
+        // things you might need to do
+        // NOTE: this is not an exhaustive list
+        // I was just gathering thoughts as I was preparing the
+        // form code examples
+        // - obtain affilitations for vm.page.organisation
+        // - obtain the contact record for the chairperson affiliation
+        //   (if one exists)
+
         resolve(true);
       });
     };
@@ -91,8 +109,70 @@
     // this is where we do the saving
     vm.section.process = function() {
       return $q(function(resolve, reject) {
+
+        // some (hopefully) helpful notes
+        // Look at form/directives/sectionContact.directive.js for examples
+        // Look at form/directives/sectionPersonal.directive.js for examples
+
         resolve(true);
       });
+    };
+
+    // I have started work on this so you can see what the dialog should
+    // look like. You'll need to make it function.
+    // for more info check out
+    // https://material.angularjs.org/latest/demo/dialog
+    vm.section.deleteDialog = function(ev) {
+      $mdDialog.show({
+        controller: ContactsSectionChairpersonDeleteController,
+        controllerAs: 'vm',
+        bindToController: true,
+        templateUrl:
+          'scripts/contacts/directives/' +
+          'sectionChairpersonDelete.dialog.template.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        clickOutsideToClose: true
+      })
+      .then(function(answer) {
+        if (DEBUG) {
+          console.log('Delete dialog answer', answer);
+        }
+      }, function() {
+        console.log('Delete dialog cancelled');
+      });
+    };
+  }
+
+  ContactsSectionChairpersonDeleteController.$inject = [
+    '$scope',
+    '$mdDialog',
+    'DEBUG'
+  ];
+
+  function ContactsSectionChairpersonDeleteController(
+    $scope,
+    $mdDialog,
+    DEBUG
+  ) {
+
+    var vm = this;
+
+    vm.salutations = ["I don't know", 'They still work here'];
+
+    vm.hide = function() {
+      $mdDialog.hide();
+    };
+
+    // you'll need to undelete the person if they hit cancel
+    vm.cancel = function() {
+      $mdDialog.cancel();
+    };
+
+    // NOTE: you'll need to do some custom validation on this one
+    // to make sure that at least one of the options is chosen
+    vm.save = function() {
+      $mdDialog.hide();
     };
   }
 })();

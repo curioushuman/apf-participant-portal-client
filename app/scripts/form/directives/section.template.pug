@@ -78,21 +78,21 @@ div(ng-show='vm.section.enabled === true')
           ng-click="vm.process()",
           ng-disabled='vm.page.working'
         ) 
-          | Start
+          | {{ vm.page.buttonText.start }}
           md-icon.md-material-icons navigate_next
         md-button.md-accent.md-raised(
           ng-show='vm.sectionNext && !vm.section.first',
           ng-click="vm.process()",
           ng-disabled='vm.page.working'
         ) 
-          | Continue
+          | {{ vm.page.buttonText.next }}
           md-icon.md-material-icons navigate_next
         md-button.md-accent.md-raised(
           ng-hide='vm.sectionNext',
           ng-click="vm.process()",
           ng-disabled='vm.page.working'
         ) 
-          | Register for this event
+          | {{ vm.page.buttonText.final }}
     gz-progress-bar(
       progress='vm.section.progress',
       ng-hide='vm.section.first'

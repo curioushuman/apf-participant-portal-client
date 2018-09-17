@@ -35,12 +35,14 @@
   SectionPersonalController.$inject = [
     '$q',
     'contactService',
+    'formService',
     'DEBUG'
   ];
 
   function SectionPersonalController(
     $q,
     contactService,
+    formService,
     DEBUG
   ) {
     var vm = this;
@@ -51,10 +53,8 @@
       'contactSalutation', 'contactGender'
     ];
 
-    vm.page.salutations =
-      ['Mr.', 'Ms.', 'Mrs.', 'Dr.', 'Prof.', 'Atty.', 'Hon. Just.'];
-    vm.page.genders =
-      ['Male', 'Female', 'Another term', 'Prefer not to disclose'];
+    vm.page.salutations = formService.salutations();
+    vm.page.genders = formService.genders();
 
     vm.section.pre = function() {
       return $q(function(resolve, reject) {

@@ -1,0 +1,37 @@
+md-dialog(aria-label='When did your Chairperson leave?')
+  form(ng-cloak)
+    md-toolbar
+      div.md-toolbar-tools
+        h2(hide-xs) When did your Chairperson leave?
+        h2(hide-gt-xs) When did they leave?
+        span(flex)
+        md-button.md-icon-button(ng-click='vm.cancel()')
+          md-icon.md-material-icons(aria-label='Close dialog') close
+          
+    md-dialog-content
+      div.md-dialog-content
+
+        md-input-container.md-block(flex)
+          label Enter date
+          md-datepicker(
+            ng-model='',
+            name='affiliationEndDate',
+            md-no-asterisk,
+            md-open-on-focus,
+            md-placeholder='Enter date'
+          )
+          
+        p.intro Or select one of the following options
+          
+        md-input-container.md-block(flex)
+          md-radio-group
+            md-radio-button(value="I don't know")
+              | I don't know
+            md-radio-button(value="They still work here")
+              | They still work here
+    
+    md-dialog-actions
+      md-button.md-accent.md-raised(ng-click='vm.save()')
+        | Confirm
+        md-icon.md-material-icons navigate_next
+      

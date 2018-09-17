@@ -72,8 +72,6 @@
     ];
     vm.page.sectionReady('organisation');
 
-    vm.page.affiliation = null;
-    vm.page.affiliations = [];
     vm.page.organisationIds = [];
     vm.page.organisation = null;
 

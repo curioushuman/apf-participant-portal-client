@@ -19,8 +19,22 @@
     var debug = false;
 
     var service = {
-
+      genders: genders,
+      phoneTypes: phoneTypes,
+      salutations: salutations
     };
+
+    function salutations() {
+      return ['Mr.', 'Ms.', 'Mrs.', 'Dr.', 'Prof.', 'Atty.', 'Hon. Just.'];
+    }
+
+    function genders() {
+      return ['Male', 'Female', 'Another term', 'Prefer not to disclose'];
+    }
+
+    function phoneTypes() {
+      return ['Work', 'Mobile', 'Home', 'Other'];
+    }
 
     return service;
   }

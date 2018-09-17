@@ -137,7 +137,12 @@
           enabler: 'Show_Related_Events_section__c'
         }
       },
-      sectionsEnabled: false
+      sectionsEnabled: false,
+      buttonText: {
+        start: 'Start',
+        next: 'Continue',
+        final: 'Register for this event'
+      }
     };
 
     // this could do with some minor attention

@@ -81,7 +81,12 @@
       },
       sectionsEnabled: false,
       sectionsEnabledCount: 0,
-      sectionsReadyCount: 0
+      sectionsReadyCount: 0,
+      buttonText: {
+        start: 'Start',
+        next: 'Confirm',
+        final: 'Submit Contact Information'
+      }
     };
 
     vm.page.sectionReady = function(sectionId) {

@@ -38,6 +38,7 @@
     '$scope',
     'contactService',
     'countryService',
+    'formService',
     'DEBUG'
   ];
 
@@ -46,6 +47,7 @@
     $scope,
     contactService,
     countryService,
+    formService,
     DEBUG
   ) {
     var vm = this;
@@ -54,7 +56,7 @@
     vm.section.required = [];
 
     vm.section.emailIsWork = 'yes';
-    vm.section.phoneTypes = ['Work', 'Mobile', 'Home', 'Other'];
+    vm.section.phoneTypes = formService.phoneTypes();
     vm.section.phoneNumber = '';
 
     vm.page.countries = [];
