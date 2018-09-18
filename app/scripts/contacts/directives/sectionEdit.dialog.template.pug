@@ -1,4 +1,4 @@
-md-dialog(aria-label='When did your Chairperson leave?')
+md-dialog(aria-label='Edit contact information')
   form(ng-cloak)
     md-toolbar
       div.md-toolbar-tools
@@ -51,6 +51,34 @@ md-dialog(aria-label='When did your Chairperson leave?')
           div(ng-messages='vm.form.affiliationContactLastName.$error')
             div(ng-message='required')
               | Please enter a last name
+              
+        md-input-container.md-block(flex)
+          label Start date
+          md-datepicker(
+            ng-model='',
+            name='affiliationStartDate',
+            required,
+            md-no-asterisk,
+            md-open-on-focus,
+            md-placeholder='Start date'
+          )
+          div(ng-messages='vm.form.affiliationStartDate.$error')
+            div(ng-message='required')
+              | When did this person start at your NHRI?
+              
+        md-input-container.md-block(flex)
+          label End date
+          md-datepicker(
+            ng-model='',
+            name='affiliationStartDate',
+            required,
+            md-no-asterisk,
+            md-open-on-focus,
+            md-placeholder='Start date'
+          )
+          div(ng-messages='vm.form.affiliationStartDate.$error')
+            div(ng-message='required')
+              | When did they leave, or when are they scheduled to depart, your NHRI?
 
         md-input-container.md-block(flex)
           label Phone number

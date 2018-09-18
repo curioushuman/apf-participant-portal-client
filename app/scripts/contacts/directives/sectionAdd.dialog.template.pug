@@ -1,4 +1,4 @@
-md-dialog(aria-label='When did your Chairperson leave?')
+md-dialog(aria-label='Add new contact')
   form(ng-cloak)
     md-toolbar
       div.md-toolbar-tools
@@ -13,7 +13,7 @@ md-dialog(aria-label='When did your Chairperson leave?')
         p.intro.less_space(ng-show='true') Enter an email address
 
         div.form-email(ng-show='true', layout='row')
-          div(flex='90', flex-xs='80')
+          div(flex='80')
             md-input-container.md-block(flex)
               label Work email address
               input(
@@ -32,7 +32,7 @@ md-dialog(aria-label='When did your Chairperson leave?')
                 div(ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']")
                   | Email addresses must be between 10 and 155 characters long and look like an e-mail address.
           
-          div(ng-show='true', flex='10', flex-xs='20')
+          div(ng-show='true', flex='20')
             md-button.md-accent.md-hue-2.md-raised.md-icon-button
               md-icon.md-material-icons search
           
@@ -60,6 +60,34 @@ md-dialog(aria-label='When did your Chairperson leave?')
             div(ng-messages='vm.form.affiliationContactLastName.$error')
               div(ng-message='required')
                 | Please enter a last name
+                
+          md-input-container.md-block(flex)
+            label Start date
+            md-datepicker(
+              ng-model='',
+              name='affiliationStartDate',
+              required,
+              md-no-asterisk,
+              md-open-on-focus,
+              md-placeholder='Start date'
+            )
+            div(ng-messages='vm.form.affiliationStartDate.$error')
+              div(ng-message='required')
+                | When did this person start at your NHRI?
+                
+          md-input-container.md-block(flex)
+            label End date
+            md-datepicker(
+              ng-model='',
+              name='affiliationStartDate',
+              required,
+              md-no-asterisk,
+              md-open-on-focus,
+              md-placeholder='Start date'
+            )
+            div(ng-messages='vm.form.affiliationStartDate.$error')
+              div(ng-message='required')
+                | When did they leave, or when are they scheduled to depart, your NHRI?
 
           md-input-container.md-block(flex)
             label Phone number
