@@ -16,3 +16,38 @@ md-input-container.md-block(flex)
   div(ng-messages='vm.form.organisationEmail.$error')
     div(ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']")
       | Your email must be between 10 and 155 characters long and look like an e-mail address.
+
+md-input-container.md-block(flex)
+  label Phone number
+  input(ng-model='vm.page.organisation.Phone', name='organisationPhone', required, md-no-asterisk)
+  div(ng-messages='vm.form.organisationPhone.$error')
+    div(ng-message='required')
+      | Please enter the best phone number for your NHRI
+
+md-input-container.md-block(flex)
+  label Street
+  input(ng-model='vm.page.organisation.ShippingStreet', name='organisationShippingStreet', required, md-no-asterisk)
+  div(ng-messages='vm.form.organisationShippingStreet.$error')
+    div(ng-message='required')
+      | Please enter the street your NHRI resides on
+      
+md-input-container.md-block(flex)
+  label City
+  input(ng-model='vm.page.organisation.ShippingCity', name='organisationShippingCity', required, md-no-asterisk)
+  div(ng-messages='vm.form.organisationShippingCity.$error')
+    div(ng-message='required')
+      | Please enter the city your NHRI resides in
+      
+md-input-container.md-block(flex)
+  label State
+  input(ng-model='vm.page.organisation.ShippingState', name='organisationShippingState', required, md-no-asterisk)
+  div(ng-messages='vm.form.organisationShippingState.$error')
+    div(ng-message='required')
+      | Please enter the state your NHRI resides in
+      
+md-input-container.md-block(flex)
+  label Postal code
+  input(ng-model='vm.page.organisation.ShippingPostalCode', name='organisationShippingPostalCode', required, md-no-asterisk)
+  div(ng-messages='vm.form.organisationShippingPostalCode.$error')
+    div(ng-message='required')
+      | Please enter the postal code for your NHRI
