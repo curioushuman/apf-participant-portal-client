@@ -9,15 +9,23 @@
   ContactsSectionDeleteController.$inject = [
     '$scope',
     '$mdDialog',
-    'DEBUG'
+    'DEBUG',
+    'page',
+    'section'
   ];
 
   function ContactsSectionDeleteController(
     $scope,
     $mdDialog,
-    DEBUG
+    DEBUG,
+    page,
+    section
   ) {
     var vm = this;
+
+    // locals
+    vm.page = page;
+    vm.section = section;
 
     vm.hide = function() {
       $mdDialog.hide();

@@ -131,9 +131,6 @@
     vm.section.deleteDialog = function(ev) {
       $mdDialog.show({
         controller: ContactsSectionDeleteController,
-        // controllerUrl:
-        // 'scripts/contacts/directives/' +
-        // 'sectionDelete.dialog.js',
         controllerAs: 'vm',
         bindToController: true,
         templateUrl:
@@ -142,6 +139,7 @@
         parent: angular.element(document.body),
         targetEvent: ev,
         locals: {
+          page: vm.page,
           section: vm.section
         },
         clickOutsideToClose: true
@@ -164,6 +162,7 @@
     '$scope',
     '$mdDialog',
     'DEBUG',
+    'page',
     'section'
   ];
 
@@ -171,11 +170,13 @@
     $scope,
     $mdDialog,
     DEBUG,
+    page,
     section
   ) {
     var vm = this;
 
-    // grab locals
+    // locals
+    vm.page = page;
     vm.section = section;
 
     vm.hide = function() {
@@ -190,7 +191,6 @@
     // NOTE: you'll need to do some custom validation on this one
     // to make sure that at least one of the options is chosen
     vm.save = function() {
-      vm.section.deletePerson();
       $mdDialog.hide();
     };
   }
