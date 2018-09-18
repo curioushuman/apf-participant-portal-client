@@ -68,7 +68,12 @@ p.intro.less_space {
   font-size: 0.9em;
 }
 
-.hint, .question {
+.hint {
+  font-size: 0.8em;
+  color: #888888;
+}
+
+.question {
   font-size: 0.9em;
   color: #888888;
 }
