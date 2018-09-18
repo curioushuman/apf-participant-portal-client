@@ -17,7 +17,6 @@
     $mdDialog,
     DEBUG
   ) {
-
     var vm = this;
 
     vm.hide = function() {
