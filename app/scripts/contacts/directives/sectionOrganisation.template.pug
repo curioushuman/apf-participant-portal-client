@@ -51,3 +51,18 @@ md-input-container.md-block(flex)
   div(ng-messages='vm.form.organisationShippingPostalCode.$error')
     div(ng-message='required')
       | Please enter the postal code for your NHRI
+
+//- ng-pattern="/^http:\/\/.+\..+$/"
+md-input-container.md-block(flex)
+  label Website
+  input(
+    type='url',
+    ng-model='vm.page.organisation.Website',
+    name='organisationWebsite',
+    required,
+    md-no-asterisk
+  )
+  div(ng-messages='vm.form.organisationWebsite.$error')
+    div(ng-message-exp="['required', 'pattern']")
+      | Please enter a valid URL for your NHRI using the format http://asiapacificforum.net
+      

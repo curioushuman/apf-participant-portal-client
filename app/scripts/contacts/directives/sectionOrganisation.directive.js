@@ -73,7 +73,8 @@
       'organisationShippingStreet',
       'organisationShippingCity',
       'organisationShippingState',
-      'organisationShippingPostalCode'
+      'organisationShippingPostalCode',
+      'Website'
     ];
     vm.page.sectionReady('organisation');
 
