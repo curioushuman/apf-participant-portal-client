@@ -213,15 +213,18 @@
             vm.page.contact
           );
         }
-        accountService.save(vm.page.organisation)
-        .then(
-          function(contact) {
-            resolve(vm.page.organisation);
-          },
-          function(err) {
-            reject(err);
-          }
-        );
+        // HACK: I've turned off saving for now while people are reviewing
+        // the form. You can turn it back on later.
+        resolve(vm.page.organisation);
+        // accountService.save(vm.page.organisation)
+        // .then(
+        //   function(contact) {
+        //     resolve(vm.page.organisation);
+        //   },
+        //   function(err) {
+        //     reject(err);
+        //   }
+        // );
       });
     };
 

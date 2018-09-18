@@ -18,7 +18,7 @@ md-input-container.md-block(flex)
       | Your email must be between 10 and 155 characters long and look like an e-mail address.
 
 md-input-container.md-block(flex)
-  label Phone number
+  label Phone number (optional)
   input(ng-model='vm.page.organisation.Phone', name='organisationPhone', required, md-no-asterisk)
   div(ng-messages='vm.form.organisationPhone.$error')
     div(ng-message='required')
@@ -52,7 +52,9 @@ md-input-container.md-block(flex)
     div(ng-message='required')
       | Please enter the postal code for your NHRI
 
+//- the type url shouldn't need a pattern, but here is (an untested) one in case
 //- ng-pattern="/^http:\/\/.+\..+$/"
+//- The vlidation error doesn't seem to be coming up though when the input is not the right pattern
 md-input-container.md-block(flex)
   label Website
   input(

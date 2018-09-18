@@ -138,13 +138,13 @@ div(ng-show='vm.section.editStatus')
         | This field can have a maximum of 80 characters
 
   md-input-container.md-block(flex)
-    label Phone number
+    label Phone number (optional)
     input(ng-model='vm.section.phoneNumber', name='affiliateContactPhone', md-no-asterisk)
     //- div.hint
     //-   | What is the best number to reach them on?
 
   md-input-container.md-block(flex)
-    label Which phone number is this?
+    label Which phone number is this? (optional)
     md-select(ng-model='', name='affiliationContactPreferredPhone', md-no-asterisk)
       md-option(ng-repeat='phoneType in vm.section.phoneTypes', value='{{ phoneType }}')
         | {{ phoneType }}
@@ -266,13 +266,13 @@ div(ng-show='vm.section.searchStatus')
         | This field can have a maximum of 80 characters
 
   md-input-container.md-block(flex)
-    label Phone number
+    label Phone number (optional)
     input(ng-model='vm.section.phoneNumber', name='affiliateContactPhone', md-no-asterisk)
     //- div.hint
     //-   | What is the best number to reach them on?
 
   md-input-container.md-block(flex)
-    label Which phone number is this?
+    label Which phone number is this? (optional)
     md-select(ng-model='', name='affiliationContactPreferredPhone', md-no-asterisk)
       md-option(ng-repeat='phoneType in vm.section.phoneTypes', value='{{ phoneType }}')
         | {{ phoneType }}

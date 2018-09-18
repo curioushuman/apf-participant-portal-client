@@ -192,6 +192,7 @@
     // to make sure that at least one of the options is chosen
     vm.save = function() {
       $mdDialog.hide();
+      vm.section.deletePerson();
     };
   }
 })();
