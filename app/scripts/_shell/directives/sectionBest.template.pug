@@ -3,18 +3,66 @@
 //- I've included comments as to when things should be visible / invisible
 //- use the flow as the main source of truth
 
-p.intro.less_space Are these your current commissioners / members? 
-  | Please 
-  strong edit
-  | , 
-  strong delete
-  | , and 
-  strong add 
-  | until the list represents your current group of commissioners / members.
+p.intro.less_space There will be times when the APF needs to act quickly to 
+  | coordinate cooperation with international bodies such as the UN. Who are the 
+  | best people to directly contact to either 
+  strong take action 
+  | or 
+  strong put us in touch with the people 
+  | who will be able to take action?
+  
+p.intro.less_space Mark those who should be contacted directly
   
 md-list
   md-list-item
     p
+      strong Mr. James Dean
+      br
+      | Chairperson
+    md-checkbox(ng-model='')
+    md-divider
+      
+  md-list-item
+    p
+      strong Mr. James Dean
+      br
+      | Senior Executive Officer
+    md-checkbox(ng-model='')
+    md-divider
+      
+  md-list-item
+    p
+      strong Mr. James Dean
+      br
+      | Commissioner / member
+    md-checkbox(ng-model='')
+    md-divider
+      
+  md-list-item
+    p
+      strong Mr. James Dean
+      br
+      | Commissioner / member
+    md-checkbox(ng-model='')
+    md-divider
+      
+  md-list-item
+    p
+      strong Mr. This Person
+      br
+      | The person filling out the form
+    md-checkbox(ng-model='')
+    md-divider
+      
+      
+p.intro.less_space Are there other people who we should contact 
+  strong who might be well placed to put us in touch with the right person 
+    | at the right time?
+
+md-list
+  md-list-item
+    p
+      br
       strong Mr. Working Example
       br
       | working@example.com
@@ -123,48 +171,10 @@ div(ng-show='vm.section.editStatus')
     span(flex)
     md-button.md-accent.md-raised(ng-click='vm.section.editedPerson()')
       | {{ vm.page.buttonText.next }}
-  
-md-list
-  md-list-item
-    p
-      strong Mr. James Dean
-      br
-      | james@dean.com
-      br
-      | +61 9520 9862
-      br
-      strong From 
-      | 01/01/2017 
-      strong to 
-      | 01/01/2020 
-    md-button.md-accent.md-hue-2.md-raised.md-icon-button(ng-click='vm.section.editDialog()')
-      md-icon.md-material-icons edit
-    md-button.md-accent.md-hue-3.md-raised.md-icon-button(ng-click='vm.section.deleteDialog()')
-      md-icon.md-material-icons delete
-    md-divider
-
-md-list
-  md-list-item
-    p
-      strong Mr. James Dean
-      br
-      | james@dean.com
-      br
-      | +61 9520 9862
-      br
-      strong From 
-      | 01/01/2017 
-      strong to 
-      | 01/01/2020 
-    md-button.md-accent.md-hue-2.md-raised.md-icon-button(ng-click='vm.section.editDialog()')
-      md-icon.md-material-icons edit
-    md-button.md-accent.md-hue-3.md-raised.md-icon-button(ng-click='vm.section.deleteDialog()')
-      md-icon.md-material-icons delete
-    md-divider
 
 div(layout='row', flex)
   div(flex='90', flex-xs='80')
-    p.intro.less_space If there are commissioners / members missing from the list please 
+    p.intro.less_space If there are people missing from the list please 
       strong add 
       | them here.
   div(flex='10', flex-xs='20')

@@ -58,7 +58,7 @@
       sections: {
         email: {
           id: 'email',
-          title: 'Email',
+          title: 'Authorisation',
           next: 'organisation',
           enabled: true,
           ready: false,
@@ -66,21 +66,35 @@
         },
         organisation: {
           id: 'organisation',
-          title: 'Organisation contact information',
+          title: 'Organisation',
           next: 'chairperson',
           enabled: true,
           ready: false
         },
         chairperson: {
           id: 'chairperson',
-          title: 'Chairperson contact information',
+          title: 'Chairperson',
           next: 'commissioners',
           enabled: true,
           ready: false
         },
+        // seo: {
+        //   id: 'seo',
+        //   title: 'Senior Executive Officer',
+        //   next: 'commissioners',
+        //   enabled: true,
+        //   ready: false
+        // },
         commissioners: {
           id: 'commissioners',
-          title: 'Commissioners contact information',
+          title: 'Commissioners / members',
+          next: 'best',
+          enabled: true,
+          ready: false
+        },
+        best: {
+          id: 'best',
+          title: 'Best people to contact',
           next: false,
           enabled: true,
           ready: false

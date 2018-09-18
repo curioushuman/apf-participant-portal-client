@@ -1,8 +1,8 @@
-md-dialog(aria-label='When did your Chairperson leave?')
+md-dialog(aria-label='When did this person leave?')
   form(ng-cloak)
     md-toolbar
       div.md-toolbar-tools
-        h2(hide-xs) When did your Chairperson leave?
+        h2(hide-xs) When did this person leave?
         h2(hide-gt-xs) When did they leave?
         span(flex)
         md-button.md-icon-button(ng-click='vm.cancel()')
@@ -32,6 +32,6 @@ md-dialog(aria-label='When did your Chairperson leave?')
     
     md-dialog-actions
       md-button.md-accent.md-raised(ng-click='vm.save()')
-        | Confirm
+        | {{ vm.page.buttonText.next }}
         md-icon.md-material-icons navigate_next
       

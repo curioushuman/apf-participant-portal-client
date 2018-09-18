@@ -74,6 +74,21 @@
 
     vm.page.salutations = formService.salutations();
 
+    // this is a temporary fix in place to illustrate how the section
+    // should behave. Don't use this, find a better way.
+    vm.section.editStatus = false;
+    vm.section.deleteStatus = false;
+    vm.section.searchStatus = false;
+    vm.section.editPerson = function() {
+      vm.section.editStatus = true;
+    };
+    vm.section.deletePerson = function() {
+      vm.section.deleteStatus = true;
+    };
+    vm.section.searchPerson = function() {
+      vm.section.searchStatus = true;
+    };
+
     // as with all sections the model is
     // we do / load things in the pre(load) function that we need to
     // that pertain to this section
@@ -127,6 +142,9 @@
           'sectionDelete.dialog.template.html',
         parent: angular.element(document.body),
         targetEvent: ev,
+        locals: {
+          section: vm.section
+        },
         clickOutsideToClose: true
       })
       .then(function() {
@@ -146,16 +164,21 @@
   ContactsSectionDeleteController.$inject = [
     '$scope',
     '$mdDialog',
-    'DEBUG'
+    'DEBUG',
+    'section'
   ];
 
   function ContactsSectionDeleteController(
     $scope,
     $mdDialog,
-    DEBUG
+    DEBUG,
+    section
   ) {
 
     var vm = this;
+
+    // grab locals
+    vm.section = section;
 
     vm.hide = function() {
       $mdDialog.hide();
@@ -169,6 +192,7 @@
     // NOTE: you'll need to do some custom validation on this one
     // to make sure that at least one of the options is chosen
     vm.save = function() {
+      vm.section.deletePerson();
       $mdDialog.hide();
     };
   }

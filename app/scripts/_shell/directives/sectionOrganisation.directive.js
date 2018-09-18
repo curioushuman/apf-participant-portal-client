@@ -68,7 +68,13 @@
     var vm = this;
     vm.section = vm.page.sections.organisation;
     vm.section.required = [
-      'organisationEmail'
+      'organisationEmail',
+      'organisationPhone',
+      'organisationShippingStreet',
+      'organisationShippingCity',
+      'organisationShippingState',
+      'organisationShippingPostalCode',
+      'organisationWebsite'
     ];
     vm.page.sectionReady('organisation');
 

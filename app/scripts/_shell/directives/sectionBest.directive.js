@@ -22,27 +22,27 @@
 
   angular
     .module('app.contacts')
-    .directive('gzContactsSectionCommissioners', gzContactsSectionCommissioners);
+    .directive('gzContactsSectionBest', gzContactsSectionBest);
 
-  gzContactsSectionCommissioners.$inject = [
+  gzContactsSectionBest.$inject = [
 
   ];
 
-  function gzContactsSectionCommissioners() {
+  function gzContactsSectionBest() {
     return {
       require: '^^gzSection',
-      controller: ContactsSectionCommissionersController,
+      controller: ContactsSectionBestController,
       controllerAs: 'vm',
       bindToController: true,
       templateUrl:
-        'scripts/contacts/directives/sectionCommissioners.template.html',
+        'scripts/contacts/directives/sectionBest.template.html',
       restrict: 'E',
       scope: {
         page: '=',
         form: '='
       },
       link: function(scope, elem, attrs, sectionCtrl) {
-        sectionCtrl.section = sectionCtrl.page.sections.commissioners;
+        sectionCtrl.section = sectionCtrl.page.sections.best;
         sectionCtrl.section.sectionCtrl = sectionCtrl;
       }
     };
@@ -50,7 +50,7 @@
 
   // you will need to include the relevant services that are necessary
   // for this section
-  ContactsSectionCommissionersController.$inject = [
+  ContactsSectionBestController.$inject = [
     '$q',
     '$scope',
     '$mdDialog',
@@ -59,7 +59,7 @@
     'DEBUG'
   ];
 
-  function ContactsSectionCommissionersController(
+  function ContactsSectionBestController(
     $q,
     $scope,
     $mdDialog,
@@ -68,9 +68,9 @@
     DEBUG
   ) {
     var vm = this;
-    vm.section = vm.page.sections.commissioners;
+    vm.section = vm.page.sections.best;
     vm.section.required = [];
-    vm.page.sectionReady('commissioners');
+    vm.page.sectionReady('best');
 
     vm.page.salutations = formService.salutations();
 
