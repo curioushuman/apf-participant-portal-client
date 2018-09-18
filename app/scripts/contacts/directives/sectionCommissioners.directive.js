@@ -74,6 +74,28 @@
 
     vm.page.salutations = formService.salutations();
 
+    // this is a temporary fix in place to illustrate how the section
+    // should behave. Don't use this, find a better way.
+    vm.section.editStatus = false;
+    vm.section.addStatus = false;
+    vm.section.searchStatus = false;
+    vm.section.editPerson = function() {
+      vm.section.editStatus = true;
+    };
+    vm.section.editedPerson = function() {
+      vm.section.editStatus = false;
+    };
+    vm.section.addPerson = function() {
+      vm.section.addStatus = true;
+    };
+    vm.section.searchPerson = function() {
+      vm.section.searchStatus = true;
+    };
+    vm.section.addedPerson = function() {
+      vm.section.addStatus = false;
+      vm.section.searchStatus = false;
+    };
+
     // as with all sections the model is
     // we do / load things in the pre(load) function that we need to
     // that pertain to this section
@@ -126,48 +148,6 @@
         console.log('Delete dialog cancelled');
       });
     };
-
-    vm.section.editDialog = function(ev) {
-      $mdDialog.show({
-        controller: ContactsSectionEditController,
-        controllerAs: 'vm',
-        bindToController: true,
-        templateUrl:
-          'scripts/contacts/directives/' +
-          'sectionEdit.dialog.template.html',
-        parent: angular.element(document.body),
-        targetEvent: ev,
-        clickOutsideToClose: true
-      })
-      .then(function() {
-        if (DEBUG) {
-          console.log('Edit dialog saved');
-        }
-      }, function() {
-        console.log('Edit dialog cancelled');
-      });
-    };
-
-    vm.section.addDialog = function(ev) {
-      $mdDialog.show({
-        controller: ContactsSectionAddController,
-        controllerAs: 'vm',
-        bindToController: true,
-        templateUrl:
-          'scripts/contacts/directives/' +
-          'sectionAdd.dialog.template.html',
-        parent: angular.element(document.body),
-        targetEvent: ev,
-        clickOutsideToClose: true
-      })
-      .then(function() {
-        if (DEBUG) {
-          console.log('Add dialog saved');
-        }
-      }, function() {
-        console.log('Add dialog cancelled');
-      });
-    };
   }
 
   // I've had to include the controller code here for now
@@ -199,60 +179,6 @@
 
     // NOTE: you'll need to do some custom validation on this one
     // to make sure that at least one of the options is chosen
-    vm.save = function() {
-      $mdDialog.hide();
-    };
-  }
-
-  ContactsSectionEditController.$inject = [
-    '$scope',
-    '$mdDialog',
-    'DEBUG'
-  ];
-
-  function ContactsSectionEditController(
-    $scope,
-    $mdDialog,
-    DEBUG
-  ) {
-
-    var vm = this;
-
-    vm.hide = function() {
-      $mdDialog.hide();
-    };
-
-    vm.cancel = function() {
-      $mdDialog.cancel();
-    };
-
-    vm.save = function() {
-      $mdDialog.hide();
-    };
-  }
-
-  ContactsSectionAddController.$inject = [
-    '$scope',
-    '$mdDialog',
-    'DEBUG'
-  ];
-
-  function ContactsSectionAddController(
-    $scope,
-    $mdDialog,
-    DEBUG
-  ) {
-
-    var vm = this;
-
-    vm.hide = function() {
-      $mdDialog.hide();
-    };
-
-    vm.cancel = function() {
-      $mdDialog.cancel();
-    };
-
     vm.save = function() {
       $mdDialog.hide();
     };

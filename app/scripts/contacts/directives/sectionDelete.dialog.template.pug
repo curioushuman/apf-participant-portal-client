@@ -32,6 +32,6 @@ md-dialog(aria-label='When did this person leave?')
     
     md-dialog-actions
       md-button.md-accent.md-raised(ng-click='vm.save()')
-        | Confirm
+        | {{ vm.page.buttonText.next }}
         md-icon.md-material-icons navigate_next
       

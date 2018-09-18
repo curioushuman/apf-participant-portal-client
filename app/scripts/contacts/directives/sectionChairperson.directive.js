@@ -75,7 +75,7 @@
     vm.page.salutations = formService.salutations();
 
     // this is a temporary fix in place to illustrate how the section
-    // should behave. Don't feel bound by it, there is probably a better way.
+    // should behave. Don't use this, find a better way.
     vm.section.editStatus = false;
     vm.section.deleteStatus = false;
     vm.section.searchStatus = false;
@@ -179,7 +179,7 @@
 
     // grab locals
     vm.section = section;
-console.log(section);
+
     vm.hide = function() {
       $mdDialog.hide();
     };
