@@ -2,6 +2,14 @@
 
 This repo is built on the web starter kit (which is awesome!). See instructional notes below.
 
+Use the following to run this locally.
+
+```
+
+gulp serve
+
+```
+
 ## config.json
 
 You need a config.json file in /app/scripts/core that has the format:

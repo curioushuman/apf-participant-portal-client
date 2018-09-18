@@ -1,0 +1,27 @@
+[debug] [2018-09-18T22:16:17.827Z] ----------------------------------------------------------------------
+[debug] [2018-09-18T22:16:17.830Z] Command:       /usr/local/Cellar/node/8.7.0/bin/node /usr/local/bin/firebase deploy
+[debug] [2018-09-18T22:16:17.830Z] CLI Version:   3.19.3
+[debug] [2018-09-18T22:16:17.830Z] Platform:      darwin
+[debug] [2018-09-18T22:16:17.830Z] Node Version:  v8.7.0
+[debug] [2018-09-18T22:16:17.830Z] Time:          Wed Sep 19 2018 08:16:17 GMT+1000 (AEST)
+[debug] [2018-09-18T22:16:17.830Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-09-18T22:16:17.842Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-09-18T22:16:17.843Z] > authorizing via signed-in user
+[debug] [2018-09-18T22:16:17.844Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-09-18T22:16:17.844Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token: '1/3bAdc3NZ9RzGlZboGsZAijKL9oGMowXY7whCDgrUD3w',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Wed Sep 19 2018 08:16:17 GMT+1000 (AEST)
+[debug] [2018-09-18T22:16:18.396Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-18T22:16:18.422Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/apf-portal  
+  
+ Wed Sep 19 2018 08:16:18 GMT+1000 (AEST)
+[debug] [2018-09-18T22:16:19.694Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-18T22:16:19.694Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/apf-portal/tokens  
+  
+ Wed Sep 19 2018 08:16:19 GMT+1000 (AEST)
+[debug] [2018-09-18T22:16:20.822Z] <<< HTTP RESPONSE 200
