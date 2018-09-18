@@ -22,27 +22,27 @@
 
   angular
     .module('app.contacts')
-    .directive('gzContactsSectionChairperson', gzContactsSectionChairperson);
+    .directive('gzContactsSectionCommissioners', gzContactsSectionCommissioners);
 
-  gzContactsSectionChairperson.$inject = [
+  gzContactsSectionCommissioners.$inject = [
 
   ];
 
-  function gzContactsSectionChairperson() {
+  function gzContactsSectionCommissioners() {
     return {
       require: '^^gzSection',
-      controller: ContactsSectionChairpersonController,
+      controller: ContactsSectionCommissionersController,
       controllerAs: 'vm',
       bindToController: true,
       templateUrl:
-        'scripts/contacts/directives/sectionChairperson.template.html',
+        'scripts/contacts/directives/sectionCommissioners.template.html',
       restrict: 'E',
       scope: {
         page: '=',
         form: '='
       },
       link: function(scope, elem, attrs, sectionCtrl) {
-        sectionCtrl.section = sectionCtrl.page.sections.chairperson;
+        sectionCtrl.section = sectionCtrl.page.sections.commissioners;
         sectionCtrl.section.sectionCtrl = sectionCtrl;
       }
     };
@@ -50,7 +50,7 @@
 
   // you will need to include the relevant services that are necessary
   // for this section
-  ContactsSectionChairpersonController.$inject = [
+  ContactsSectionCommissionersController.$inject = [
     '$q',
     '$scope',
     '$mdDialog',
@@ -59,7 +59,7 @@
     'DEBUG'
   ];
 
-  function ContactsSectionChairpersonController(
+  function ContactsSectionCommissionersController(
     $q,
     $scope,
     $mdDialog,
@@ -68,9 +68,9 @@
     DEBUG
   ) {
     var vm = this;
-    vm.section = vm.page.sections.chairperson;
+    vm.section = vm.page.sections.commissioners;
     vm.section.required = [];
-    vm.page.sectionReady('chairperson');
+    vm.page.sectionReady('commissioners');
 
     vm.page.salutations = formService.salutations();
 
@@ -82,13 +82,7 @@
     vm.section.pre = function() {
       return $q(function(resolve, reject) {
 
-        // things you might need to do
-        // NOTE: this is not an exhaustive list
-        // I was just gathering thoughts as I was preparing the
-        // form code examples
-        // - obtain affilitations for vm.page.organisation
-        // - obtain the contact record for the chairperson affiliation
-        //   (if one exists)
+
 
         resolve(true);
       });
@@ -99,9 +93,7 @@
     vm.section.process = function() {
       return $q(function(resolve, reject) {
 
-        // some (hopefully) helpful notes
-        // Look at form/directives/sectionContact.directive.js for examples
-        // Look at form/directives/sectionPersonal.directive.js for examples
+
 
         resolve(true);
       });
@@ -117,9 +109,6 @@
     vm.section.deleteDialog = function(ev) {
       $mdDialog.show({
         controller: ContactsSectionDeleteController,
-        // controllerUrl:
-        // 'scripts/contacts/directives/' +
-        // 'sectionDelete.dialog.js',
         controllerAs: 'vm',
         bindToController: true,
         templateUrl:
@@ -135,6 +124,48 @@
         }
       }, function() {
         console.log('Delete dialog cancelled');
+      });
+    };
+
+    vm.section.editDialog = function(ev) {
+      $mdDialog.show({
+        controller: ContactsSectionEditController,
+        controllerAs: 'vm',
+        bindToController: true,
+        templateUrl:
+          'scripts/contacts/directives/' +
+          'sectionEdit.dialog.template.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        clickOutsideToClose: true
+      })
+      .then(function() {
+        if (DEBUG) {
+          console.log('Edit dialog saved');
+        }
+      }, function() {
+        console.log('Edit dialog cancelled');
+      });
+    };
+
+    vm.section.addDialog = function(ev) {
+      $mdDialog.show({
+        controller: ContactsSectionAddController,
+        controllerAs: 'vm',
+        bindToController: true,
+        templateUrl:
+          'scripts/contacts/directives/' +
+          'sectionAdd.dialog.template.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        clickOutsideToClose: true
+      })
+      .then(function() {
+        if (DEBUG) {
+          console.log('Add dialog saved');
+        }
+      }, function() {
+        console.log('Add dialog cancelled');
       });
     };
   }
@@ -168,6 +199,60 @@
 
     // NOTE: you'll need to do some custom validation on this one
     // to make sure that at least one of the options is chosen
+    vm.save = function() {
+      $mdDialog.hide();
+    };
+  }
+
+  ContactsSectionEditController.$inject = [
+    '$scope',
+    '$mdDialog',
+    'DEBUG'
+  ];
+
+  function ContactsSectionEditController(
+    $scope,
+    $mdDialog,
+    DEBUG
+  ) {
+
+    var vm = this;
+
+    vm.hide = function() {
+      $mdDialog.hide();
+    };
+
+    vm.cancel = function() {
+      $mdDialog.cancel();
+    };
+
+    vm.save = function() {
+      $mdDialog.hide();
+    };
+  }
+
+  ContactsSectionAddController.$inject = [
+    '$scope',
+    '$mdDialog',
+    'DEBUG'
+  ];
+
+  function ContactsSectionAddController(
+    $scope,
+    $mdDialog,
+    DEBUG
+  ) {
+
+    var vm = this;
+
+    vm.hide = function() {
+      $mdDialog.hide();
+    };
+
+    vm.cancel = function() {
+      $mdDialog.cancel();
+    };
+
     vm.save = function() {
       $mdDialog.hide();
     };

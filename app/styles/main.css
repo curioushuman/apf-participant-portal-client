@@ -59,6 +59,11 @@ p.intro {
   -webkit-margin-before: 0em;
   -webkit-margin-after: 2em;
 }
+p.intro.less_space {
+  font-size: 0.9em;
+  -webkit-margin-before: 1em;
+  -webkit-margin-after: 1em;
+}
 .error {
   font-size: 0.9em;
 }

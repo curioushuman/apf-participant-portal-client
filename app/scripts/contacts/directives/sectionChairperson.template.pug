@@ -3,10 +3,14 @@
 //- I've included comments as to when things should be visible / invisible
 //- use the flow as the main source of truth
 
-p.intro Is this your current Chairperson? 
-  strong Please make sure their contact information is correct.
+p.intro.less_space Is this your current Chairperson? 
+  | Please 
+  strong edit their information 
+  | if it needs to be updated, or 
+  strong delete 
+  | them if you have a new chairperson.
     
-md-list.md-dense
+md-list
   md-list-item
     p
       br
@@ -15,8 +19,6 @@ md-list.md-dense
       | james@dean.com
       br
       | +61 9520 9862
-    //- md-icon.material-icons.md-accent mode_edit
-    //- md-icon.material-icons.md-accent delete
     md-button.md-accent.md-hue-2.md-raised.md-icon-button
       md-icon.md-material-icons edit
     md-button.md-accent.md-hue-3.md-raised.md-icon-button(ng-click='vm.section.deleteDialog()')
@@ -24,7 +26,11 @@ md-list.md-dense
     md-divider
 
 //- This would be hidden until the edit button is clicked above
-div.form-email(ng-show='true', layout='row')
+//- this should not be visible if we are editing existing chairperson
+p.intro.less_space(ng-show='false') Enter the email address of your Chairperson
+
+//- This would be hidden until the edit button is clicked above
+div.form-email(ng-show='false', layout='row')
   div(flex='90', flex-xs='80')
     md-input-container.md-block(flex)
       label Work email address
@@ -42,7 +48,7 @@ div.form-email(ng-show='true', layout='row')
       //-   | Please enter their work email, rather than their personal email address
       div(ng-messages='vm.form.affiliationContactEmail.$error')
         div(ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']")
-          | Your email must be between 10 and 155 characters long and look like an e-mail address.
+          | Email addresses must be between 10 and 155 characters long and look like an e-mail address.
   
   //- this should not be visible if we are editing existing chairperson
   div(ng-show='true', flex='10', flex-xs='20')
@@ -52,7 +58,7 @@ div.form-email(ng-show='true', layout='row')
 //- this will be visible either if
 //- - we are editing existing Chairperson
 //- - or after we've searched for an email address
-div.form-other(ng-show='true')
+div.form-other(ng-show='false')
   md-input-container.md-block(flex-xs='40', flex-gt-sm='25')
     label Salutation
     md-select(

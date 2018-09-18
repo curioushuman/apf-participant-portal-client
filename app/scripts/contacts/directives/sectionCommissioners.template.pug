@@ -1,0 +1,82 @@
+//- I've added all of the code below
+//- not all of it should be visible all the time
+//- I've included comments as to when things should be visible / invisible
+//- use the flow as the main source of truth
+
+p.intro.less_space Are these your current commissioners? 
+  | Please 
+  strong edit
+  | , 
+  strong delete
+  | , and 
+  strong add 
+  | until the list represents your current group of commissioners.
+  
+md-list
+  md-list-item
+    p
+      br
+      strong Mr. James Dean
+      br
+      | james@dean.com
+      br
+      | +61 9520 9862
+      br
+      strong From 
+      | 01/01/2017 
+      strong to 
+      | 01/01/2020 
+    md-button.md-accent.md-hue-2.md-raised.md-icon-button(ng-click='vm.section.editDialog()')
+      md-icon.md-material-icons edit
+    md-button.md-accent.md-hue-3.md-raised.md-icon-button(ng-click='vm.section.deleteDialog()')
+      md-icon.md-material-icons delete
+    md-divider
+  
+  md-list-item
+    p
+      br
+      strong Mr. James Dean
+      br
+      | james@dean.com
+      br
+      | +61 9520 9862
+      br
+      strong From 
+      | 01/01/2017 
+      strong to 
+      | 01/01/2020 
+    md-button.md-accent.md-hue-2.md-raised.md-icon-button(ng-click='vm.section.editDialog()')
+      md-icon.md-material-icons edit
+    md-button.md-accent.md-hue-3.md-raised.md-icon-button(ng-click='vm.section.deleteDialog()')
+      md-icon.md-material-icons delete
+    md-divider
+
+  md-list-item
+    p
+      br
+      strong Mr. James Dean
+      br
+      | james@dean.com
+      br
+      | +61 9520 9862
+      br
+      strong From 
+      | 01/01/2017 
+      strong to 
+      | 01/01/2020 
+    md-button.md-accent.md-hue-2.md-raised.md-icon-button(ng-click='vm.section.editDialog()')
+      md-icon.md-material-icons edit
+    md-button.md-accent.md-hue-3.md-raised.md-icon-button(ng-click='vm.section.deleteDialog()')
+      md-icon.md-material-icons delete
+    md-divider
+
+div(layout='row', flex)
+  div(flex='90', flex-xs='80')
+    p.intro.less_space If there are commissioners missing from the list please 
+      strong add 
+      | them here.
+  div(flex='10', flex-xs='20')
+    md-button.md-accent.md-hue-2.md-raised.md-icon-button(ng-click='vm.section.addDialog()')
+      md-icon.md-material-icons add
+
+  

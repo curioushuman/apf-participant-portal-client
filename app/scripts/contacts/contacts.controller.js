@@ -74,6 +74,13 @@
         chairperson: {
           id: 'chairperson',
           title: 'Chairperson contact information',
+          next: 'commissioners',
+          enabled: true,
+          ready: false
+        },
+        commissioners: {
+          id: 'commissioners',
+          title: 'Commissioners contact information',
           next: false,
           enabled: true,
           ready: false
