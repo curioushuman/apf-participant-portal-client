@@ -3,6 +3,7 @@
 /* eslint camelcase: 0 */
 /* eslint no-negated-condition: 0 */
 /* global angular */
+/* global document */
 
 // this is an example of an empty shell of a form section
 // please check out the gzSection directive which is a wrapper
@@ -96,7 +97,6 @@
     // sections
     vm.section.pre = function() {
       return $q(function(resolve, reject) {
-
         // things you might need to do
         // NOTE: this is not an exhaustive list
         // I was just gathering thoughts as I was preparing the
@@ -113,7 +113,6 @@
     // this is where we do the saving
     vm.section.process = function() {
       return $q(function(resolve, reject) {
-
         // some (hopefully) helpful notes
         // Look at form/directives/sectionContact.directive.js for examples
         // Look at form/directives/sectionPersonal.directive.js for examples
@@ -127,7 +126,7 @@
     // for more info check out
     // https://material.angularjs.org/latest/demo/dialog
     // https://material.angularjs.org/latest/api/service/$mdDialog
-    // TODO: controllerUrl doesn't work
+    // PLEASE FIX: controllerUrl doesn't work
     // if you can figure it out that'd be amazing!
     vm.section.deleteDialog = function(ev) {
       $mdDialog.show({
@@ -174,7 +173,6 @@
     DEBUG,
     section
   ) {
-
     var vm = this;
 
     // grab locals
