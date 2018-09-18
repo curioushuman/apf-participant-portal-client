@@ -10,7 +10,7 @@ p.intro.less_space Is this your current Chairperson?
   strong delete 
   | them if you have a new chairperson.
     
-md-list(ng-hide='vm.section.editStatus || vm.section.deleteStatus')
+md-list(ng-hide='vm.section.deleteStatus')
   md-list-item
     p
       strong Mr. James Dean
@@ -22,7 +22,7 @@ md-list(ng-hide='vm.section.editStatus || vm.section.deleteStatus')
       md-icon.md-material-icons edit
     md-button.md-accent.md-hue-3.md-raised.md-icon-button(ng-click='vm.section.deleteDialog()')
       md-icon.md-material-icons delete
-    md-divider
+    md-divider(ng-hide='vm.section.editStatus')
 
 //- This would be hidden until the edit button is clicked above
 div.form-email(ng-show='vm.section.editStatus || vm.section.deleteStatus', layout='row')
