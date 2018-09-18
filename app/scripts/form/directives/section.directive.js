@@ -44,7 +44,7 @@
     var vm = this;
     vm.section = null;
     vm.sectionNext = null;
-    vm.save = false;
+    vm.processSave = false;
 
     $scope.$watch('vm.page.sectionsEnabled', function(value) {
       if (vm.page.sectionsEnabled === true) {
@@ -213,8 +213,8 @@
           // mark the section as complete, and move to the next section
           // or simply complete the form
           vm.section.complete = true;
-          if (vm.save === true) {
-            vm.save = false;
+          if (vm.processSave === true) {
+            vm.processSave = false;
             vm.page.save();
           } else if (vm.sectionNext === false) {
             vm.page.complete();
@@ -236,7 +236,7 @@
     };
 
     vm.save = function() {
-      vm.save = true;
+      vm.processSave = true;
       vm.process();
     };
 
