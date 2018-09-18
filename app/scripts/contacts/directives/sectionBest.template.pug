@@ -121,6 +121,21 @@ div(ng-show='vm.section.editStatus')
     div(ng-messages='vm.form.affiliationContactLastName.$error')
       div(ng-message='required')
         | Please enter a last name
+        
+  md-input-container.md-block(flex)
+    label Official job title
+    input(
+      ng-model='',
+      name='affiliationContactRole',
+      required,
+      md-no-asterisk,
+      md-maxlength='80'
+    )
+    div(ng-messages='vm.form.affiliationContactRole.$error')
+      div(ng-message='required')
+        | This field is required
+      div(ng-message='md-maxlength')
+        | This field can have a maximum of 80 characters
 
   md-input-container.md-block(flex)
     label Phone number
@@ -234,6 +249,21 @@ div(ng-show='vm.section.searchStatus')
     div(ng-messages='vm.form.affiliationContactLastName.$error')
       div(ng-message='required')
         | Please enter a last name
+        
+  md-input-container.md-block(flex)
+    label Official job title
+    input(
+      ng-model='',
+      name='affiliationContactRole',
+      required,
+      md-no-asterisk,
+      md-maxlength='80'
+    )
+    div(ng-messages='vm.form.affiliationContactRole.$error')
+      div(ng-message='required')
+        | This field is required
+      div(ng-message='md-maxlength')
+        | This field can have a maximum of 80 characters
 
   md-input-container.md-block(flex)
     label Phone number

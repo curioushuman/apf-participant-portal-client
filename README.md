@@ -1,6 +1,6 @@
 # APF Participant Portal
 
-This repo is built on the web starter kit (which is awesome!).
+This repo is built on the web starter kit (which is awesome!). See instructional notes below.
 
 ## config.json
 
@@ -18,6 +18,15 @@ You need a config.json file in /app/scripts/core that has the format:
   }
 }
 ```
+
+## Other stack resources
+
+* Material design in Angular
+    * https://material.angularjs.org/latest/
+* Icons
+    * https://material.io/tools/icons/?style=baseline
+* Pug templating language
+    * https://pugjs.org/api/getting-started.html
 
 ## Web Starter Kit notes
 

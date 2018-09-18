@@ -15,6 +15,11 @@
 // NOTE: to fixe the function you might need to edit both the account service
 // and the related account controller in the apf-participantportal code
 
+// OTHER NOTE: for some reason clicking on the
+// completeSection (see form/directives) for this section does not work
+// it is supposed to re-open that section.
+// Please look into this as well.
+
 (function() {
   'use strict';
 
