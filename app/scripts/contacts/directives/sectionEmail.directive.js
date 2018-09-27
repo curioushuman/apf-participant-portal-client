@@ -53,9 +53,10 @@
     ];
     vm.page.sectionReady('email');
 
-    if (DEBUG) {
-      vm.page.email = 'mike@curioushuman.com.au';
-    }
+    // HACK: turn this off again when you start developing
+    // if (DEBUG) {
+    vm.page.email = 'mike@curioushuman.com.au';
+    // }
 
     // for this section we do nothing in our pre(load) function
     vm.section.pre = function() {
@@ -70,42 +71,39 @@
     vm.section.process = function() {
       gaService.addSalesforceRequest('Retrieve Contact', vm.page.email);
       return $q(function(resolve, reject) {
-        // HACK: the below has been turned off while people review the form
-        vm.page.contact.exists = true;
-        resolve(vm.page.contact);
-        // contactService.retrieve(
-        //   {
-        //     email: vm.page.email
-        //   },
-        //   function(contact) {
-        //     gaService.addSalesforceResponse(
-        //       'Retrieve Contact',
-        //       vm.page.email
-        //     );
-        //     vm.page.contact = contact;
-        //     vm.page.contact.exists = true;
-        //     if (DEBUG) {
-        //       console.log('Contact found', vm.page.contact);
-        //     }
-        //     gaService.setUserId(vm.page.email);
-        //     resolve(vm.page.contact);
-        //   },
-        //   function(err) {
-        //     if (err.status === 404) {
-        //       // if we don't have the in the database we'll not allow them
-        //       // to edit the contact information
-        //       // this person is not authorised
-        //       vm.page.formStatus = 'unauthorised';
-        //     } else {
-        //       gaService.addSalesforceError(
-        //         'Retrieve Contact',
-        //         vm.page.email,
-        //         err.status
-        //       );
-        //       reject(err);
-        //     }
-        //   }
-        // );
+        contactService.retrieve(
+          {
+            email: vm.page.email
+          },
+          function(contact) {
+            gaService.addSalesforceResponse(
+              'Retrieve Contact',
+              vm.page.email
+            );
+            vm.page.contact = contact;
+            vm.page.contact.exists = true;
+            if (DEBUG) {
+              console.log('Contact found', vm.page.contact);
+            }
+            gaService.setUserId(vm.page.email);
+            resolve(vm.page.contact);
+          },
+          function(err) {
+            if (err.status === 404) {
+              // if we don't have the in the database we'll not allow them
+              // to edit the contact information
+              // this person is not authorised
+              vm.page.formStatus = 'unauthorised';
+            } else {
+              gaService.addSalesforceError(
+                'Retrieve Contact',
+                vm.page.email,
+                err.status
+              );
+              reject(err);
+            }
+          }
+        );
       });
     };
   }

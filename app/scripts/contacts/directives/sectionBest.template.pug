@@ -150,37 +150,6 @@ div(ng-show='vm.section.editStatus')
         | {{ phoneType }}
     //- div.hint
     //-   | Is it you work phone, mobile phone, home phone?
-    
-  div(flex, layout='row', layout-xs='column')
-    div(flex='50', flex-xs)      
-      md-input-container.md-block(flex)
-        label Start date
-        md-datepicker(
-          ng-model='',
-          name='affiliationStartDate',
-          required,
-          md-no-asterisk,
-          md-open-on-focus,
-          md-placeholder='Start date'
-        )
-        div(ng-messages='vm.form.affiliationStartDate.$error')
-          div(ng-message='required')
-            | When did this person start at your NHRI?
-        
-    div(flex='50', flex-xs)
-      md-input-container.md-block(flex)
-        label End date
-        md-datepicker(
-          ng-model='',
-          name='affiliationStartDate',
-          required,
-          md-no-asterisk,
-          md-open-on-focus,
-          md-placeholder='Start date'
-        )
-        div(ng-messages='vm.form.affiliationStartDate.$error')
-          div(ng-message='required')
-            | When did they leave, or when are they scheduled to depart, your NHRI?
             
   div(layout='row')
     span(flex)
@@ -278,37 +247,6 @@ div(ng-show='vm.section.searchStatus')
         | {{ phoneType }}
     //- div.hint
     //-   | Is it you work phone, mobile phone, home phone?
-    
-  div(flex, layout='row', layout-xs='column')
-    div(flex='50', flex-xs)      
-      md-input-container.md-block(flex)
-        label Start date
-        md-datepicker(
-          ng-model='',
-          name='affiliationStartDate',
-          required,
-          md-no-asterisk,
-          md-open-on-focus,
-          md-placeholder='Start date'
-        )
-        div(ng-messages='vm.form.affiliationStartDate.$error')
-          div(ng-message='required')
-            | When did this person start at your NHRI?
-        
-    div(flex='50', flex-xs)
-      md-input-container.md-block(flex)
-        label End date
-        md-datepicker(
-          ng-model='',
-          name='affiliationStartDate',
-          required,
-          md-no-asterisk,
-          md-open-on-focus,
-          md-placeholder='Start date'
-        )
-        div(ng-messages='vm.form.affiliationStartDate.$error')
-          div(ng-message='required')
-            | When did they leave, or when are they scheduled to depart, your NHRI?
 
   div(layout='row')
     span(flex)

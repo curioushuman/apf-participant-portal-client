@@ -90,7 +90,7 @@
       vm.section.searchStatus = true;
     };
 
-    // as with all sections the model is
+    // all sections work in the same way
     // we do / load things in the pre(load) function that we need to
     // that pertain to this section
     // store them at the page level in case they might be useful in other
