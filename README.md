@@ -2,7 +2,15 @@
 
 This repo is built on the web starter kit (which is awesome!). See instructional notes below.
 
-Use the following to run this locally.
+Use NPM to install dependencies
+
+```
+
+npm install
+
+```
+
+Use the following to run locally, make sure config is in place first (see below)
 
 ```
 
